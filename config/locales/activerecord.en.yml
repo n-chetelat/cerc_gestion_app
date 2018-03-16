@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      admin_user: Admin User
+    attributes:
+      admin_user:
+        email: Email

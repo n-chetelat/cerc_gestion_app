@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      admin_user: Administateur
+    attributes:
+      admin_user:
+        email: Courriel
