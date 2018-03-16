@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180316183153) do
+ActiveRecord::Schema.define(version: 20180316205023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,4 +47,50 @@ ActiveRecord::Schema.define(version: 20180316183153) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "positions_form_field_translations", force: :cascade do |t|
+    t.integer "positions_form_field_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "label", null: false
+    t.index ["locale"], name: "index_positions_form_field_translations_on_locale"
+    t.index ["positions_form_field_id"], name: "index_9939125a30cc4053c2ebf423926168a906b53a10"
+  end
+
+  create_table "positions_form_fields", force: :cascade do |t|
+    t.bigint "recruitment_form_id"
+    t.jsonb "options", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "position", default: 0
+    t.integer "requirement_id"
+    t.integer "form_cd"
+    t.index ["recruitment_form_id"], name: "index_positions_form_fields_on_recruitment_form_id"
+  end
+
+  create_table "positions_recruitment_forms", force: :cascade do |t|
+    t.bigint "position_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position_id"], name: "index_positions_recruitment_forms_on_position_id"
+  end
+
+  create_table "positions_requirement_translations", force: :cascade do |t|
+    t.integer "positions_requirement_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "label", null: false
+    t.index ["locale"], name: "index_positions_requirement_translations_on_locale"
+    t.index ["positions_requirement_id"], name: "index_758f0a08048846c3abd13663ef37786654691ba1"
+  end
+
+  create_table "positions_requirements", force: :cascade do |t|
+    t.integer "form_cd"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "positions_form_fields", "positions_recruitment_forms", column: "recruitment_form_id"
+  add_foreign_key "positions_recruitment_forms", "positions"
 end

@@ -5,4 +5,11 @@ class Position < ApplicationRecord
     validates_uniqueness_of :title, scope: :locale
   end
 
+  has_one :recruitment_form, class_name: "Positions::RecruitmentForm", dependent: :destroy
+
+  accepts_nested_attributes_for :recruitment_form
+
+  validates_presence_of :recruitment_form
+  validates_associated :recruitment_form
+
 end

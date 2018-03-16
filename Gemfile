@@ -42,6 +42,8 @@ gem 'globalize', git: 'https://github.com/globalize/globalize'
 gem 'activemodel-serializers-xml'
 gem 'activeadmin-globalize', '~> 1.0.0.pre'
 
+gem 'simple_enum'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
