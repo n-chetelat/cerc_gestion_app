@@ -21,6 +21,14 @@ ActiveAdmin.register Position do
     attributes_table do
       row :title
     end
+    panel "Recruitment Form" do
+      table_for resource.recruitment_form.form_fields do
+        column :position
+        column(:form_cd) {|form_field| te(form_field, :form)}
+        column :label_en
+        column :label_fr
+      end
+    end
   end
 
   form do |f|
@@ -41,7 +49,7 @@ ActiveAdmin.register Position do
               b.input :label_fr, label: "Label (fr)"
             end
             b.input :position
-            b.input :form_cd
+            b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true)
           end
         end
 

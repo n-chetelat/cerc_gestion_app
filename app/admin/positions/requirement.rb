@@ -8,14 +8,14 @@ ActiveAdmin.register Positions::Requirement do
     selectable_column
     id_column
     column :label
-    column :form
+    column(:form) {|resource| te(resource, :form)}
     actions
   end
 
   show do
     attributes_table do
       row :label
-      row :form
+      row(:form) {|resource| te(resource, :form)}
     end
   end
 
@@ -25,7 +25,7 @@ ActiveAdmin.register Positions::Requirement do
         f.translated_inputs "Translated field", switch_locale: false do |t|
           t.input :label
         end
-        f.input :form_cd
+        f.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true)
       end
     end
     f.actions

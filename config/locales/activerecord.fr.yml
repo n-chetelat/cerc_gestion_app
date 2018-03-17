@@ -1,7 +1,22 @@
 fr:
+  enums:
+    form:
+      text: Texte
+      textarea: Paragraphe
+      checkbox: Case à cocher
+      radio: Case d'option
+      date: Date
+      select: Menu déroulant
+      upload: Téléversement
   activerecord:
     models:
       admin_user: Administateur
     attributes:
+      form_default: &form_default
+        form_cd: Mode de saisie
+        label_en: Titre en anglais
+        label_fr: Titre en français
       admin_user:
         email: Courriel
+      positions/form_field:
+        <<: *form_default

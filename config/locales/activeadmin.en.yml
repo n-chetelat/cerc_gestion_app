@@ -1,0 +1,6 @@
+en:
+  active_admin:
+    globalize:
+      language:
+        en: English
+        fr: French

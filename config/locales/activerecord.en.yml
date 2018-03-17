@@ -1,7 +1,22 @@
 en:
+  enums:
+    form:
+      text: Text
+      textarea: Paragraph
+      checkbox: Checkbox
+      radio: Radio button
+      date: Date
+      select: Pull-down menu
+      upload: Upload
   activerecord:
     models:
       admin_user: Admin User
     attributes:
+      form_default: &form_default
+        form_cd: Input type
+        label_en: English label
+        label_fr: French label
       admin_user:
         email: Email
+      positions/form_field:
+        <<: *form_default
