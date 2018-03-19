@@ -1,0 +1,15 @@
+@import "normalize.css";
+
+html {
+  font-size: 16px;
+}
+
+html, body {
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+.wrapper {
+  width: 90%;
+  max-width: 960px;
+  margin: auto;
+}

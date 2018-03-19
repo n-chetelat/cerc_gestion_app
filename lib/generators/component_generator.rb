@@ -4,15 +4,15 @@ class ComponentGenerator < Rails::Generators::Base
   def create_vue_file
     create_file "#{component_path}/#{component_name}.vue" do
       <<-FILE
-      <template>
-        div.#{component_name}
-      </template>
-
       <script>
       export default {
-        name: #{component_name.underscore.camelize}
+        name: "#{component_name.underscore.camelize}"
       }
       </script>
+
+      <template lang="pug">
+        div.#{component_name}
+      </template>
 
       <style scoped>
       </style>

@@ -1,22 +1,18 @@
-<template>
-  <div>
-    <p>{{ message }}</p>
-  </div>
+<template lang="pug">
+  div.wrapper
+    recruitment-form
 </template>
 
 <script>
+import RecruitmentForm from "./recruitment-form.vue"
+
 export default {
-  data() {
-    return {
-      message: "Hello Vue!"
-    }
+  name: "App",
+  components: {
+    RecruitmentForm
   }
 }
 </script>
 
 <style scoped>
-p {
-  font-size: 2em;
-  text-align: center;
-}
 </style>

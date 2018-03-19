@@ -6,6 +6,10 @@ Rails.application.routes.draw do
 
   scope "(:locale)", locale: /en|fr/ do
     get "/", to: "home#index"
+
+    namespace "api", defaults: {format: "json"} do
+      resources :positions, only: [:index]
+    end
   end
 
 end
