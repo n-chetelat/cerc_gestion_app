@@ -10,7 +10,8 @@ en:
       upload: Upload
   activerecord:
     models:
-      admin_user: Admin User
+      admin_user: Admin Users
+      positions/requirement: Requirements
     attributes:
       form_default: &form_default
         form_cd: Input type

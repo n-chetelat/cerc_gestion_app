@@ -33,16 +33,25 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# UX helpers
+gem 'jquery-rails'
+gem 'select2-rails'
+
+# ActiveRecord helpers
+gem 'simple_enum'
+gem 'acts_as_list'
+
 # Admin page
 gem 'activeadmin'
 gem 'devise'
+gem "activeadmin-orderable"
 
 # I18n
 gem 'globalize', git: 'https://github.com/globalize/globalize'
 gem 'activemodel-serializers-xml'
+gem 'globalize-accessors'
 gem 'activeadmin-globalize', '~> 1.0.0.pre'
 
-gem 'simple_enum'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -1,10 +1,10 @@
 ActiveAdmin.register Position do
-  menu parent: "Recruitment"
+  menu false
 
   permit_params translations_attributes: [:id, :locale, :_destroy, :title],
-    recruitment_form_attributes: [:id, form_fields_attributes: [
-      :id, :_destroy, :position, :form_cd, :label_en, :label_fr
-      ]
+    recruitment_form_attributes: [:id, form_fields_attributes: ([
+      :id, :_destroy, :position, :form_cd
+      ] + Positions::FormField.globalize_attribute_names)
     ]
 
   filter :title
@@ -22,8 +22,8 @@ ActiveAdmin.register Position do
       row :title
     end
     panel "Recruitment Form" do
-      table_for resource.recruitment_form.form_fields do
-        column :position
+      table_for resource.recruitment_form.form_fields.order(position: :asc) do
+        orderable_handle_column url: :sort_admin_positions_form_field_path
         column(:form_cd) {|form_field| te(form_field, :form)}
         column :label_en
         column :label_fr
@@ -42,14 +42,14 @@ ActiveAdmin.register Position do
 
         f.inputs "", for: [:recruitment_form, f.object.recruitment_form || Positions::RecruitmentForm.new] do |a|
           a.has_many :form_fields, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
+            # b.input :requirement_id, as: :select, collection: Positions::Requirement.limit(5).map {|req| [req.label, req.id] }, input_html: {class: "select2", data: {:placeholder => "Choose a requirement", "ajax--url" => autocomplete_admin_positions_requirements_url(:format => :json)}}
             Globalize.with_locale(:en) do
               b.input :label_en, label: "Label (en)"
             end
             Globalize.with_locale(:fr) do
               b.input :label_fr, label: "Label (fr)"
             end
-            b.input :position
-            b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true)
+            b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true), input_html: {class: "select2"}
           end
         end
 

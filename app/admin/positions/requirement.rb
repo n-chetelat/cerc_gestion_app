@@ -31,4 +31,20 @@ ActiveAdmin.register Positions::Requirement do
     f.actions
   end
 
+  collection_action :autocomplete, method: :get do
+    @list = resource_class.with_locales(I18n.locale).limit(5)
+
+    if (params[:q].present?)
+      filter = "%#{params[:q].parameterize(separator: '%')}%"
+      ids = resource_class.translation_class.with_locales(I18n.locale)
+        .where("label ILIKE ?", filter).select(:positions_requirement_id)
+      @list = resource_class.where(id: ids)
+
+    else
+      @list = resource_class.none
+    end
+
+    respond_with(@list.limit(10))
+  end
+
 end

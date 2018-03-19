@@ -10,7 +10,8 @@ fr:
       upload: Téléversement
   activerecord:
     models:
-      admin_user: Administateur
+      admin_user: Administateurs
+      positions/requirement: 	Pré-requis
     attributes:
       form_default: &form_default
         form_cd: Mode de saisie
