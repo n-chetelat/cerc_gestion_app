@@ -4,6 +4,12 @@ import { mapGetters, mapActions } from 'vuex'
 import SceneMixin from 'mixins/scene-mixin.js'
 
 import InputText from './recruitment-form/input-text.vue'
+import InputUpload from './recruitment-form/input-upload.vue'
+import InputTextarea from './recruitment-form/input-textarea.vue'
+import InputCheckbox from './recruitment-form/input-checkbox.vue'
+import InputRadio from './recruitment-form/input-radio.vue'
+import InputDate from './recruitment-form/input-date.vue'
+import InputSelect from './recruitment-form/input-select.vue'
 
   export default {
     name: "RecruitmentForm",
@@ -41,7 +47,13 @@ import InputText from './recruitment-form/input-text.vue'
       },
     },
     components: {
-      InputText
+      InputText,
+      InputUpload,
+      InputCheckbox,
+      InputRadio,
+      InputDate,
+      InputSelect,
+      InputTextarea
     }
   }
   </script>

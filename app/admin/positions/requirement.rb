@@ -1,5 +1,5 @@
 ActiveAdmin.register Positions::Requirement do
-  menu parent: "Recruitment"
+  menu false
   permit_params :form_cd, translations_attributes: [:id, :locale, :label]
 
   filter :label

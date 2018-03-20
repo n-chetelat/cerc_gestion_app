@@ -1,5 +1,5 @@
 ActiveAdmin.register Position do
-  menu false
+  menu parent: "Recruitment"
 
   permit_params translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
