@@ -3,6 +3,8 @@ import { mapGetters, mapActions } from 'vuex'
 
 import SceneMixin from 'mixins/scene-mixin.js'
 
+import LocaleSwitcher from './shared/locale-switcher.vue'
+
 import InputText from './recruitment-form/input-text.vue'
 import InputUpload from './recruitment-form/input-upload.vue'
 import InputTextarea from './recruitment-form/input-textarea.vue'
@@ -47,6 +49,7 @@ import InputSelect from './recruitment-form/input-select.vue'
       },
     },
     components: {
+      LocaleSwitcher,
       InputText,
       InputUpload,
       InputCheckbox,
@@ -60,6 +63,7 @@ import InputSelect from './recruitment-form/input-select.vue'
 
   <template lang="pug">
     div.recruitment-form(v-if="loaded")
+      locale-switcher
       div.application-form
         form
           div.form-row.position-select

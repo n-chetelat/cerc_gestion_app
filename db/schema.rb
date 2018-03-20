@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180319212416) do
+ActiveRecord::Schema.define(version: 20180320153901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,8 +91,17 @@ ActiveRecord::Schema.define(version: 20180319212416) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "recruitment_infos", force: :cascade do |t|
+  create_table "recruitment_info_translations", force: :cascade do |t|
+    t.integer "recruitment_info_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "content"
+    t.index ["locale"], name: "index_recruitment_info_translations_on_locale"
+    t.index ["recruitment_info_id"], name: "index_recruitment_info_translations_on_recruitment_info_id"
+  end
+
+  create_table "recruitment_infos", force: :cascade do |t|
     t.integer "singleton_guard", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
