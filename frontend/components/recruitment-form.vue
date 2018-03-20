@@ -79,6 +79,17 @@ import InputSelect from './recruitment-form/input-select.vue'
   </template>
 
   <style>
+
+    .recruitment-form nav {
+      width: 100%;
+      height: 5em;
+    }
+
+    .recruitment-form nav .locale-switcher {
+      margin: 1em auto;
+      float: right;
+    }
+
     .application-form {
       width: 90%;
       margin: auto;

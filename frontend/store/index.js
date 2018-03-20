@@ -7,6 +7,9 @@ import positions from './modules/positions'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  getters: {
+    isAuthenticated: state => false
+  },
   modules: {
     locales,
     recruitmentInfo,

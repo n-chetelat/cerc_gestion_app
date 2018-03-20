@@ -12,6 +12,7 @@ fr:
     models:
       admin_user: Administateurs
       positions/requirement: 	Pré-requis
+      recruitment_info: Information
     attributes:
       form_default: &form_default
         form_cd: Mode de saisie
@@ -21,3 +22,7 @@ fr:
         email: Courriel
       positions/form_field:
         <<: *form_default
+      recruitment_info:
+        contnet_en: Contenu en anglais
+        content_fr: Contenu en français
+      

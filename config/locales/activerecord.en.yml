@@ -12,6 +12,7 @@ en:
     models:
       admin_user: Admin Users
       positions/requirement: Requirements
+      recruitment_info: Recruitment Information
     attributes:
       form_default: &form_default
         form_cd: Input type
@@ -21,3 +22,6 @@ en:
         email: Email
       positions/form_field:
         <<: *form_default
+      recruitment_info:
+        content_en: English content
+        content_fr: French content
