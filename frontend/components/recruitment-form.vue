@@ -21,20 +21,21 @@ import InputSelect from './recruitment-form/input-select.vue'
         application: {
           positionId: null
         },
-        positions: [],
         applicationForm: null,
         generatingForm: false,
       }
     },
     async created() {
+      await this.getRecruitmentInfo()
       await this.getAllPositions()
-      this.positions = this.allPositions
     },
     computed: {
       ...mapGetters("positions", ["allPositions", "positionFormsById"]),
+      ...mapGetters("recruitmentInfo", ["recruitmentInfo"]),
     },
     methods: {
       ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
+      ...mapActions("recruitmentInfo", ["getRecruitmentInfo"]),
       async generatePositionForm() {
         if (!this.application.positionId) {
           this.applicationForm = null
@@ -63,14 +64,16 @@ import InputSelect from './recruitment-form/input-select.vue'
 
   <template lang="pug">
     div.recruitment-form(v-if="loaded")
-      locale-switcher
+      nav
+        locale-switcher.locale-switcher
+      div.information(v-html="recruitmentInfo")
       div.application-form
         form
           div.form-row.position-select
-            label.label Which position are you applying for?
+            label.label Position
             select(v-model="application.positionId", @change="generatePositionForm")
-              option(:value="null") Select a position
-              option(v-for="position in positions", :value="position.id") {{position.title}}
+              option(:value="null") --
+              option(v-for="position in allPositions", :value="position.id") {{position.title}}
           div.position-fields(v-if="applicationForm && !generatingForm")
             component.form-row(v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options")
   </template>
@@ -91,7 +94,7 @@ import InputSelect from './recruitment-form/input-select.vue'
       display: inline-block;
       width: 30%;
       margin-right: 10px;
-      vertical-align: top;
+      vertical-align: middle;
       text-align: right;
     }
 
