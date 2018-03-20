@@ -1,14 +1,21 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
+import SceneMixin from 'mixins/scene-mixin.js'
+
+import InputText from './recruitment-form/input-text.vue'
+
   export default {
     name: "RecruitmentForm",
+    mixins: [SceneMixin],
     data() {
       return {
         application: {
-          position: null
+          positionId: null
         },
-        positions: []
+        positions: [],
+        applicationForm: null,
+        generatingForm: false,
       }
     },
     async created() {
@@ -16,47 +23,43 @@ import { mapGetters, mapActions } from 'vuex'
       this.positions = this.allPositions
     },
     computed: {
-      ...mapGetters(["allPositions"])
+      ...mapGetters("positions", ["allPositions", "positionFormsById"]),
     },
     methods: {
-      ...mapActions(["getAllPositions"])
+      ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
+      async generatePositionForm() {
+        if (!this.application.positionId) {
+          this.applicationForm = null
+        } else {
+          this.generatingForm = true
+          await this.getPositionForm(this.application.positionId).then(() => {
+          })
+          const form = this.positionFormsById[this.application.positionId]
+          this.applicationForm = form
+          this.generatingForm = false
+        }
+      },
+    },
+    components: {
+      InputText
     }
   }
   </script>
 
   <template lang="pug">
-    div.recruitment-form
-      div.information
-        h1 Application Form
-        p Our lab aims to combine mathematical optimization and machine learning. For moreinformation, please visit our website and see our recent publications. For allpositions, our ideal candidate has strong backgrounds in both mathematics andcomputer science, with experience in large-scale data analysis.
-        p We expect applicants to have a reasonable knowledge of English. In addition,Montreal is a primarily French-speaking environment and Polytechnique Montrealcourses are usually given in French, so we expect applicants to either have a workingknowledge of French or be willing to learn it.
-        p If you are admitted to a student position, our offer will include a generous financialhelp package that covers tuition costs, as well as provide a comfortable stipend forliving. In addition, these offers are not typically contigent on any teachingobligations.
+    div.recruitment-form(v-if="loaded")
       div.application-form
         form
           div.form-row.position-select
             label.label Which position are you applying for?
-            select(v-model="application.position")
-              option(value="null") Select a position
+            select(v-model="application.positionId", @change="generatePositionForm")
+              option(:value="null") Select a position
               option(v-for="position in positions", :value="position.id") {{position.title}}
-          div.position-fields
-            div.form-row
-              label.label Name
-              input(type="text")
-            div.form-row
-              label.label Name
-              input(type="text")
+          div.position-fields(v-if="applicationForm && !generatingForm")
+            component.form-row(v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options")
   </template>
 
-  <style scoped>
-    .information h1 {
-      text-align: center;
-    }
-
-    .information p {
-      line-height: 1.4em;
-      margin: 15px 10%;
-    }
-
+  <style>
     .application-form {
       width: 90%;
       margin: auto;

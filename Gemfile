@@ -36,6 +36,7 @@ gem 'jbuilder', '~> 2.5'
 # UX helpers
 gem 'jquery-rails'
 gem 'select2-rails'
+gem 'tinymce-rails'
 
 # ActiveRecord helpers
 gem 'simple_enum'

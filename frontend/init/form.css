@@ -1,0 +1,8 @@
+.information h1 {
+  text-align: center;
+}
+
+.information p {
+  line-height: 1.4em;
+  margin: 15px 10%;
+}

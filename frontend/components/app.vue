@@ -1,6 +1,5 @@
 <template lang="pug">
-  div.wrapper
-    recruitment-form
+  recruitment-form
 </template>
 
 <script>

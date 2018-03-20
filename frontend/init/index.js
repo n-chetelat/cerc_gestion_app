@@ -1,4 +1,5 @@
 import "./index.css";
+import "./form.css";
 
 import "babel-polyfill"
 

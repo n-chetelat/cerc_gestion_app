@@ -2,6 +2,7 @@
 //= require active_admin/active_admin_globalize.js
 //= require select2
 //= require activeadmin-orderable
+//= require tinymce
 
 $(document)
 .ready(function() {
@@ -15,18 +16,22 @@ $(document)
     init_select2($(this));
   });
 
-  // # tinymce.init({
-  // #   selector: 'textarea.tinymce',
-  // #   width: 'auto',
-  // #   menubar: false,
-  // #   plugins: 'code',
-  // #   toolbar: 'undo redo | bold italic | code',
-  // #   entity_encoding: "raw",
-  // # });
-  // #
-  // # $(".colorpicker").each(function() {
-  // #   $(this).minicolors()
-  // # });
+  tinymce.init({
+    selector: 'textarea.tinymce',
+    width: 'auto',
+    menubar: false,
+    plugins: [
+      'advlist autolink link image lists charmap hr anchor pagebreak spellchecker',
+      'searchreplace wordcount visualblocks visualchars code insertdatetime nonbreaking',
+      'save table directionality emoticons template paste textcolor'
+    ],
+    toolbar: 'undo redo | styleselect | bold italic removeformat | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
+    entity_encoding: "raw",
+  });
+
+  // $(".colorpicker").each(function() {
+  //   $(this).minicolors()
+  // });
 
 })
 
