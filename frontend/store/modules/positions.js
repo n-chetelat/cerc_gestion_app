@@ -1,7 +1,7 @@
 import axios from "axios"
 import { keyBy } from "lodash-es"
 
-const BASE_URL = "api/positions"
+const BASE_URL = "/api/positions"
 
 const state = {
   all: [],
@@ -10,6 +10,7 @@ const state = {
 
 // getters
 const getters = {
+  localeURL: (state, getters, rootState, rootGetters) =>`${rootGetters["locales/currentLocale"]}${BASE_URL}`,
   allPositions: state => state.all,
   positionForms: state => state.forms,
   positionFormsById: (state, getters) => keyBy(getters.positionForms, 'position_id'),
@@ -17,13 +18,13 @@ const getters = {
 
 // actions
 const actions = {
-  getAllPositions({ commit }) {
-    return axios.get(BASE_URL).then(({ data }) => {
+  getAllPositions({ commit, getters }) {
+    return axios.get(getters.localeURL).then(({ data }) => {
       commit('setPositions', data)
     })
   },
   getPositionForm({ commit, getters }, positionId) {
-    return axios.get(`${BASE_URL}/${positionId}/form`)
+    return axios.get(`${getters.localeURL}/${positionId}/form`)
     .then(({ data }) => {
       commit('setPositionForms', data)
     })
