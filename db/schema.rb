@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180321011526) do
+ActiveRecord::Schema.define(version: 20180321161725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,23 @@ ActiveRecord::Schema.define(version: 20180321011526) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "applications", force: :cascade do |t|
+    t.bigint "person_id"
+    t.string "locale"
+    t.date "starting_semester"
+    t.jsonb "fields", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_applications_on_person_id"
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.string "file_uid"
+    t.string "file_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "persons", force: :cascade do |t|
@@ -109,6 +126,7 @@ ActiveRecord::Schema.define(version: 20180321011526) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "applications", "persons"
   add_foreign_key "positions_form_fields", "positions_recruitment_forms", column: "recruitment_form_id"
   add_foreign_key "positions_recruitment_forms", "positions"
 end

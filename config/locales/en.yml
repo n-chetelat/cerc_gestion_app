@@ -59,6 +59,11 @@ en:
     - :year
     - :month
     - :day
+    seasons:
+      winter: Winter
+      autumn: Autumn
+      summer: Summer
+      spring: Spring
   datetime:
     distance_in_words:
       about_x_hours:

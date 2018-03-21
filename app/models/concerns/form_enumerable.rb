@@ -5,11 +5,12 @@ module FormEnumerable
     as_enum :form, {
       text: 0,
       textarea: 1,
-      upload: 2,
-      date: 3,
-      select: 4,
-      # checkbox: 5,
-      # radio: 6,
+      upload_single: 2,
+      upload_multiple: 3,
+      date: 4,
+      select: 5,
+      checkbox: 6,
+      radio: 7,
     }
 
     validates :form_cd, presence: true

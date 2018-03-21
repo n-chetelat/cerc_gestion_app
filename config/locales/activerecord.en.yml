@@ -17,6 +17,7 @@ en:
         email: Email
         name: Name
         lastname: Last Name
+        starting_semester: Starting Semester
       form_default: &form_default
         form_cd: Input type
         label_en: English label

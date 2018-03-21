@@ -17,6 +17,7 @@ fr:
         email: Courriel
         name: Prénom
         lastname: Nom
+        starting_semester: Session de début
       form_default: &form_default
         form_cd: Mode de saisie
         label_en: Titre en anglais
