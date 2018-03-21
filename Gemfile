@@ -33,6 +33,9 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Attachments
+gem 'dragonfly', '~> 1.1.4'
+
 # UX helpers
 gem 'jquery-rails'
 gem 'select2-rails'
