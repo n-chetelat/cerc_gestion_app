@@ -1,22 +1,30 @@
 <script>
+import FormFieldMixin from "../../mixins/form-field-mixin.js"
 
 export default {
   name: "InputSelect",
+  mixins: [FormFieldMixin],
   props: {
-    label: {
-      required: true
-    },
-    options: {}
-  }
+    options: {
+      type: Object,
+      default: function () {
+        return { choices: [] }
+      }
+    }
+  },
 }
 </script>
 
 <template lang="pug">
-  div
+  div.input-select
     label.label {{label}}
-    select
+    select(v-model="value")
+      option(:value="null") --
+      option(v-for="choice in options.choices", :value="choice.id") {{choice.label}}
 </template>
 
 <style>
+  .input-select {
 
+  }
 </style>

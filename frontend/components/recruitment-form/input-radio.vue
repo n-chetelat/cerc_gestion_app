@@ -1,22 +1,38 @@
 <script>
+import FormFieldMixin from "../../mixins/form-field-mixin.js"
 
 export default {
   name: "InputRadio",
+  mixins: [FormFieldMixin],
   props: {
-    label: {
-      required: true
-    },
-    options: {}
+    options: {
+      type: Object,
+      default: function () {
+        return { choices: [] }
+      }
+    }
   }
 }
 </script>
 
 <template lang="pug">
-  div
+  div.input-radio
     label.label {{label}}
-    input(type="radio")
+    fieldset
+      span(v-for="choice in options.choices")
+        label.radio {{choice.label}}
+        input(type="radio", :value="choice.id", v-model="value")
 </template>
 
 <style>
+  .input-radio fieldset {
+    display: inline-block;
+    max-width: 20em;
+    border: none;
+  }
 
+  .input-radio label.radio {
+    margin: 5px 5px 0 15px;
+    display: inline-block;
+  }
 </style>

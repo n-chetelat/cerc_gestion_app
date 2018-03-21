@@ -1,22 +1,21 @@
 <script>
+import FormFieldMixin from "../../mixins/form-field-mixin.js"
 
 export default {
   name: "InputTextarea",
-  props: {
-    label: {
-      required: true
-    },
-    options: {}
-  }
+  mixins: [FormFieldMixin],
 }
 </script>
 
 <template lang="pug">
-  div
+  div.input-textarea
     label.label {{label}}
-    textarea
+    textarea(v-model="value")
 </template>
 
 <style>
+  .input-textarea textarea {
+    width: 20em;
+  }
 
 </style>

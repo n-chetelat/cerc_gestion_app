@@ -1,7 +1,7 @@
 <script>
 
 export default {
-  name: "InputUpload",
+  name: "InputUploadSingle",
   props: {
     label: {
       required: true

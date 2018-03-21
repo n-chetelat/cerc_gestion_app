@@ -14,6 +14,7 @@ module Positions
     def self.common_fields
       fields = [:name, :lastname, :email].map do |attr|
         {
+          id: attr.to_s,
           label: ActionController::Base.helpers.t("activerecord.attributes.positions/recruitment_form.#{attr}"),
           options: {},
           type: "input-text"
@@ -21,6 +22,7 @@ module Positions
       end
 
         fields << {
+          id: "starting_semester",
           label: ActionController::Base.helpers.t("activerecord.attributes.positions/recruitment_form.starting_semester"),
           options: { choices: generate_next_admission_dates },
           type: "input-select"

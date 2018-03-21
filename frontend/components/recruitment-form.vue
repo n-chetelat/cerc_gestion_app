@@ -6,7 +6,8 @@ import SceneMixin from 'mixins/scene-mixin.js'
 import LocaleSwitcher from './shared/locale-switcher.vue'
 
 import InputText from './recruitment-form/input-text.vue'
-import InputUpload from './recruitment-form/input-upload.vue'
+import InputUploadSingle from './recruitment-form/input-upload-single.vue'
+import InputUploadMultiple from './recruitment-form/input-upload-multiple.vue'
 import InputTextarea from './recruitment-form/input-textarea.vue'
 import InputCheckbox from './recruitment-form/input-checkbox.vue'
 import InputRadio from './recruitment-form/input-radio.vue'
@@ -52,7 +53,8 @@ import InputSelect from './recruitment-form/input-select.vue'
     components: {
       LocaleSwitcher,
       InputText,
-      InputUpload,
+      InputUploadSingle,
+      InputUploadMultiple,
       InputCheckbox,
       InputRadio,
       InputDate,
@@ -75,7 +77,7 @@ import InputSelect from './recruitment-form/input-select.vue'
               option(:value="null") --
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
           div.position-fields(v-if="applicationForm && !generatingForm")
-            component.form-row(v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options")
+            component.form-row(v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id")
   </template>
 
   <style>
@@ -107,10 +109,6 @@ import InputSelect from './recruitment-form/input-select.vue'
       margin-right: 10px;
       vertical-align: middle;
       text-align: right;
-    }
-
-    .application-form input[type="text"] {
-      width: 20em;
     }
 
     .position-select {

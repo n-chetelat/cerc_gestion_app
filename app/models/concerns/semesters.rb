@@ -22,7 +22,9 @@ module Semesters
       (count - 1).times do |i|
         semesters << semesters[-1] + 6.months
       end
-      semesters.map {|semester| self.semester_to_s(semester) }
+      semesters.map do |semester|
+        {id: semester.to_s, label: self.semester_to_s(semester)}
+      end
     end
 
     def semester_to_s(semester_date)

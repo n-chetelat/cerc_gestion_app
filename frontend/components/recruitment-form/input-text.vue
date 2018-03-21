@@ -1,22 +1,22 @@
 <script>
 
+import FormFieldMixin from "../../mixins/form-field-mixin.js"
+
 export default {
   name: "InputText",
-  props: {
-    label: {
-      required: true
-    },
-    options: {}
-  }
+  mixins: [FormFieldMixin],
 }
 </script>
 
 <template lang="pug">
-  div
+  div.input-text
     label.label {{label}}
-    input(type="text")
+    input(type="text", v-model="value")
 </template>
 
 <style>
+.input-text input {
+  width: 20em;
+}
 
 </style>
