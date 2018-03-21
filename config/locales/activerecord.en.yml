@@ -11,15 +11,20 @@ en:
   activerecord:
     models:
       admin_user: Admin Users
-      positions/requirement: Requirements
       recruitment_info: Recruitment Information
     attributes:
+      default: &default
+        email: Email
+        name: Name
+        lastname: Last Name
       form_default: &form_default
         form_cd: Input type
         label_en: English label
         label_fr: French label
       admin_user:
-        email: Email
+        <<: *default
+      positions/recruitment_form:
+        <<: *default
       positions/form_field:
         <<: *form_default
       recruitment_info:

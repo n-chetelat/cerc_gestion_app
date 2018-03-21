@@ -11,18 +11,22 @@ fr:
   activerecord:
     models:
       admin_user: Administateurs
-      positions/requirement: 	Pré-requis
       recruitment_info: Information
     attributes:
+      default: &default
+        email: Courriel
+        name: Prénom
+        lastname: Nom
       form_default: &form_default
         form_cd: Mode de saisie
         label_en: Titre en anglais
         label_fr: Titre en français
       admin_user:
-        email: Courriel
+        <<: *default
+      positions/recruitment_form:
+        <<: *default
       positions/form_field:
         <<: *form_default
       recruitment_info:
         contnet_en: Contenu en anglais
         content_fr: Contenu en français
-      

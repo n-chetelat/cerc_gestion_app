@@ -7,11 +7,10 @@ ActiveAdmin.register Position do
       ] + Positions::FormField.globalize_attribute_names)
     ]
 
-  filter :title
+  config.filters = false
 
   index do
     selectable_column
-    id_column
     column :title
     column :updated_at
     actions
@@ -39,16 +38,17 @@ ActiveAdmin.register Position do
         end
       end
       panel "Recruitment Form" do
-
+        para "N.B: Besides the fields below, each position form asks for name, last name, and email address."
         f.inputs "", for: [:recruitment_form, f.object.recruitment_form || Positions::RecruitmentForm.new] do |a|
           a.has_many :form_fields, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
-            # b.input :requirement_id, as: :select, collection: Positions::Requirement.limit(5).map {|req| [req.label, req.id] }, input_html: {class: "select2", data: {:placeholder => "Choose a requirement", "ajax--url" => autocomplete_admin_positions_requirements_url(:format => :json)}}
             Globalize.with_locale(:en) do
               b.input :label_en, label: "Label (en)"
             end
             Globalize.with_locale(:fr) do
               b.input :label_fr, label: "Label (fr)"
             end
+
+
             b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true), input_html: {class: "select2"}
           end
         end

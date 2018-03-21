@@ -7,7 +7,8 @@ module Api
 
     def form
       @resource = Position.find(params[:id].try(:to_i))
-      @form_fields = @resource.recruitment_form.form_fields.order(position: :asc).map do |field|
+      @form_fields = Positions::RecruitmentForm.common_fields
+      @form_fields += @resource.recruitment_form.form_fields.order(position: :asc).map do |field|
         field.attributes.symbolize_keys.slice(:label, :options).merge(type: "input-#{field.form}")
       end
 

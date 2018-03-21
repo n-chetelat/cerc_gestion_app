@@ -1,6 +1,8 @@
 ActiveAdmin.register AdminUser do
   permit_params :email, :password, :password_confirmation
 
+  config.filters = false
+
   index do
     selectable_column
     id_column
@@ -9,8 +11,6 @@ ActiveAdmin.register AdminUser do
     column :created_at
     actions
   end
-
-  filter :email
 
   form do |f|
     f.inputs do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180320153901) do
+ActiveRecord::Schema.define(version: 20180321001142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,12 +83,6 @@ ActiveRecord::Schema.define(version: 20180320153901) do
     t.string "label", null: false
     t.index ["locale"], name: "index_positions_requirement_translations_on_locale"
     t.index ["positions_requirement_id"], name: "index_758f0a08048846c3abd13663ef37786654691ba1"
-  end
-
-  create_table "positions_requirements", force: :cascade do |t|
-    t.integer "form_cd"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "recruitment_info_translations", force: :cascade do |t|
