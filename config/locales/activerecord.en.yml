@@ -7,7 +7,8 @@ en:
       radio: Radio button
       date: Date
       select: Pull-down menu
-      upload: Upload
+      upload_single: Upload (single file)
+      upload_multiple: Upload (multiple files)
   activerecord:
     models:
       admin_user: Admin Users

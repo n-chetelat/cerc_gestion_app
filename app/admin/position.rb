@@ -3,7 +3,7 @@ ActiveAdmin.register Position do
 
   permit_params translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
-      :id, :_destroy, :position, :form_cd
+      :id, :_destroy, :position, :form_cd, :choices,
       ] + Positions::FormField.globalize_attribute_names)
     ]
 
@@ -38,7 +38,7 @@ ActiveAdmin.register Position do
         end
       end
       panel "Recruitment Form" do
-        para "N.B: Besides the fields below, each position form asks for name, last name, and email address."
+        para "N.B: Besides the fields below, each position's form asks for: #{Positions::RecruitmentForm.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"
         f.inputs "", for: [:recruitment_form, f.object.recruitment_form || Positions::RecruitmentForm.new] do |a|
           a.has_many :form_fields, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
             Globalize.with_locale(:en) do
@@ -49,7 +49,8 @@ ActiveAdmin.register Position do
             end
 
 
-            b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true), input_html: {class: "select2"}
+          b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true), input_html: {class: "select2 has-choices"}
+          b.input :choices, as: :text, placeholder: "Choice one in English; Choice one in French \nChoice two in English; Choice two in French", hint: "Separate translations (English, then French) by a semi-colon (;) and choices by a new line.", wrapper_html: {class: "hideable"}
           end
         end
 

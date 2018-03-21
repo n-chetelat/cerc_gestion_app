@@ -7,7 +7,8 @@ fr:
       radio: Case d'option
       date: Date
       select: Menu déroulant
-      upload: Téléversement
+      upload_single: Téléversement (un seule fichier)
+      upload_multiple: Téléversement (plusieurs fichiers)
   activerecord:
     models:
       admin_user: Administateurs

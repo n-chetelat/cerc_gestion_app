@@ -3,6 +3,7 @@
 //= require select2
 //= require activeadmin-orderable
 //= require tinymce
+//= require position
 
 $(document)
 .ready(function() {

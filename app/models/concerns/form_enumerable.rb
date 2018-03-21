@@ -14,6 +14,12 @@ module FormEnumerable
     }
 
     validates :form_cd, presence: true
+
+    NEED_CHOICES = [5, 6, 7]
+  end
+
+  def needs_choices?
+    NEED_CHOICES.include?(self.form_cd)
   end
 
   module ClassMethods

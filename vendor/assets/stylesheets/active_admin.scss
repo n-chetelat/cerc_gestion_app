@@ -18,3 +18,17 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+.hideable {
+  display: none
+}
+
+p.inline-hints {
+  font-weight: bold;
+}
+
+p.form-note {
+  font-weight: bold;
+  font-size: 1.2em;
+  text-align: center;
+}
