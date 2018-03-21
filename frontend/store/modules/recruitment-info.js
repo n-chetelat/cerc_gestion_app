@@ -9,13 +9,14 @@ const state = {
 
 // getters
 const getters = {
+  endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   recruitmentInfo: state => state.info,
 }
 
 // actions
 const actions = {
   getRecruitmentInfo({ commit, getters }) {
-    return axios.get(BASE_URL).then(({ data }) => {
+    return axios.get(getters.endpoint).then(({ data }) => {
       commit('setRecruitmentInfo', data.content)
     })
   },
