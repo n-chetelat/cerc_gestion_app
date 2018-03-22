@@ -1,6 +1,6 @@
 <script>
 import FormFieldMixin from "../../mixins/form-field-mixin.js"
-import axios from "axios"
+
 import { find, difference } from "lodash-es"
 
 export default {
@@ -8,13 +8,8 @@ export default {
   mixins: [FormFieldMixin],
   data() {
     return {
-      fileList: [],
+      value: [],
     }
-  },
-  computed: {
-    inputName() {
-      return `input_upload_multiple_${this.fieldId}`
-    },
   },
   methods: {
     onChange(files) {
@@ -22,21 +17,14 @@ export default {
 
       const that = this
       Array.from(Array(files.length).keys()).map((index) => {
-        if (!find(that.fileList, (file) =>  file.name === files[index].name)) {
-          that.fileList.push(files[index])
+        if (!find(that.value, (file) =>  file.name === files[index].name)) {
+          that.value.push(files[index])
         }
       })
     },
     removeFile(file) {
-      this.fileList = difference(this.fileList, [file])
+      this.value = difference(this.value, [file])
     },
-    // send() {
-    //   this.value = new FormData()
-    //   this.fileList.forEach((file, index) => {
-    //     this.value.append(`${this.inputName}[${index}]`, file, file.name)
-    //   })
-    //   axios.post("/", this.value).then((h) => {debugger})
-    // },
   }
 }
 </script>
@@ -46,7 +34,7 @@ export default {
     label.label {{label}}
     input(type="file", accept=".pdf", multiple, @change="onChange($event.target.files)")
     ul.file-list
-      li(v-for="file in fileList") {{file.name}}
+      li(v-for="file in value") {{file.name}}
         button.remove(type="button", @click="removeFile(file)") x
 </template>
 
@@ -61,12 +49,4 @@ export default {
   .file-list li {
     margin-top: 3px;
   }
-
-  .remove {
-    margin: auto 15px;
-    width: 1.7em;
-    height: 1.7em;
-    padding: 2px;
-  }
-
 </style>

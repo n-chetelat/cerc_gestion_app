@@ -3,6 +3,9 @@ export default {
     fieldId: {
       required: true
     },
+    fieldType: {
+      required: true
+    },
     label: {
       required: true
     },
@@ -12,5 +15,13 @@ export default {
     return {
       value: null
     }
+  },
+  computed: {
+    fieldData() {
+      return this.value
+    },
+    inputName() {
+      return `${this.fieldType.replace(/-/g, "_")}_${this.fieldId}`
+    },
   }
 }

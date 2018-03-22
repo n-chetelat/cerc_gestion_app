@@ -24,6 +24,8 @@ import InputSelect from './recruitment-form/input-select.vue'
         },
         applicationForm: null,
         generatingForm: false,
+        sending: false,
+        savedApplication: null,
       }
     },
     async created() {
@@ -37,6 +39,7 @@ import InputSelect from './recruitment-form/input-select.vue'
     methods: {
       ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
       ...mapActions("recruitmentInfo", ["getRecruitmentInfo"]),
+      ...mapActions("application", ["sendApplication"]),
       async generatePositionForm() {
         if (!this.application.positionId) {
           this.applicationForm = null
@@ -49,6 +52,11 @@ import InputSelect from './recruitment-form/input-select.vue'
           this.generatingForm = false
         }
       },
+      async submitApplication() {
+        this.sending = true
+        this.savedApplication = await this.sendApplication(this.$refs.field)
+        this.sending = false
+      }
     },
     components: {
       LocaleSwitcher,
@@ -77,7 +85,8 @@ import InputSelect from './recruitment-form/input-select.vue'
               option(:value="null") --
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
           div.position-fields(v-if="applicationForm && !generatingForm")
-            component.form-row(v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id")
+            component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
+          button(type="button", @click="submitApplication") Send
   </template>
 
   <style>

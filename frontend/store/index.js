@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import locales from './modules/locales'
 import recruitmentInfo from './modules/recruitment-info'
 import positions from './modules/positions'
+import application from './modules/application'
 
 Vue.use(Vuex)
 
@@ -15,5 +16,6 @@ export default new Vuex.Store({
     locales,
     recruitmentInfo,
     positions,
+    application,
   },
 })
