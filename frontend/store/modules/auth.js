@@ -19,7 +19,7 @@ const actions = {
     return axios.get(BASE_URL).then(({ data }) => {
       commit('setAuthenticated', data.authenticated)
     })
-  },
+  }
 }
 
 // mutations

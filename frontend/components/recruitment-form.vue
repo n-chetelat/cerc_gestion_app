@@ -70,7 +70,7 @@ import InputSelect from './recruitment-form/input-select.vue'
         locale-switcher.locale-switcher
       div.information(v-html="recruitmentInfo")
       div.application-form
-        form
+        form(enctype="multipart/form-data")
           div.form-row.position-select
             label.label Position
             select(v-model="application.positionId", @change="generatePositionForm")
@@ -120,6 +120,17 @@ import InputSelect from './recruitment-form/input-select.vue'
       padding: .7em;
       width: 20em;
       background-color: white;
+    }
+
+    .application-form .choice-group {
+      display: inline-block;
+      max-width: 20em;
+      border: none;
+    }
+
+    .application-form .choice-group label {
+      margin: 5px 5px 0 15px;
+      display: inline-block;
     }
 
   </style>

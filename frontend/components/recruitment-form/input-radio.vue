@@ -18,21 +18,12 @@ export default {
 <template lang="pug">
   div.input-radio
     label.label {{label}}
-    fieldset
+    fieldset.choice-group
       span(v-for="choice in options.choices")
         label.radio {{choice.label}}
         input(type="radio", :value="choice.id", v-model="value")
 </template>
 
 <style>
-  .input-radio fieldset {
-    display: inline-block;
-    max-width: 20em;
-    border: none;
-  }
 
-  .input-radio label.radio {
-    margin: 5px 5px 0 15px;
-    display: inline-block;
-  }
 </style>

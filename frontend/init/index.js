@@ -9,6 +9,9 @@ import router from '../router'
 import App from '../components/app.vue'
 import AppAdmin from '../components/app-admin.vue'
 
+import axios from "axios"
+axios.defaults.headers.common["X-CSRF-TOKEN"] = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+
 document.addEventListener('DOMContentLoaded', () => {
   let options = { store }
   let el = document.getElementById("app-admin")
