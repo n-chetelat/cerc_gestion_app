@@ -8,6 +8,10 @@ class PagesController < ApplicationController
     end
   end
 
+  def upload
+    0/0
+  end
+
   def admin
   end
 

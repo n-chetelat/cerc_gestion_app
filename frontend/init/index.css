@@ -8,6 +8,17 @@ html, body {
   font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
+button {
+  background-color: white;
+  padding: 15px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+button:hover {
+  text-decoration: underline;
+}
+
 .wrapper {
   width: 90%;
   max-width: 960px;

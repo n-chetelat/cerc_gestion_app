@@ -27,15 +27,4 @@ export default {
     display: inline-block;
   }
 
-  .locale-switcher button {
-    background-color: white;
-    padding: 15px;
-    border: 1px solid black;
-    cursor: pointer;
-  }
-
-  .locale-switcher button:hover {
-    text-decoration: underline;
-  }
-
 </style>

@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     ActiveAdmin.routes(self)
 
     get "/", to: "pages#home"
-
+    post "/", to: "pages#upload"
     namespace "api", defaults: {format: "json"} do
       resources :positions, only: [:index] do
         get :form, on: :member
