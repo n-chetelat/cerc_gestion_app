@@ -6,6 +6,7 @@ class Position < ApplicationRecord
   end
 
   has_one :recruitment_form, class_name: "Positions::RecruitmentForm", dependent: :destroy
+  has_many :application, foreign_key: "position_id"
 
   accepts_nested_attributes_for :recruitment_form
 

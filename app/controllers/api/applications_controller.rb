@@ -10,9 +10,8 @@ module Api
     end
 
     def create
-      @resource = Application.new
-      ApplicationService.build_application(@resource, params)
-      if @resource.save
+      if @resource = ApplicationService.create_application(params)
+        0/0
         render :show
       else
         render json: {

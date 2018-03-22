@@ -19,9 +19,7 @@ import InputSelect from './recruitment-form/input-select.vue'
     mixins: [SceneMixin],
     data() {
       return {
-        application: {
-          positionId: null
-        },
+        positionId: null,
         applicationForm: null,
         generatingForm: false,
         sending: false,
@@ -41,20 +39,21 @@ import InputSelect from './recruitment-form/input-select.vue'
       ...mapActions("recruitmentInfo", ["getRecruitmentInfo"]),
       ...mapActions("application", ["sendApplication"]),
       async generatePositionForm() {
-        if (!this.application.positionId) {
+        if (!this.positionId) {
           this.applicationForm = null
         } else {
           this.generatingForm = true
-          await this.getPositionForm(this.application.positionId).then(() => {
+          await this.getPositionForm(this.positionId).then(() => {
           })
-          const form = this.positionFormsById[this.application.positionId]
+          const form = this.positionFormsById[this.positionId]
           this.applicationForm = form
           this.generatingForm = false
         }
       },
       async submitApplication() {
         this.sending = true
-        this.savedApplication = await this.sendApplication(this.$refs.field)
+        this.savedApplication = await this.sendApplication([...this.$refs.field,
+          {value: this.positionId, inputName: "position_id"}])
         this.sending = false
       }
     },
@@ -81,7 +80,7 @@ import InputSelect from './recruitment-form/input-select.vue'
         form(enctype="multipart/form-data")
           div.form-row.position-select
             label.label Position
-            select(v-model="application.positionId", @change="generatePositionForm")
+            select(v-model="positionId", @change="generatePositionForm")
               option(:value="null") --
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
           div.position-fields(v-if="applicationForm && !generatingForm")
