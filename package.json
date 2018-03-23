@@ -11,8 +11,7 @@
     "vue-loader": "^14.2.1",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.16",
-    "vuex": "^3.0.1",
-    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
