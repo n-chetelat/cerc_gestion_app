@@ -9,6 +9,12 @@ ActiveAdmin.register Position do
 
   config.filters = false
 
+  sidebar :action, only: [:show] do
+    para do
+      button_to "Duplicate", duplicate_admin_position_path(resource), data: {confirm: "Are you sure?", disable_with: "In process..."}
+    end
+  end
+
   index do
     selectable_column
     column :title
@@ -57,6 +63,11 @@ ActiveAdmin.register Position do
       end
     end
     f.actions
+  end
+
+  member_action :duplicate, :method => [:post] do
+    resource.duplicate!
+    redirect_to admin_positions_path
   end
 
 end

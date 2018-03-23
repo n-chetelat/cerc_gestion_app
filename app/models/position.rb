@@ -13,4 +13,28 @@ class Position < ApplicationRecord
   validates_presence_of :recruitment_form
   validates_associated :recruitment_form
 
+  def duplicate!
+    self.with_lock do
+      copy = self.class.new
+      self.translations.each do |translation|
+        tr = copy.translations.build(translation.attributes.slice("locale", "title"))
+        tr.title = "#{tr.title} - Copy"
+      end
+      form = copy.build_recruitment_form
+      copy.save!
+
+      self.recruitment_form.form_fields.each do |field|
+        new_field = form.form_fields.build(field.attributes
+          .slice("position", "form_cd", "options"))
+        field.translations.each do |translation|
+          tr = new_field.translations.build(translation.attributes.slice("locale", "label"))
+          tr.label = "#{tr.label}"
+        end
+      end
+
+      copy.save!
+      copy
+    end
+  end
+
 end

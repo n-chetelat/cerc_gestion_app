@@ -17,13 +17,12 @@ export default {
 </script>
 
 <template lang="pug">
-  div
+  div.input-upload-single
     label.label {{label}}
     input(type="file", accept=".pdf", @change="onChange($event.target.files)")
-    p(v-if="value") {{value.name}}
+    p.file-list(v-if="value") {{value.name}}
       button.remove(type="button", @click="removeFile") x
 </template>
 
 <style>
-
 </style>

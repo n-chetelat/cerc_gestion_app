@@ -11,7 +11,6 @@ module Api
 
     def create
       if @resource = ApplicationService.create_application(params)
-        0/0
         render :show
       else
         render json: {

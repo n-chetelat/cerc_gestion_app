@@ -85,7 +85,8 @@ import InputSelect from './recruitment-form/input-select.vue'
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
           div.position-fields(v-if="applicationForm && !generatingForm")
             component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
-          button(type="button", @click="submitApplication") Send
+            div.form-row
+              button.submit(type="button", @click="submitApplication") Send
   </template>
 
   <style>
@@ -139,6 +140,29 @@ import InputSelect from './recruitment-form/input-select.vue'
     .application-form .choice-group label {
       margin: 5px 5px 0 15px;
       display: inline-block;
+    }
+
+    .file-list {
+      list-style: none;
+      max-width: 20em;
+      margin: auto;
+    }
+
+    .file-list li {
+      margin-top: 3px;
+    }
+
+    button.remove {
+      margin: auto 15px;
+      width: 1.7em;
+      height: 1.7em;
+      padding: 2px;
+    }
+
+    .submit {
+      width: 20em;
+      margin: auto;
+      display: block;
     }
 
   </style>

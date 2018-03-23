@@ -12,4 +12,13 @@ class Person < ApplicationRecord
     end
   end
 
+  def full_name
+    [self.name, self.lastname].map(&:presence)
+      .compact.joins(" ")
+  end
+
+  def to_s
+    self.full_name
+  end
+
 end

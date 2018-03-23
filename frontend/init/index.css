@@ -19,13 +19,6 @@ button:hover {
   text-decoration: underline;
 }
 
-button.remove {
-  margin: auto 15px;
-  width: 1.7em;
-  height: 1.7em;
-  padding: 2px;
-}
-
 .wrapper {
   width: 90%;
   max-width: 960px;
