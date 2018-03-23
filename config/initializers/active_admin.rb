@@ -228,6 +228,7 @@ ActiveAdmin.setup do |config|
       admin.build_menu :default do |menu|
         menu.add label: "Recruitment" do |recruitment|
           recruitment.add label: "Recruitment Info", url: "/admin/recruitment_infos/1"
+          recruitment.add label: "Applications", url: "/#/admin/applications"
         end
       end
     end
