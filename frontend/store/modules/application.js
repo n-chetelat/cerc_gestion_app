@@ -19,7 +19,7 @@ const actions = {
   sendApplication({ commit, getters }, values) {
     const formData = new FormData()
     const data = Array.from(values).forEach((value) => {
-      if (value.value.constructor === Array) {
+      if (value.value && (value.value.constructor === Array)) {
         value.value.forEach((item, index) => {
           formData.append(`${value.inputName}[${index}]`, item)
         })

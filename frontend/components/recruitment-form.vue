@@ -76,7 +76,7 @@ import InputSelect from './recruitment-form/input-select.vue'
 
   <template lang="pug">
     div.recruitment-form(v-if="loaded")
-      div.loading-overlay(v-if="sending")
+      //- div.loading-overlay(v-if="sending")
       nav
         locale-switcher.locale-switcher
       div.information(v-html="recruitmentInfo")
