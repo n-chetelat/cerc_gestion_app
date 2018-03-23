@@ -23,6 +23,7 @@ import InputSelect from './recruitment-form/input-select.vue'
         applicationForm: null,
         generatingForm: false,
         sending: false,
+        applicationSent: false,
         savedApplication: null,
       }
     },
@@ -54,6 +55,8 @@ import InputSelect from './recruitment-form/input-select.vue'
         this.sending = true
         this.savedApplication = await this.sendApplication([...this.$refs.field,
           {value: this.positionId, inputName: "position_id"}])
+        this.applicationForm = null
+        this.applicationSent = true
         this.sending = false
       }
     },
@@ -73,12 +76,13 @@ import InputSelect from './recruitment-form/input-select.vue'
 
   <template lang="pug">
     div.recruitment-form(v-if="loaded")
+      div.loading-overlay(v-if="sending")
       nav
         locale-switcher.locale-switcher
       div.information(v-html="recruitmentInfo")
       div.application-form
         form(enctype="multipart/form-data")
-          div.form-row.position-select
+          div.form-row.position-select(v-if="!applicationSent")
             label.label Position
             select(v-model="positionId", @change="generatePositionForm")
               option(:value="null") --
@@ -87,9 +91,21 @@ import InputSelect from './recruitment-form/input-select.vue'
             component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
             div.form-row
               button.submit(type="button", @click="submitApplication") Send
+          div.info-message(v-if="applicationSent")
+            p Your application has been sent.
+            p You will hear from us soon.
   </template>
 
   <style>
+
+  .loading-overlay {
+    width: 100%;
+    height: 1000px;
+    position: absolute;
+    top: 0;
+    /* background-color: rgba(0, 0, 0, .5); */
+    left: 0;
+  }
 
     .recruitment-form nav {
       width: 100%;
@@ -163,6 +179,12 @@ import InputSelect from './recruitment-form/input-select.vue'
       width: 20em;
       margin: auto;
       display: block;
+    }
+
+    .info-message {
+      text-align: center;
+      width: 33%;
+      margin: auto;
     }
 
   </style>

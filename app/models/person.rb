@@ -14,7 +14,7 @@ class Person < ApplicationRecord
 
   def full_name
     [self.name, self.lastname].map(&:presence)
-      .compact.joins(" ")
+      .compact.join(" ")
   end
 
   def to_s
