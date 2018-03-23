@@ -43,23 +43,25 @@ ActiveAdmin.register Position do
           t.input :title
         end
       end
-      panel "Recruitment Form" do
-        para "N.B: Besides the fields below, each position's form asks for: #{Positions::RecruitmentForm.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"
-        f.inputs "", for: [:recruitment_form, f.object.recruitment_form || Positions::RecruitmentForm.new] do |a|
-          a.has_many :form_fields, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
-            Globalize.with_locale(:en) do
-              b.input :label_en, label: "Label (en)"
-            end
-            Globalize.with_locale(:fr) do
-              b.input :label_fr, label: "Label (fr)"
-            end
+      if !f.object.new_record?
+        panel "Recruitment Form" do
+          para "N.B: Besides the fields below, each position's form asks for: #{Positions::RecruitmentForm.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"
+          f.inputs "", for: [:recruitment_form, f.object.recruitment_form || Positions::RecruitmentForm.new] do |a|
+            a.has_many :form_fields, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
+              Globalize.with_locale(:en) do
+                b.input :label_en, label: "Label (en)"
+              end
+              Globalize.with_locale(:fr) do
+                b.input :label_fr, label: "Label (fr)"
+              end
 
 
-          b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true), input_html: {class: "select2 has-choices"}
-          b.input :choices, as: :text, placeholder: "Choice one in English; Choice one in French \nChoice two in English; Choice two in French", hint: "Separate translations (English, then French) by a semi-colon (;) and choices by a new line.", wrapper_html: {class: "hideable"}
+            b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true), input_html: {class: "select2 has-choices"}
+            b.input :choices, as: :text, placeholder: "Choice one in English; Choice one in French \nChoice two in English; Choice two in French", hint: "Separate translations (English, then French) by a semi-colon (;) and choices by a new line.", wrapper_html: {class: "hideable"}
+            end
           end
-        end
 
+        end
       end
     end
     f.actions
