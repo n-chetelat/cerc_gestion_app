@@ -22,12 +22,19 @@ import InputSelect from './recruitment-form/input-select.vue'
         positionId: null,
         applicationForm: null,
         applicationSent: false,
+        translations: {
+          send: {en: "Send", fr: "Envoyer"},
+          position: {en: "Select the type of application you wish to send",
+            fr: "Sélectionnez le type d'application que vous désirez envoyer"
+          }
+        }
       }
     },
     async created() {
       await this.fetchInitialData()
     },
     computed: {
+      ...mapGetters("locales", ["currentLocale"]),
       ...mapGetters("positions", ["allPositions", "positionFormsById"]),
       ...mapGetters("recruitmentInfo", ["recruitmentInfo"]),
     },
@@ -88,7 +95,7 @@ import InputSelect from './recruitment-form/input-select.vue'
         form(enctype="multipart/form-data")
 
           div.position-select
-            label.label Position
+            label.label {{translations["position"][currentLocale]}}
             select(v-model="positionId", @change="generatePositionForm")
               option(:value="null") --
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
@@ -96,7 +103,7 @@ import InputSelect from './recruitment-form/input-select.vue'
           div.position-fields(v-if="applicationForm && !loading")
             component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
             div.form-row
-              button.submit(type="button", @click="submitApplication") Send
+              button.submit(type="button", @click="submitApplication") {{translations["send"][currentLocale]}}
 
       div.info-message(v-else)
           p Your application has been sent.
