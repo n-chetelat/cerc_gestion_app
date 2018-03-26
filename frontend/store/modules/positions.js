@@ -13,7 +13,7 @@ const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   allPositions: state => state.all,
   positionForms: state => state.forms,
-  positionFormsById: (state, getters) => keyBy(getters.positionForms, 'position_id'),
+  positionFormsById: (state, getters) => keyBy(getters.positionForms, 'position_id')
 }
 
 // actions

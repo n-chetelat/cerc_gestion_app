@@ -21,10 +21,7 @@ import InputSelect from './recruitment-form/input-select.vue'
       return {
         positionId: null,
         applicationForm: null,
-        generatingForm: false,
-        sending: false,
         applicationSent: false,
-        savedApplication: null,
       }
     },
     async created() {
@@ -50,20 +47,19 @@ import InputSelect from './recruitment-form/input-select.vue'
         if (!this.positionId) {
           this.applicationForm = null
         } else {
-          this.generatingForm = true
+          this.loading = true
           await this.getPositionForm(this.positionId)
-          const form = this.positionFormsById[this.positionId]
-          this.applicationForm = form
-          this.generatingForm = false
+          this.applicationForm = this.positionFormsById[this.positionId]
+          this.loading = false
         }
       },
       async submitApplication() {
-        this.sending = true
-        this.savedApplication = await this.sendApplication([...this.$refs.field,
+        this.loading = true
+        await this.sendApplication([...this.$refs.field,
           {value: this.positionId, inputName: "position_id"}])
         this.applicationForm = null
         this.applicationSent = true
-        this.sending = false
+        this.loading = false
       }
     },
     components: {
@@ -97,7 +93,7 @@ import InputSelect from './recruitment-form/input-select.vue'
               option(:value="null") --
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
 
-          div.position-fields(v-if="applicationForm && !generatingForm")
+          div.position-fields(v-if="applicationForm && !loading")
             component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
             div.form-row
               button.submit(type="button", @click="submitApplication") Send
