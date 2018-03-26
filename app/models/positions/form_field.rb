@@ -11,7 +11,7 @@ module Positions
     translates :label
     globalize_accessors :locales => [:en, :fr], :attributes => [:label]
 
-    acts_as_list scope: :recruitment_form, top_of_list: 0
+    acts_as_list scope: :recruitment_form
 
     def choices=(ch)
       super

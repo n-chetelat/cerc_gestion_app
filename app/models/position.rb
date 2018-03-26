@@ -12,6 +12,9 @@ class Position < ApplicationRecord
 
   accepts_nested_attributes_for :recruitment_form
 
+  scope :visible, -> { where(hidden: false) }
+  scope :hidden, -> { where(hidden: true) }
+
   def duplicate!
     self.with_lock do
       copy = self.class.new
@@ -22,7 +25,7 @@ class Position < ApplicationRecord
       form = copy.build_recruitment_form
       copy.save!
 
-      self.recruitment_form.form_fields.each do |field|
+      self.recruitment_form.form_fields.order(position: :asc).each do |field|
         new_field = form.form_fields.build(field.attributes
           .slice("position", "form_cd", "options"))
         field.translations.each do |translation|

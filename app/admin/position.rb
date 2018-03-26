@@ -1,7 +1,12 @@
 ActiveAdmin.register Position do
   menu parent: "Recruitment"
 
-  permit_params translations_attributes: [:id, :locale, :_destroy, :title],
+  scope :all, default: true
+  scope :visible
+  scope :hidden
+
+  permit_params :hidden,
+  translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
       :id, :_destroy, :position, :form_cd, :choices,
       ] + Positions::FormField.globalize_attribute_names)
@@ -18,6 +23,7 @@ ActiveAdmin.register Position do
   index do
     selectable_column
     column :title
+    column :hidden
     column :updated_at
     actions
   end
@@ -25,6 +31,7 @@ ActiveAdmin.register Position do
   show do
     attributes_table do
       row :title
+      row :hidden
     end
     panel "Recruitment Form" do
       table_for resource.recruitment_form.form_fields.order(position: :asc) do
@@ -43,6 +50,7 @@ ActiveAdmin.register Position do
           t.input :title
         end
       end
+      f.input :hidden
       if !f.object.new_record?
         panel "Recruitment Form" do
           para "N.B: Besides the fields below, each position's form asks for: #{Positions::RecruitmentForm.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"

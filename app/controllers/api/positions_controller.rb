@@ -2,7 +2,7 @@ module Api
   class PositionsController < ApiController
 
     def index
-      @resources = Position.all
+      @resources = Position.visible
     end
 
     def form

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180322212306) do
+ActiveRecord::Schema.define(version: 20180326182808) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20180322212306) do
   create_table "positions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "hidden", default: false
   end
 
   create_table "positions_form_field_translations", force: :cascade do |t|
