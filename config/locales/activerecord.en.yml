@@ -13,6 +13,7 @@ en:
     models:
       admin_user: Admin Users
       recruitment_info: Recruitment Information
+      phase: Tags
     attributes:
       default: &default
         email: Email

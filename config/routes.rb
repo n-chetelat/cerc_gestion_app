@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       end
       resource :recruitment_info, only: [:show]
       resources :applications, only: [:index, :show, :create, :update, :delete]
+      resources :persons, only: [:index, :show, :update, :delete]
     end
   end
 

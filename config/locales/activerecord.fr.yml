@@ -13,6 +13,7 @@ fr:
     models:
       admin_user: Administateurs
       recruitment_info: Information
+      phase: Tags
     attributes:
       default: &default
         email: Courriel
