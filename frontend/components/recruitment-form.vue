@@ -28,8 +28,7 @@ import InputSelect from './recruitment-form/input-select.vue'
       }
     },
     async created() {
-      await this.getRecruitmentInfo()
-      await this.getAllPositions()
+      await this.fetchInitialData()
     },
     computed: {
       ...mapGetters("positions", ["allPositions", "positionFormsById"]),
@@ -39,13 +38,20 @@ import InputSelect from './recruitment-form/input-select.vue'
       ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
       ...mapActions("recruitmentInfo", ["getRecruitmentInfo"]),
       ...mapActions("application", ["sendApplication"]),
+      async fetchInitialData() {
+        await this.getRecruitmentInfo()
+        await this.getAllPositions()
+      },
+      async fetchAllData() {
+        await this.fetchInitialData()
+        await this.generatePositionForm()
+      },
       async generatePositionForm() {
         if (!this.positionId) {
           this.applicationForm = null
         } else {
           this.generatingForm = true
-          await this.getPositionForm(this.positionId).then(() => {
-          })
+          await this.getPositionForm(this.positionId)
           const form = this.positionFormsById[this.positionId]
           this.applicationForm = form
           this.generatingForm = false
@@ -76,115 +82,107 @@ import InputSelect from './recruitment-form/input-select.vue'
 
   <template lang="pug">
     div.recruitment-form(v-if="loaded")
-      //- div.loading-overlay(v-if="sending")
+
       nav
-        locale-switcher.locale-switcher
-      div.information(v-html="recruitmentInfo")
-      div.application-form
+        locale-switcher.locale-switcher(@switch="fetchAllData")
+
+      div.application-information(v-html="recruitmentInfo")
+
+      div.application-form(v-if="!applicationSent")
         form(enctype="multipart/form-data")
-          div.form-row.position-select(v-if="!applicationSent")
+
+          div.position-select
             label.label Position
             select(v-model="positionId", @change="generatePositionForm")
               option(:value="null") --
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
+
           div.position-fields(v-if="applicationForm && !generatingForm")
             component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
             div.form-row
               button.submit(type="button", @click="submitApplication") Send
-          div.info-message(v-if="applicationSent")
-            p Your application has been sent.
-            p You will hear from us soon.
+
+      div.info-message(v-else)
+          p Your application has been sent.
+          p You will hear from us soon.
   </template>
 
   <style>
 
-  .loading-overlay {
-    width: 100%;
-    height: 1000px;
-    position: absolute;
-    top: 0;
-    /* background-color: rgba(0, 0, 0, .5); */
-    left: 0;
-  }
-
-    .recruitment-form nav {
+  .recruitment-form {
+    & nav {
       width: 100%;
       height: 5em;
+      & .locale-switcher {
+        margin: 1em auto;
+        float: right;
+      }
     }
 
-    .recruitment-form nav .locale-switcher {
-      margin: 1em auto;
-      float: right;
-    }
-
-    .application-form {
+    & .application-form {
       width: 90%;
       margin: auto;
       border-top: 2px solid black;
       padding-top: 20px;
+      & .label {
+        display: inline-block;
+        width: 30%;
+        margin-right: 10px;
+        vertical-align: middle;
+        text-align: right;
+      }
+      & .choice-group {
+        display: inline-block;
+        max-width: 20em;
+        border: none;
+        & label {
+          margin: 5px 5px 0 15px;
+          display: inline-block;
+        }
+      }
+      & .position-select {
+        padding-bottom: 20px;
+        & select {
+          display: inline-block;
+          padding: .7em;
+          width: 20em;
+          background-color: white;
+        }
+      }
+      & .position-fields {
+        & .form-row {
+          margin: 10px auto;
+        }
+      }
     }
+  }
 
-    .position-fields .form-row {
-      margin: 10px auto;
-    }
-
-    .application-form .label {
+  .file-list {
+    list-style: none;
+    padding-left: 0;
+    max-width: 20em;
+    margin: auto;
+    & .file-line {
+      position: relative;
       display: inline-block;
-      width: 30%;
-      margin-right: 10px;
-      vertical-align: middle;
-      text-align: right;
-    }
-
-    .position-select {
-      padding-bottom: 20px;
-    }
-
-    .position-select select {
-      display: inline-block;
-      padding: .7em;
-      width: 20em;
-      background-color: white;
-    }
-
-    .application-form .choice-group {
-      display: inline-block;
-      max-width: 20em;
-      border: none;
-    }
-
-    .application-form .choice-group label {
-      margin: 5px 5px 0 15px;
-      display: inline-block;
-    }
-
-    .file-list {
-      list-style: none;
-      max-width: 20em;
-      margin: auto;
-    }
-
-    .file-list li {
+      height: 2em;
+      line-height: 2em;
       margin-top: 3px;
+      & span {
+        margin-left: 2em;
+      }
     }
+    & .remove {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
 
-    button.remove {
-      margin: auto 15px;
-      width: 1.7em;
-      height: 1.7em;
-      padding: 2px;
-    }
-
-    .submit {
-      width: 20em;
-      margin: auto;
-      display: block;
-    }
-
-    .info-message {
-      text-align: center;
-      width: 33%;
-      margin: auto;
-    }
+  .info-message {
+    text-align: center;
+    width: 33%;
+    margin: auto;
+  }
 
   </style>

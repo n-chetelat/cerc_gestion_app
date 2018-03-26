@@ -34,19 +34,10 @@ export default {
     label.label {{label}}
     input(type="file", accept=".pdf", multiple, @change="onChange($event.target.files)")
     ul.file-list
-      li(v-for="file in value") {{file.name}}
+      li.file-line(v-for="file in value")
+        span {{file.name}}
         button.remove(type="button", @click="removeFile(file)") x
 </template>
 
 <style>
-
-  .file-list {
-    list-style: none;
-    max-width: 20em;
-    margin: auto;
-  }
-
-  .file-list li {
-    margin-top: 3px;
-  }
 </style>

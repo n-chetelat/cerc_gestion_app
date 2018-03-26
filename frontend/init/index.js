@@ -1,7 +1,7 @@
 import "babel-polyfill"
 
 import "./index.css";
-import "./form.css";
+import "./recruitment-info.css";
 
 import Vue from 'vue'
 import store from '../store'

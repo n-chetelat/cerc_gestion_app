@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "lodash-es": "^4.17.7",
     "normalize.css": "^8.0.0",
+    "postcss-nested": "^3.0.0",
     "pug": "^2.0.1",
     "vue": "^2.5.16",
     "vue-loader": "^14.2.1",

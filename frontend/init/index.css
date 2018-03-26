@@ -1,5 +1,9 @@
 @import "normalize.css";
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   font-size: 16px;
 }
@@ -8,28 +12,33 @@ html, body {
   font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
-button {
-  background-color: white;
-  padding: 15px;
-  border: 1px solid black;
-  cursor: pointer;
-}
-
-button:hover {
-  text-decoration: underline;
-}
-
 .wrapper {
   width: 90%;
   max-width: 960px;
   margin: auto;
 }
 
-.information h1 {
-  text-align: center;
-}
+button {
+  background-color: white;
+  padding: 15px;
+  border: 1px solid black;
+  cursor: pointer;
 
-.information p {
-  line-height: 1.4em;
-  margin: 15px 10%;
+  &:hover {
+    text-decoration: underline;
+  }
+  &.remove {
+    width: 1.7em;
+    height: 1.7em;
+    padding: 2px;
+    border: none;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+  }
+  &.submit {
+    width: 20em;
+    margin: auto;
+    display: block;
+  }
 }

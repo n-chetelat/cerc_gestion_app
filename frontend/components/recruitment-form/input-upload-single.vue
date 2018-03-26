@@ -20,9 +20,12 @@ export default {
   div.input-upload-single
     label.label {{label}}
     input(type="file", accept=".pdf", @change="onChange($event.target.files)")
-    p.file-list(v-if="value") {{value.name}}
-      button.remove(type="button", @click="removeFile") x
+    p.file-list(v-if="value")
+      span.file-line
+        span {{value.name}}
+        button.remove(type="button", @click="removeFile") x
 </template>
 
 <style>
+
 </style>

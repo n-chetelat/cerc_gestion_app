@@ -24,7 +24,4 @@ export default {
 </template>
 
 <style>
-  .input-select {
-
-  }
 </style>
