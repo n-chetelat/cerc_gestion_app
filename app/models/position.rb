@@ -15,6 +15,10 @@ class Position < ApplicationRecord
   scope :visible, -> { where(hidden: false) }
   scope :hidden, -> { where(hidden: true) }
 
+  def to_s
+    self.title
+  end
+
   def duplicate!
     self.with_lock do
       copy = self.class.new

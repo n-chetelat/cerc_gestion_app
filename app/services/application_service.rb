@@ -47,7 +47,7 @@ class ApplicationService
       end
 
       # Classify person under initial phase if there is one
-      if initial = Phase.initial_phase
+      if initial = Phase.current_initial
         PersonPhase.create!(person: person, phase: initial)
       end
 

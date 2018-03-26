@@ -1,30 +1,30 @@
 import axios from "axios"
 
-const BASE_URL = "api/recruitment_info"
+const BASE_URL = "api/phases"
 
 const state = {
-  info: null
+  all: []
 }
 
 // getters
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
-  recruitmentInfo: state => state.info,
+  allPhases: state => state.all,
 }
 
 // actions
 const actions = {
-  getRecruitmentInfo({ commit, getters }) {
+  fetchPhases({ commit, getters }) {
     return axios.get(getters.endpoint).then(({ data }) => {
-      commit('setRecruitmentInfo', data.content)
+      commit('setAllPhases', data)
     })
   },
 }
 
 // mutations
 const mutations = {
-  setRecruitmentInfo(state, info) {
-    state.info = info
+  setAllPhases(state, phases) {
+    state.all = phases
   },
 }
 

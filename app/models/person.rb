@@ -5,7 +5,7 @@ class Person < ApplicationRecord
   validate :validate_email_format
 
   has_one :application, foreign_key: "person_id"
-  has_many :persons_phases, class_name: "PersonPhase", foreign_key: "person_id"
+  has_many :persons_phases, class_name: "PersonPhase", foreign_key: "person_id", dependent: :destroy
 
   scope :not_in_phase, -> { where.not(id: joins(:persons_phases).select(:person_id)) }
 
@@ -26,6 +26,10 @@ class Person < ApplicationRecord
 
   def current_phase
     PersonPhase.find_by(person_id: self.id).try(:phase)
+  end
+
+  def current_position
+    self.application.try(:position)
   end
 
 end

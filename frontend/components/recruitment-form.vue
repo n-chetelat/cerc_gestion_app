@@ -62,10 +62,14 @@ import InputSelect from './recruitment-form/input-select.vue'
       },
       async submitApplication() {
         this.loading = true
-        await this.sendApplication([...this.$refs.field,
-          {value: this.positionId, inputName: "position_id"}])
+        try {
+          await this.sendApplication([...this.$refs.field,
+            {value: this.positionId, inputName: "position_id"}])
+          this.applicationSent = true
+        } catch(error) {
+          // TODO: handle error with modal
+        }
         this.applicationForm = null
-        this.applicationSent = true
         this.loading = false
       }
     },

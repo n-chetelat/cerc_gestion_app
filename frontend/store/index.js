@@ -4,6 +4,7 @@ import locales from './modules/locales'
 import recruitmentInfo from './modules/recruitment-info'
 import positions from './modules/positions'
 import application from './modules/application'
+import phases from './modules/phases'
 
 Vue.use(Vuex)
 
@@ -17,5 +18,6 @@ export default new Vuex.Store({
     recruitmentInfo,
     positions,
     application,
+    phases,
   },
 })
