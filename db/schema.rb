@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180326204053) do
+ActiveRecord::Schema.define(version: 20180327165238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,23 @@ ActiveRecord::Schema.define(version: 20180326204053) do
     t.string "file_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "boards", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "boards_phases", force: :cascade do |t|
+    t.bigint "board_id"
+    t.bigint "phase_id"
+    t.integer "position", default: 1
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["board_id"], name: "index_boards_phases_on_board_id"
+    t.index ["phase_id"], name: "index_boards_phases_on_phase_id"
   end
 
   create_table "persons", force: :cascade do |t|
@@ -149,6 +166,8 @@ ActiveRecord::Schema.define(version: 20180326204053) do
 
   add_foreign_key "applications", "persons"
   add_foreign_key "applications", "positions"
+  add_foreign_key "boards_phases", "boards"
+  add_foreign_key "boards_phases", "phases"
   add_foreign_key "persons_phases", "persons"
   add_foreign_key "persons_phases", "phases"
   add_foreign_key "positions_form_fields", "positions_recruitment_forms", column: "recruitment_form_id"

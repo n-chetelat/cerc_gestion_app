@@ -1,4 +1,5 @@
 ActiveAdmin.register Phase do
+  menu parent: "Boards"
   permit_params :title, :description, :initial
 
   config.filters = false
@@ -30,6 +31,19 @@ ActiveAdmin.register Phase do
       f.input :description, input_html: {class: "tinymce"}
     end
     f.actions
+  end
+
+  collection_action :autocomplete, method: :get do
+    @list = resource_class
+
+    if (filter = params[:q])
+      filter = "%#{filter.parameterize(separator: '%')}%"
+
+      @list = @list.where("title ILIKE ?", filter)
+    else
+      @list = @list.none
+    end
+    respond_with(@list)
   end
 
 end
