@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 import store from './../store'
 
 import RecruitmentForm from "./../components/recruitment-form.vue"
-import RecruitmentAdmin from "./../components/recruitment-admin.vue"
+import Board from "./../components/board.vue"
 
 const routes = [
   {
@@ -17,7 +17,14 @@ const routes = [
   {
     path: "/admin/applications",
     name: "applications",
-    component: RecruitmentAdmin,
+    component: Board,
+    props:  { boardId: "1" }
+  },
+  {
+    path: "/admin/boards/:boardId",
+    name: "board",
+    component: Board,
+    props:  (route) => ({ boardId: route.params.boardId })
   }
 ]
 

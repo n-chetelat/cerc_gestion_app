@@ -34,7 +34,7 @@ const actions = {
     try {
       const application = await axios.get(`${getters.endpoint}/${applicationId}`)
       commit("setCurrentApplication", application.data)
-    } catch(eror) {
+    } catch(error) {
       // TODO: handle error with modal
     }
   },

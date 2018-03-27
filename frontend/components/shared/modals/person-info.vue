@@ -25,6 +25,9 @@ export default {
   computed: {
     ...mapGetters("persons", ["currentPerson"]),
     ...mapGetters("application", ["currentApplication"]),
+    isLoaded() {
+      return this.currentPerson && this.currentApplication
+    }
   },
   methods: {
     ...mapActions("persons", ["fetchPerson"]),
@@ -42,7 +45,7 @@ export default {
 <template lang="pug">
   modal(@close="closeModal")
     template(slot="body")
-      div.person-info(v-if="currentPerson")
+      div.person-info(v-if="isLoaded")
         div {{currentPerson}}
         div {{currentApplication}}
 

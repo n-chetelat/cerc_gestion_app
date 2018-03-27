@@ -21,6 +21,9 @@ const actions = {
       commit("setCurrentPerson", data)
     })
   },
+  setPerson({ commit }, person) {
+    commit("setCurrentPerson", person)
+  }
 }
 
 // mutations
