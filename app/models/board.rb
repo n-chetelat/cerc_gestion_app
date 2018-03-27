@@ -5,4 +5,7 @@ class Board < ApplicationRecord
 
   accepts_nested_attributes_for :boards_phases, allow_destroy: true
 
+  validates :title, presence: true
+  validates :title, uniqueness: true
+
 end
