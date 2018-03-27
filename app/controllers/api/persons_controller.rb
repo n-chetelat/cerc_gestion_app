@@ -30,6 +30,7 @@ module Api
 
       def set_resource
         @resource = Person.find(params[:id])
+        @scopes = params[:scopes].values || []
       end
 
   end

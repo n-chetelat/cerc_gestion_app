@@ -32,7 +32,7 @@ const actions = {
   },
   async fetchApplication({ commit, getters }, applicationId) {
     try {
-      const application = await axios.get(`${getters.endpoint}/${applicationId}?v=long`)
+      const application = await axios.get(`${getters.endpoint}/${applicationId}`)
       commit("setCurrentApplication", application.data)
     } catch(eror) {
       // TODO: handle error with modal

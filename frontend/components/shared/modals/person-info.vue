@@ -16,9 +16,10 @@ export default {
     }
   },
   async created() {
-    await this.fetchPerson(this.personId)
-    if (this.currentPerson.application) {
-      await this.fetchApplication(this.currentPerson.application.id)
+    const payload = {person_id: this.personId, options: {scopes: ["application"]}}
+    await this.fetchPerson(payload)
+    if (this.currentPerson.application_id) {
+      await this.fetchApplication(this.currentPerson.application_id)
     }
   },
   computed: {

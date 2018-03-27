@@ -1,4 +1,5 @@
 import axios from "axios"
+import qs from "qs"
 
 const BASE_URL = "api/persons"
 
@@ -14,8 +15,9 @@ const getters = {
 
 // actions
 const actions = {
-  fetchPerson({ commit, getters }, person_id) {
-    return axios.get(`${getters.endpoint}/${person_id}`).then(({ data }) => {
+  fetchPerson({ commit, getters }, { person_id, options }) {
+    const query = qs.stringify(options)
+    return axios.get(`${getters.endpoint}/${person_id}?${query}`).then(({ data }) => {
       commit("setCurrentPerson", data)
     })
   },

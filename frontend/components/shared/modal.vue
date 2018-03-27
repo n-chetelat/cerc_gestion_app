@@ -71,7 +71,7 @@ export default {
       color: white;
       background: black;
       float: right;
-      margin: 4px;
+      margin: 10px;
     }
 
   }

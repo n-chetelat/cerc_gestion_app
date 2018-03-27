@@ -18,11 +18,9 @@ import PersonInfoModal from "./shared/modals/person-info.vue"
     },
     computed: {
       ...mapGetters("phases", ["allPhases"]),
-      ...mapGetters("application", ["getApplications"])
     },
     methods: {
       ...mapActions("phases", ["fetchPhases"]),
-      ...mapActions("application", ["fetchApplications"]),
       ...mapActions("persons", ["fetchPerson"]),
       async showPersonInfo(person) {
         this.currentPersonId = person.id
@@ -47,11 +45,11 @@ import PersonInfoModal from "./shared/modals/person-info.vue"
         h2 {{phase.title}}
         p You have {{phase.persons.length}} person(s) in this section.
         div.applicant-card(v-for="person in phase.persons")
-          h3 {{person.name}}
+          h3 {{person.full_name}}
           p {{person.email}}
-          p Applying for: {{person.application.position}}
-          p Starting on: {{person.application.starting_semester}}
-          p Received on: {{person.application.created_at}}
+          p Applying for: {{person.position}}
+          p Starting on: {{person.starting_semester}}
+          p Received on: {{person.applied_at}}
           button(type="button", @click="showPersonInfo(person)") More...
   </template>
 

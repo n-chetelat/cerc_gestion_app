@@ -57,4 +57,42 @@ class ApplicationService
     end
   end
 
+  def self.fields_to_hash_for(application)
+    application.fields.map do |key, value|
+      form_field_type, form_field_id = /input_(\w+)_(\d+)/.match(key).captures
+      form_field = Positions::FormField.find(form_field_id.to_i)
+      next unless form_field
+      self.field_to_hash(form_field, value)
+    end.compact
+  end
+
+  private
+
+    def self.field_to_hash(form_field, value)
+      attrs = {form_field_id: form_field.id, label: form_field.label}
+      attrs[:value] = case form_field.form
+      when :text, :textarea, :date
+        value
+      when :radio, :select
+        form_field.locale_choices[value][I18n.locale.to_s]
+      when :checkbox
+        value.map do |val|
+          form_field.locale_choices[val][I18n.locale.to_s]
+        end
+      when :upload_single
+        file = GlobalID::Locator.locate(value["uri"])
+        {name: file.file.name, url: file.file.url}
+      when :upload_multiple
+        value.map do |val|
+          file = GlobalID::Locator.locate(val["uri"])
+          {name: file.file.name, url: file.file.url}
+        end
+      else
+        nil
+      end
+      attrs
+    end
+
+
+
 end

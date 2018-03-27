@@ -7,7 +7,7 @@ module Api
     end
 
     def show
-      @version = "long"
+      @form_fields = ::ApplicationService.fields_to_hash_for(@resource)
     end
 
     def create
