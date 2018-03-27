@@ -4,6 +4,8 @@ ActiveAdmin.register Board do
     :id, :_destroy, :phase_id, :position
   ]
 
+  actions :index, :show, :update, :edit
+
   config.filters = false
 
   index do

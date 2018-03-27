@@ -55,7 +55,7 @@ ActiveAdmin.register Position do
         panel "Recruitment Form" do
           para "N.B: Besides the fields below, each position's form asks for: #{Positions::RecruitmentForm.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"
           f.inputs "", for: [:recruitment_form, f.object.recruitment_form || Positions::RecruitmentForm.new] do |a|
-            a.has_many :form_fields, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
+            a.has_many :form_fields, sortable: :position, sortable_start: 1, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
               Globalize.with_locale(:en) do
                 b.input :label_en, label: "Label (en)"
               end
