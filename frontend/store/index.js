@@ -5,6 +5,7 @@ import recruitmentInfo from './modules/recruitment-info'
 import positions from './modules/positions'
 import application from './modules/application'
 import phases from './modules/phases'
+import persons from './modules/persons'
 
 Vue.use(Vuex)
 
@@ -19,5 +20,6 @@ export default new Vuex.Store({
     positions,
     application,
     phases,
+    persons
   },
 })

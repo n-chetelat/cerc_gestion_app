@@ -4,13 +4,14 @@ import { keyBy } from "lodash-es"
 const BASE_URL = `api/applications`
 
 const state = {
-  current: {},
+  current: null,
   all: []
 }
 
 // getters
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
+  currentApplication: state => state.current,
   getApplications: state => state.all
 }
 
@@ -27,9 +28,15 @@ const actions = {
         formData.append(value.inputName, value.value)
       }
     })
-    return axios.post(getters.endpoint, formData).then(({ data }) => {
-      commit('setCurrentApplication', data)
-    })
+    return axios.post(getters.endpoint, formData)
+  },
+  async fetchApplication({ commit, getters }, applicationId) {
+    try {
+      const application = await axios.get(`${getters.endpoint}/${applicationId}?v=long`)
+      commit("setCurrentApplication", application.data)
+    } catch(eror) {
+      // TODO: handle error with modal
+    }
   },
   fetchApplications({ commit, getters }) {
     axios.get(getters.endpoint).then(({ data }) => {

@@ -7,6 +7,7 @@ module Api
     end
 
     def show
+      @version = "long"
     end
 
     def create
