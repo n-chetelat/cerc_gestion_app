@@ -69,7 +69,7 @@ class ApplicationService
   private
 
     def self.field_to_hash(form_field, value)
-      attrs = {form_field_id: form_field.id, label: form_field.label}
+      attrs = {form_field_id: form_field.id, label: form_field.label, type: form_field.form}
       attrs[:value] = case form_field.form
       when :text, :textarea, :date
         value

@@ -21,6 +21,8 @@ export default {
     div.modal-backdrop
       div.modal-content
         header.modal-header
+          span.modal-title
+            slot(name="header")
           button.btn-close(type="button", @click="close") x
         div.modal-body
           slot(name="body")
@@ -54,12 +56,25 @@ export default {
       flex-direction: column;
     }
 
+    & .modal-header {
+      position: relative;
+    }
+
     & .modal-body {
       position: relative;
       padding: 20px 10px;
     }
 
+    & .modal-title {
+      width: 90%;
+      display: inline-block;
+      padding: 0 15px;
+    }
+
     & .btn-close {
+      position: absolute;
+      right: 0;
+      top: 0;
       border: none;
       border-radius: 50%;
       font-size: 20px;
@@ -70,7 +85,6 @@ export default {
       line-height: 0;
       color: white;
       background: black;
-      float: right;
       margin: 10px;
     }
 

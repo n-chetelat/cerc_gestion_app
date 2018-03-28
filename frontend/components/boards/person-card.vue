@@ -1,10 +1,8 @@
 <script>
 
-import { mapActions } from "vuex"
-
 import ModalMixin from "../../mixins/modal-mixin"
 
-import PersonInfoModal from "../shared/modals/person-info.vue"
+import PersonInfoModal from "./modals/person-info.vue"
 
 export default {
   name: "PersonCard",
@@ -13,9 +11,6 @@ export default {
     person: {
       required: true
     }
-  },
-  methods: {
-    ...mapActions("persons", ["setPerson"]),
   },
   components: {
     PersonInfoModal
