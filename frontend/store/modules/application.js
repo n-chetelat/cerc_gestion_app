@@ -4,14 +4,12 @@ import { keyBy } from "lodash-es"
 const BASE_URL = `api/applications`
 
 const state = {
-  current: null,
   all: []
 }
 
 // getters
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
-  currentApplication: state => state.current,
   getApplications: state => state.all
 }
 
@@ -33,7 +31,7 @@ const actions = {
   async fetchApplication({ commit, getters }, applicationId) {
     try {
       const application = await axios.get(`${getters.endpoint}/${applicationId}`)
-      commit("setCurrentApplication", application.data)
+      return application.data
     } catch(error) {
       // TODO: handle error with modal
     }
@@ -47,9 +45,6 @@ const actions = {
 
 // mutations
 const mutations = {
-  setCurrentApplication(state, application) {
-    state.current = application
-  },
   setApplications(state, applications) {
     state.all = applications
   }

@@ -10,7 +10,6 @@ const state = {
 // getters
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
-  currentPerson: state => state.current,
 }
 
 // actions
@@ -21,9 +20,6 @@ const actions = {
       commit("setCurrentPerson", data)
     })
   },
-  setPerson({ commit }, person) {
-    commit("setCurrentPerson", person)
-  }
 }
 
 // mutations

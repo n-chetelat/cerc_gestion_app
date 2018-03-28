@@ -7,30 +7,26 @@ import Modal from "../modal.vue"
 export default {
   name: "PersonInfo",
   props: {
-    personId: {
+    person: {
       required: true
     }
   },
   data() {
     return {
+      application: null,
     }
   },
   async created() {
-    const payload = {person_id: this.personId, options: {scopes: ["application"]}}
-    await this.fetchPerson(payload)
-    if (this.currentPerson.application_id) {
-      await this.fetchApplication(this.currentPerson.application_id)
+    if (this.person.application_id) {
+      this.application = await this.fetchApplication(this.person.application_id)
     }
   },
   computed: {
-    ...mapGetters("persons", ["currentPerson"]),
-    ...mapGetters("application", ["currentApplication"]),
     isLoaded() {
-      return this.currentPerson && this.currentApplication
+      return this.person && this.application
     }
   },
   methods: {
-    ...mapActions("persons", ["fetchPerson"]),
     ...mapActions("application", ["fetchApplication"]),
     closeModal() {
       this.$emit("close")
@@ -46,11 +42,15 @@ export default {
   modal(@close="closeModal")
     template(slot="body")
       div.person-info(v-if="isLoaded")
-        div {{currentPerson}}
-        div {{currentApplication}}
+        div {{person}}
+        div {{application}}
 
 </template>
 
 <style>
+
+  .person-info {
+
+  }
 
 </style>
