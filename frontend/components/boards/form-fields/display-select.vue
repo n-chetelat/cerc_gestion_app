@@ -9,8 +9,9 @@ export default {
 </script>
 
 <template lang="pug">
-  div.display-text
-    p {{field.label}}
+div.display-select
+  label {{field.label}}
+  span {{field.value}}
 
 </template>
 

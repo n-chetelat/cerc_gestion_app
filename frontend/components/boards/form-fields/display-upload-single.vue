@@ -9,8 +9,11 @@ export default {
 </script>
 
 <template lang="pug">
-  div.display-text
-    p {{field.label}}
+  div.display-upload-single
+    label {{field.label}}
+    span
+      span.icon.pdf-icon
+      a(:href="field.value.url", target="_blank") {{field.value.name}}
 
 </template>
 

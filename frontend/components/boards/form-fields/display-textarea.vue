@@ -9,11 +9,19 @@ export default {
 </script>
 
 <template lang="pug">
-  div.display-text
-    p {{field.label}}
+  div.display-textarea
+    label {{field.label}}
+    span {{field.value}}
 
 </template>
 
 <style>
+
+  .display-textarea {
+    & span {
+      display: inline-block;
+      width: 30em;
+    }
+  }
 
 </style>

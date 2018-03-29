@@ -10,10 +10,11 @@ export default {
 
 <template lang="pug">
   div.display-text
-    p {{field.label}}
+    label {{field.label}}
+    span {{field.value}}
 
 </template>
 
-<style>
+<style scoped>
 
 </style>

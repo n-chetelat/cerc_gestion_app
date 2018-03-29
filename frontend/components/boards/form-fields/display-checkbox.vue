@@ -9,11 +9,13 @@ export default {
 </script>
 
 <template lang="pug">
-  div.display-text
-    p {{field.label}}
+  div.display-checkbox
+    label {{field.label}}
+    ul
+      li.value(v-for="val in field.value") {{val}}
 
 </template>
 
-<style>
+<style scoped>
 
 </style>

@@ -18,20 +18,29 @@ export default {
 
 <template lang="pug">
   div.modal
-    div.modal-backdrop
-      div.modal-content
-        header.modal-header
-          span.modal-title
-            slot(name="header")
-          button.btn-close(type="button", @click="close") x
-        div.modal-body
-          slot(name="body")
+    div.modal-backdrop(@click="close")
+    div.modal-content
+      header.modal-header
+        span.modal-title
+          slot(name="header")
+        button.btn-close(type="button", @click="close") x
+      div.modal-body
+        slot(name="body")
 
 </template>
 
 <style>
 
   .modal {
+    z-index: 200;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     & .modal-backdrop {
       position: fixed;
@@ -40,17 +49,16 @@ export default {
       left: 0;
       right: 0;
       background-color: rgba(0, 0, 0, 0.3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     & .modal-content {
+      z-index: 201;
       background: white;
       min-width: 200px;
       width: 80%;
       max-width: 900px;
       box-shadow: 2px 2px 20px 1px;
+      border-radius: 2px;
       overflow-x: auto;
       display: flex;
       flex-direction: column;

@@ -5,6 +5,13 @@ import { mapGetters, mapActions } from "vuex"
 import Modal from "../../shared/modal.vue"
 
 import DisplayText from "../form-fields/display-text.vue"
+import DisplayTextarea from "../form-fields/display-textarea.vue"
+import DisplayDate from "../form-fields/display-date.vue"
+import DisplayRadio from "../form-fields/display-radio.vue"
+import DisplaySelect from "../form-fields/display-select.vue"
+import DisplayCheckbox from "../form-fields/display-checkbox.vue"
+import DisplayUploadSingle from "../form-fields/display-upload-single.vue"
+import DisplayUploadMultiple from "../form-fields/display-upload-multiple.vue"
 
 export default {
   name: "PersonInfo",
@@ -38,7 +45,14 @@ export default {
   },
   components: {
     Modal,
-    DisplayText
+    DisplayText,
+    DisplayDate,
+    DisplayRadio,
+    DisplaySelect,
+    DisplayTextarea,
+    DisplayCheckbox,
+    DisplayUploadSingle,
+    DisplayUploadMultiple
   }
 }
 </script>
@@ -52,18 +66,24 @@ export default {
 
         div.info-section.person-info-profile(:class="{'--open': infoOpen}")
           h2.collapsable-header(@click="infoOpen = !infoOpen") Info
-            span.arrow-icon
+            span.icon.arrow-icon
           div.collapsable-content(v-if="infoOpen")
-            p {{person.email}}
+            div.field-row
+              label Email
+              span {{person.email}}
 
         div.info-section.person-info-application(:class="{'--open': applicationOpen}")
           h2.collapsable-header(@click="applicationOpen = !applicationOpen") Application
-            span.arrow-icon
+            span.icon.arrow-icon
           div.collapsable-content(v-if="applicationOpen")
-            p For position: {{application.position}}
-            p Starting on: {{application.starting_semester}}
+            div.field-row
+              label For position
+              span {{application.position}}
+            div.field-row
+              label Starting on
+              span {{application.starting_semester}}
             div.display-fields
-              component(v-for="field in application.form_fields", :is="`display-text`", :field="field")
+              component.field-row(v-for="field in application.form_fields", :is="`display-${field.type}`", :field="field")
 
 </template>
 
@@ -85,15 +105,45 @@ export default {
         border-bottom: 1px solid black;
       }
     }
+    & .icon {
+      height: 25px;
+      width: 25px;
+      display: inline-block;
+      margin-bottom: -3px;
+    }
     & .arrow-icon {
       position: absolute;
       right: 0;
-      display: inline-block;
-      height: 32px;
-      width: 32px;
-      margin-left: 10px;
-      margin-bottom: -3px;
+      height: 30px;
+      width: 30px;
       background: url("../../../static/icons/circle-down.svg") bottom left / 70% no-repeat;
+    }
+    & .field-row {
+      padding: .5em;
+      padding-top: 0;
+      margin: .5em;
+
+      & label {
+        background-color: black;
+        color: white;
+        display: inline-block;
+        vertical-align: top;
+        font-weight: bold;
+        margin-right: 2em;
+        width: 12em;
+        padding: 2px 0;
+        padding-right: .5em;
+        text-align: right;
+      }
+      & ul {
+        display: inline-block;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      & .pdf-icon {
+        background: url("../../../static/icons/file-pdf.svg") left bottom / 70% no-repeat;
+      }
     }
   }
 

@@ -28,13 +28,14 @@ export default {
 
 .phase {
 
-  border: 3px solid black;
-  width: 30%;
-  height: 600px;
+  border-radius: 2px;
+  width: 300px;
+  height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
-  float: left;
-
+  margin: 1em;
+  padding: .5em;
+  box-shadow: 2px 2px 15px 1px;
 }
 
 </style>
