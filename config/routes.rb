@@ -1,3 +1,4 @@
+require 'googleauth'
 Rails.application.routes.draw do
 
   root to: "pages#home"
@@ -8,6 +9,8 @@ Rails.application.routes.draw do
   scope "(:locale)", locale: /en|fr/ do
 
     namespace "api", defaults: {format: "json"} do
+      get "/google", to: "google#show"
+
       resources :positions, only: [:index] do
         get :form, on: :member
       end
@@ -18,6 +21,10 @@ Rails.application.routes.draw do
       resources :phases, only: [:index, :show]
     end
   end
+
+  match '/oauth2callback',
+      to: Google::Auth::WebUserAuthorizer::CallbackApp,
+      via: :all
 
   if Rails.env.production?
     get "*unmatched_route", to: redirect("/")
