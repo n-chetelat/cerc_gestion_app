@@ -43,27 +43,23 @@
      id="namedview10"
      showgrid="false"
      inkscape:zoom="7.375"
-     inkscape:cx="16"
-     inkscape:cy="15.864407"
+     inkscape:cx="-5.8983051"
+     inkscape:cy="15.322034"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <title
      id="title4">circle-right</title>
-  <path
-     d="M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 29c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13z"
-     id="path6"
-     style="fill:#ff0000" />
-  <path
-     d="M11.086 22.086l2.829 2.829 8.914-8.914-8.914-8.914-2.828 2.828 6.086 6.086z"
-     id="path8"
-     style="fill:#ff0000" />
-  <rect
-     style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#525252;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="rect4142"
-     width="32.135593"
-     height="32.135593"
-     x="0"
-     y="-0.13559322" />
+  <g
+     id="g4136">
+    <path
+       style="fill:#000000"
+       id="path6"
+       d="M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 29c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13z" />
+    <path
+       style="fill:#000000"
+       id="path8"
+       d="M11.086 22.086l2.829 2.829 8.914-8.914-8.914-8.914-2.828 2.828 6.086 6.086z" />
+  </g>
 </svg>
