@@ -21,7 +21,7 @@ class GoogleService
     "redirect_uris" => ENV["GOOGLE_API_REDIRECT_URIS"].split(","),
     "javascript_origins" => ENV["GOOGLE_API_JAVASCRIPT_ORIGINS"].split(",")
   }}
-  CREDENTIALS_PATH = File.join(Dir.home, ".credentials", "cerc-datasciencel.yaml")
+  CREDENTIALS_PATH = File.join(Dir.home, ".credentials", "cerc-datascience.yaml")
   SCOPES = ['https://mail.google.com/']
   USER_ID = 'natalia.buitrago1@gmail.com'
 
@@ -29,9 +29,10 @@ class GoogleService
     @request = request
 
     client_id = Google::Auth::ClientId.from_hash(CLIENT_SECRETS_HASH)
-    token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+
+    @token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
     @authorizer = Google::Auth::WebUserAuthorizer.new(
-      client_id, SCOPES, token_store, '/oauth2callback')
+      client_id, SCOPES, @token_store, '/oauth2callback')
 
 
     @gmail_service = Google::Apis::GmailV1::GmailService.new
@@ -40,26 +41,38 @@ class GoogleService
   end
 
   def needs_authorization?
-    # begin
-    0/0
-      gmail_service.get_user_profile(USER_ID)
-      return false
-    # rescue
-    #   true
-    # end
+    @token_store.load(USER_ID).nil?
   end
 
   def authorization_uri
     authorizer.get_authorization_url(login_hint: USER_ID, request: request)
   end
 
-  def get_emails
-    gmail_service.list_user_messages(USER_ID, max_results: 50,  q: "didier")
+  def send_email_to(person, email_template)
+    # mail = Mail.new do
+    #   to person.email
+    #   subject ""
+    # end
+    # mail_text = Nokogiri::HTML.parse(html_content).text
+    # text_part = Mail::Part.new do
+    #   body mail_text
+    # end
+    # html_part = Mail::Part.new do
+    #   content_type 'text/html; charset=UTF-8'
+    #   body html_content
+    # end
+    # mail.text_part = text_part
+    # mail.html_part = html_part
+    #
+    # message = Google::Apis::GmailV1::Message.new(raw: mail.to_s)
+    # draft = Google::Apis::GmailV1::Draft.new(message: message)
+    # gmail_service.create_user_draft(USER_ID, draft) do |result, error|
+    #   unless error
+    #     gmail_service.send_user_draft(USER_ID, result)
+    #   end
+    # end
   end
 
-  def get_email
-    gmail_service.get_user_message(USER_ID, '15bc6a5acd9b9dd2')
-  end
 
   private
 

@@ -3,10 +3,9 @@ module Api
     before_action :authorize_gmail, only: [:show]
 
     def show
-      @result = service.get_emails
-      @mail = service.get_email
+      service.send_email_to(Person.last)
 
-      render json: {mail: @mail, result: @result}
+      head :ok
     end
 
     private
@@ -18,11 +17,7 @@ module Api
       end
 
       def service
-        if @service && @service.needs_authorization?
-          @service = ::GoogleService.new(request)
-          return @service
-        end
-        @service = ::GoogleService.new(request)
+        @service ||= ::GoogleService.new(request)
       end
 
 

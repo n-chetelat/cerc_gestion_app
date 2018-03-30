@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   scope "(:locale)", locale: /en|fr/ do
 
     namespace "api", defaults: {format: "json"} do
+      get "/google", to: "google#show"
 
       resources :positions, only: [:index] do
         get :form, on: :member

@@ -59,6 +59,7 @@ gem 'activeadmin-globalize', '~> 1.0.0.pre'
 # Gmail integration
 gem 'omniauth-google-oauth2'
 gem 'google-api-client', '~> 0.11'
+gem 'mail'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
