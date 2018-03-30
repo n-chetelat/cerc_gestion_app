@@ -77,6 +77,7 @@ group :development do
   # gem 'capistrano'
   # gem 'capistrano-rails'
   # gem 'capistrano3-puma'
+  gem "letter_opener"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

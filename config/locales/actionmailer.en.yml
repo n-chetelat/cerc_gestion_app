@@ -1,0 +1,4 @@
+en:
+  action_mailer:
+    recruitment_mailer:
+      received: Application received

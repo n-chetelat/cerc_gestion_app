@@ -40,12 +40,13 @@ class GoogleService
   end
 
   def needs_authorization?
-    begin
+    # begin
+    0/0
       gmail_service.get_user_profile(USER_ID)
       return false
-    rescue
-      true
-    end
+    # rescue
+    #   true
+    # end
   end
 
   def authorization_uri

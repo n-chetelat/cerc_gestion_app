@@ -1,0 +1,4 @@
+fr:
+  action_mailer:
+    recruitment_mailer:
+      received: Votre application a été reçue
