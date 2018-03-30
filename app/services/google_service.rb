@@ -49,28 +49,33 @@ class GoogleService
   end
 
   def send_email_to(person, email_template)
-    # mail = Mail.new do
-    #   to person.email
-    #   subject ""
-    # end
-    # mail_text = Nokogiri::HTML.parse(html_content).text
-    # text_part = Mail::Part.new do
-    #   body mail_text
-    # end
-    # html_part = Mail::Part.new do
-    #   content_type 'text/html; charset=UTF-8'
-    #   body html_content
-    # end
-    # mail.text_part = text_part
-    # mail.html_part = html_part
-    #
-    # message = Google::Apis::GmailV1::Message.new(raw: mail.to_s)
-    # draft = Google::Apis::GmailV1::Draft.new(message: message)
-    # gmail_service.create_user_draft(USER_ID, draft) do |result, error|
-    #   unless error
-    #     gmail_service.send_user_draft(USER_ID, result)
-    #   end
-    # end
+    if needs_authorization?
+      raise "Authorization needed"
+    end
+
+    compiled_email = email_template.compile_with_vars(person: person)
+
+    mail = Mail.new do
+      to person.email
+      subject compiled_email.subject
+    end
+    text_part = Mail::Part.new do
+      body compiled_email.plain
+    end
+    html_part = Mail::Part.new do
+      content_type "text/html; charset=UTF-8"
+      body compiled_email.body
+    end
+    mail.text_part = text_part
+    mail.html_part = html_part
+
+    message = Google::Apis::GmailV1::Message.new(raw: mail.to_s)
+    draft = Google::Apis::GmailV1::Draft.new(message: message)
+    gmail_service.create_user_draft(USER_ID, draft) do |result, error|
+      unless error
+        gmail_service.send_user_draft(USER_ID, result)
+      end
+    end
   end
 
 

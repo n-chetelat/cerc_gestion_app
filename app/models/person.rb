@@ -33,4 +33,8 @@ class Person < ApplicationRecord
     self.application.try(:position)
   end
 
+  def starting_semester_label
+    ::Application.semester_to_s(self.application.starting_semester)
+  end
+
 end
