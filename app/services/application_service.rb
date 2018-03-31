@@ -46,12 +46,14 @@ class ApplicationService
         end
       end
 
-      # Classify person under initial phase if there is one
-      if initial = Phase.current_initial
-        PersonPhase.create!(person: person, phase: initial)
-      end
-
       if person.save!
+
+        # Classify person under initial phase if there is one
+        if initial = Phase.current_initial
+          PersonPhase.create!(person: person, phase: initial)
+          initial.apply_callbacks_for(person)
+        end
+
         return application
       end
     end

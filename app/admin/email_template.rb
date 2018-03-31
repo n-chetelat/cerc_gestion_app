@@ -1,5 +1,5 @@
 ActiveAdmin.register EmailTemplate do
-  menu parent: "Recruitment"
+  menu parent: "Boards"
 
   permit_params translations_attributes: [:id, :locale, :subject, :body]
 

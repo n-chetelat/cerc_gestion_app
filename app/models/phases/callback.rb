@@ -6,8 +6,6 @@ module Phases
     belongs_to :phase
     has_one :email_template, class_name: "EmailTemplate", dependent: :destroy, foreign_key: "phases_callback_id", inverse_of: :phase_callback
 
-    accepts_nested_attributes_for :email_template, allow_destroy: true
-
     acts_as_list scope: :phase
 
     def to_s

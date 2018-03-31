@@ -21,20 +21,12 @@ class Phase < ApplicationRecord
     self.title
   end
 
-  def initial_phase_present
-    initials = self.class.where(initial: true)
-    unless (self.initial || initials.where.not(id: self.id).any?)
-      self.errors.add(:initial, " There needs to be an initial tag.")
-    end
-  end
-
-  def only_one_initial_phase
-    return unless self.initial
-
-    initials = self.class.where(initial: true).where.not(id: self.id)
-
-    if initials.any?
-      self.errors.add(:initial, " There can only be one initial tag.")
+  def apply_callbacks_for(person)
+    self.phases_callbacks.each do |callback|
+      if template = callback.email_template
+        # call a worker that will make api calls to the google controller
+        # apply send_email_to(person, template)
+      end
     end
   end
 
@@ -47,13 +39,26 @@ class Phase < ApplicationRecord
     def switch_to_initial
       return unless self.initial
 
-      self.with_lock do
-        initials = self.class.where(initial: true)
-        initials.update(initial: false)
+      initials = self.class.where(initial: true)
+      initials.update(initial: false)
 
-        self.initial = true
+      self.initial = true
+    end
 
-        persons_phases_id = initials.joins(:persons_phases).select(:id)
+    def initial_phase_present
+      initials = self.class.where(initial: true)
+      unless (self.initial || initials.where.not(id: self.id).any?)
+        self.errors.add(:initial, " There needs to be an initial tag.")
+      end
+    end
+
+    def only_one_initial_phase
+      return unless self.initial
+
+      initials = self.class.where(initial: true).where.not(id: self.id)
+
+      if initials.any?
+        self.errors.add(:initial, " There can only be one initial tag.")
       end
     end
 
