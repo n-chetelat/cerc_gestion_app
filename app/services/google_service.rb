@@ -53,7 +53,7 @@ class GoogleService
       raise "Authorization needed"
     end
 
-    compiled_email = email_template.compile_with_vars(person: person)
+    compiled_email = email_template.compile_with_vars(person)
 
     mail = Mail.new do
       to person.email

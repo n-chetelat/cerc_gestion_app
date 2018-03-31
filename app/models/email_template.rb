@@ -8,6 +8,8 @@ class EmailTemplate < ApplicationRecord
 
   globalize_accessors :locales => [:en, :fr], :attributes => [:subject, :body]
 
+  belongs_to :phase_callback, class_name: "Phases::Callback", foreign_key: "phases_callback_id", inverse_of: :email_template
+
   TEMPLATE_VARIABLES = [
     "name", "last_name", "full_name", "email",
     "position", "starting_semester_label"

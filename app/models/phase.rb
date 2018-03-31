@@ -13,6 +13,10 @@ class Phase < ApplicationRecord
   has_many :boards_phases, class_name: "BoardPhase", dependent: :destroy
   has_many :boards, through: :boards_phases
 
+  has_many :phases_callbacks, class_name: "Phases::Callback", dependent: :destroy
+
+  accepts_nested_attributes_for :phases_callbacks, allow_destroy: true
+
   def to_s
     self.title
   end
