@@ -3,9 +3,9 @@ module Api
     before_action :authorize_gmail, only: [:show]
 
     def show
-      # service.send_email_to(Person.last, EmailTemplate.find(1))
+      # ApplicationService.send_receipt_confirmation_email(Person.last, request)
 
-      head :ok
+      render json: {ok: "yes"}
     end
 
     private

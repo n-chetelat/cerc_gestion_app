@@ -31,6 +31,7 @@ class GoogleService
     client_id = Google::Auth::ClientId.from_hash(CLIENT_SECRETS_HASH)
 
     @token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+
     @authorizer = Google::Auth::WebUserAuthorizer.new(
       client_id, SCOPES, @token_store, '/oauth2callback')
 

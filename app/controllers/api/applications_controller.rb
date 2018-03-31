@@ -12,6 +12,7 @@ module Api
 
     def create
       if @resource = ApplicationService.create_application(params)
+        ApplicationService.send_receipt_confirmation_email(@resource.person, request)
         render :show
       else
         render json: {

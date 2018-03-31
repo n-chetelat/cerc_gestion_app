@@ -21,15 +21,6 @@ class Phase < ApplicationRecord
     self.title
   end
 
-  def apply_callbacks_for(person)
-    self.phases_callbacks.each do |callback|
-      if template = callback.email_template
-        # call a worker that will make api calls to the google controller
-        # apply send_email_to(person, template)
-      end
-    end
-  end
-
   def self.current_initial
     self.find_by(initial: true)
   end

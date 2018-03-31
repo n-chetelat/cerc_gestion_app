@@ -51,12 +51,16 @@ class ApplicationService
         # Classify person under initial phase if there is one
         if initial = Phase.current_initial
           PersonPhase.create!(person: person, phase: initial)
-          initial.apply_callbacks_for(person)
         end
 
         return application
       end
     end
+  end
+
+  def self.send_receipt_confirmation_email(person, request)
+    initial = Phase.current_initial
+    PhaseService.apply_callbacks_for(person, initial, request)
   end
 
   def self.fields_to_hash_for(application)
