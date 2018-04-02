@@ -1,6 +1,7 @@
 module Api
   class ApplicationsController < ApiController
-    before_action :set_resource, only: [:show,:update, :delete]
+    before_action :set_resource, only: [:show,:update]
+    before_action :authorize_gmail, only: [:create]
 
     def index
       @resources = Application.all
@@ -12,22 +13,13 @@ module Api
 
     def create
       if @resource = ApplicationService.create_application(params)
-        ApplicationService.send_receipt_confirmation_email(@resource.person, request)
+        ApplicationService.send_receipt_confirmation_email(@resource.person, google_service)
         render :show
       else
         render json: {
           error: "There was an error when creating the application", status: 500
           }, status: 500
       end
-    end
-
-    def update
-      render :show
-    end
-
-    def delete
-      @resource.destroy
-      render :show
     end
 
     def partial_path

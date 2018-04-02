@@ -23,6 +23,7 @@ module CercGestion
 
     config.autoload_paths << "#{Rails.root}/*/concerns"
     config.autoload_paths << "#{Rails.root}/*/services"
+    config.autoload_paths << "#{Rails.root}/lib/errors"
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

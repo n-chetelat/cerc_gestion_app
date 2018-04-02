@@ -15,7 +15,7 @@ Rails.application.routes.draw do
         get :form, on: :member
       end
       resource :recruitment_info, only: [:show]
-      resources :applications, only: [:index, :show, :create, :update, :delete]
+      resources :applications, only: [:index, :show, :create]
       resources :persons, only: [:index, :show, :update, :delete]
       resources :boards, only: [:show]
       resources :phases, only: [:index, :show]

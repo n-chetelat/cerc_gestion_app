@@ -50,9 +50,6 @@ class GoogleService
   end
 
   def send_email_to(person, email_template)
-    if needs_authorization?
-      raise "Authorization needed"
-    end
 
     compiled_email = email_template.compile_with_vars(person)
 
