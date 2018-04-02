@@ -1,3 +1,4 @@
+import LoadingScreen from '../components/shared/loading-screen.vue'
 
 export default {
   data() {
@@ -11,4 +12,7 @@ export default {
       this.loaded = true
     })
   },
+  components: {
+    LoadingScreen
+  }
 }

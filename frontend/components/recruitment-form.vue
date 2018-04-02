@@ -2,6 +2,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 import SceneMixin from 'mixins/scene-mixin.js'
+import ModalMixin from 'mixins/modal-mixin.js'
 
 import LocaleSwitcher from './shared/locale-switcher.vue'
 
@@ -14,14 +15,16 @@ import InputRadio from './recruitment-form/input-radio.vue'
 import InputDate from './recruitment-form/input-date.vue'
 import InputSelect from './recruitment-form/input-select.vue'
 
+import RecruitmentFormSuccessModal from './recruitment-form/modals/recruitment-form-success.vue'
+import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-form-error.vue'
+
   export default {
     name: "RecruitmentForm",
-    mixins: [SceneMixin],
+    mixins: [SceneMixin, ModalMixin],
     data() {
       return {
         positionId: null,
         applicationForm: null,
-        applicationSent: false,
         translations: {
           send: {en: "Send", fr: "Envoyer"},
           position: {en: "Select the type of application you wish to send",
@@ -65,9 +68,9 @@ import InputSelect from './recruitment-form/input-select.vue'
         try {
           await this.sendApplication([...this.$refs.field,
             {value: this.positionId, inputName: "position_id"}])
-          this.applicationSent = true
+          this.openModal("recruitment-form-success")
         } catch(error) {
-          // TODO: handle error with modal
+          this.openModal("recruitment-form-error")
         }
         this.applicationForm = null
         this.loading = false
@@ -82,20 +85,26 @@ import InputSelect from './recruitment-form/input-select.vue'
       InputRadio,
       InputDate,
       InputSelect,
-      InputTextarea
+      InputTextarea,
+      RecruitmentFormSuccessModal,
+      RecruitmentFormErrorModal
     }
   }
   </script>
 
   <template lang="pug">
     div.recruitment-form(v-if="loaded")
+      loading-screen(v-if="loading")
+
+      recruitment-form-success-modal(v-if="modalVisible && modalName === 'recruitment-form-success'", @close="closeModal")
+      recruitment-form-error-modal(v-if="modalVisible && modalName === 'recruitment-form-error'", @close="closeModal")
 
       nav
         locale-switcher.locale-switcher(@switch="fetchAllData")
 
       div.application-information(v-html="recruitmentInfo")
 
-      div.application-form(v-if="!applicationSent")
+      div.application-form
         form(enctype="multipart/form-data")
 
           div.position-select
@@ -109,9 +118,6 @@ import InputSelect from './recruitment-form/input-select.vue'
             div.form-row
               button.submit(type="button", @click="submitApplication") {{translations["send"][currentLocale]}}
 
-      div.info-message(v-else)
-          p Your application has been sent.
-          p You will hear from us soon.
   </template>
 
   <style>
