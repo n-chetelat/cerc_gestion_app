@@ -29,12 +29,7 @@ const actions = {
     return axios.post(getters.endpoint, formData)
   },
   async fetchApplication({ commit, getters }, applicationId) {
-    try {
-      const application = await axios.get(`${getters.endpoint}/${applicationId}`)
-      return application.data
-    } catch(error) {
-      // TODO: handle error with modal
-    }
+    return axios.get(`${getters.endpoint}/${applicationId}`)
   },
   fetchApplications({ commit, getters }) {
     axios.get(getters.endpoint).then(({ data }) => {

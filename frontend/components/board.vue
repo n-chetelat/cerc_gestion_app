@@ -1,13 +1,15 @@
   <script>
 import SceneMixin from "mixins/scene-mixin.js"
+import ModalMixin from "mixins/modal-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
 
 import Phase from "./boards/phase.vue"
+import PersonInfoModal from "./boards/modals/person-info.vue"
 
   export default {
     name: "Board",
-    mixins: [SceneMixin],
+    mixins: [SceneMixin, ModalMixin],
     props: {
       boardId: {
         required: true
@@ -20,7 +22,8 @@ import Phase from "./boards/phase.vue"
       return {
         phasesScrollX: 0,
         scrollInterval: 300,
-        maxScrollX: 0
+        maxScrollX: 0,
+        person: null,
       }
     },
     computed: {
@@ -47,21 +50,30 @@ import Phase from "./boards/phase.vue"
         if (this.phasesScrollX + this.scrollInterval <= this.maxScrollX) {
           this.phasesScrollX += this.scrollInterval
         }
+      },
+      openModalByName(modalName, data) {
+        if (modalName === "person-info") {
+          this.person = data.person
+          this.openModal(modalName)
+        }
       }
     },
     components: {
       Phase,
+      PersonInfoModal
     }
   }
   </script>
 
   <template lang="pug">
     div.boards(v-if="isLoaded")
+      person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
+
       div.navigation.--left
         span.arrow-icon(@click="scrollLeft")
       div.phases-wrapper
         div.phases(:style="{width: (board.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
-          phase(v-for="phase in board.phases", :phase="phase")
+          phase(v-for="phase in board.phases", :phase="phase", @modal="openModalByName")
       div.navigation.--right
         span.arrow-icon(@click="scrollRight")
   </template>

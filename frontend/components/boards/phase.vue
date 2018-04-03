@@ -10,6 +10,9 @@ export default {
     }
   },
   methods: {
+    openModal(modalName, data) {
+      this.$emit('modal', modalName, data)
+    }
   },
   components: {
     PersonCard
@@ -20,7 +23,7 @@ export default {
 <template lang="pug">
   div.phase
     h2 {{phase.title}}
-    person-card(v-for="person in phase.persons", :person="person")
+    person-card(v-for="person in phase.persons", :person="person", @modal="openModal")
 
 </template>
 

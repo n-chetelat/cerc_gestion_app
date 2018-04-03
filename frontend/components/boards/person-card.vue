@@ -1,28 +1,24 @@
 <script>
 
-import ModalMixin from "../../mixins/modal-mixin"
-
-import PersonInfoModal from "./modals/person-info.vue"
-
 export default {
   name: "PersonCard",
-  mixins: [ModalMixin],
   props: {
     person: {
       required: true
     }
   },
-  components: {
-    PersonInfoModal
-  }
+  methods: {
+    openPersonInfoModal() {
+      this.$emit("modal", "person-info", {person: this.person})
+    }
+  },
 }
 </script>
 
 <template lang="pug">
   div.person-card
-    person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
-    div.card-content(@click="openModal('person-info')")
-      h3.card-title(@click="openModal('person-info')") {{person.full_name}}
+    div.card-content(@click="openPersonInfoModal")
+      h3.card-title(@click="openPersonInfoModal") {{person.full_name}}
       p {{person.email}}
       p Applying for: {{person.position}}
       p Starting on: {{person.starting_semester}}

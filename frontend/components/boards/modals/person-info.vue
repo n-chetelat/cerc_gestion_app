@@ -25,11 +25,16 @@ export default {
       application: null,
       infoOpen: false,
       applicationOpen: false,
+      applicationNotFound: false,
     }
   },
   async created() {
     if (this.person.application_id) {
-      this.application = await this.fetchApplication(this.person.application_id)
+      await this.fetchApplication(this.person.application_id).then(({data}) => {
+        this.application = data
+      }).catch((error) => {
+        this.applicationNotFound = true
+      })
     }
   },
   computed: {
@@ -62,6 +67,10 @@ export default {
     template(slot="header")
       h1 {{person.full_name}}
     template(slot="body")
+      div(v-if="applicationNotFound", style="text-align: center;")
+        p There was an error while fetching this applicant's information.
+        p Please try again later.
+
       div.person-info(v-if="isLoaded")
 
         div.info-section.person-info-profile(:class="{'--open': infoOpen}")

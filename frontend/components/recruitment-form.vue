@@ -73,7 +73,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         }
       },
       async submitApplication() {
-        if (!!this.formIsValid || this.loading) return
+        if (!this.formIsValid || this.loading) return
         this.loading = true
         try {
           await this.sendApplication([...this.$refs.field,
