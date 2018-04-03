@@ -9,7 +9,7 @@ module Api
       @resource = Position.find(params[:id].try(:to_i))
       @form_fields = Positions::RecruitmentForm.common_fields
       @form_fields += @resource.recruitment_form.form_fields.order(position: :asc).map do |field|
-        options = { choices: field.choices_with_locale }
+        options = { choices: field.choices_with_locale, optional: field.optional }
         field.attributes.symbolize_keys.slice(:id, :label).merge(
           type: "input-#{field.form.to_s.gsub(/_/, "-")}",
           options: options

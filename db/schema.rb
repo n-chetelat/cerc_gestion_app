@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180330225356) do
+ActiveRecord::Schema.define(version: 20180403162543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(version: 20180330225356) do
     t.integer "position", default: 0
     t.integer "requirement_id"
     t.integer "form_cd"
+    t.boolean "optional", default: false
     t.index ["recruitment_form_id"], name: "index_positions_form_fields_on_recruitment_form_id"
   end
 

@@ -23,5 +23,16 @@ export default {
     inputName() {
       return `${this.fieldType.replace(/-/g, "_")}_${this.fieldId}`
     },
+    isValid() {
+      if (!this.options.optional) {
+        return !!this.value
+      }
+      return true
+    }
+  },
+  methods: {
+    onInput() {
+      this.$emit("input")
+    }
   }
 }

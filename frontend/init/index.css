@@ -40,5 +40,28 @@ button {
     width: 20em;
     margin: auto;
     display: block;
+    &.--disabled {
+      cursor: default;
+      border-color: gray(50%);
+      color: gray(50%);
+    }
+    &.--disabled:hover {
+      text-decoration: none;
+    }
   }
+}
+
+input {
+  padding: .5em;
+}
+
+input[type="file"] {
+  color: transparent;
+}
+
+select {
+  display: inline-block;
+  padding: .5em;
+  width: 20em;
+  background-color: white;
 }

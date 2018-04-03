@@ -8,7 +8,7 @@ ActiveAdmin.register Position do
   permit_params :hidden,
   translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
-      :id, :_destroy, :position, :form_cd, :choices,
+      :id, :_destroy, :position, :form_cd, :optional, :choices,
       ] + Positions::FormField.globalize_attribute_names)
     ]
 
@@ -37,6 +37,7 @@ ActiveAdmin.register Position do
       table_for resource.recruitment_form.form_fields.order(position: :asc) do
         orderable_handle_column url: :sort_admin_positions_form_field_path
         column(:form_cd) {|form_field| te(form_field, :form)}
+        column :optional
         column :label_en
         column :label_fr
       end
@@ -65,6 +66,7 @@ ActiveAdmin.register Position do
 
 
             b.input :form_cd, as: :select, collection: enum_option_pairs(Positions::FormField, :form, true), input_html: {class: "select2 has-choices"}
+            b.input :optional
             b.input :choices, as: :text, placeholder: "Choice one in English; Choice one in French \nChoice two in English; Choice two in French", hint: "Separate translations (English, then French) by a semi-colon (;) and choices by a new line.", wrapper_html: {class: "hideable"}
             end
           end

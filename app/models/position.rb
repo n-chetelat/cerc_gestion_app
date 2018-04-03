@@ -31,7 +31,7 @@ class Position < ApplicationRecord
 
       self.recruitment_form.form_fields.order(position: :asc).each do |field|
         new_field = form.form_fields.build(field.attributes
-          .slice("position", "form_cd", "options"))
+          .slice("position", "form_cd", "optional", "options"))
         field.translations.each do |translation|
           tr = new_field.translations.build(translation.attributes.slice("locale", "label"))
           tr.label = "#{tr.label}"

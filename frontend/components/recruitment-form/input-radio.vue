@@ -21,7 +21,7 @@ export default {
     fieldset.choice-group
       span(v-for="choice in options.choices")
         label.radio {{choice.label}}
-        input(type="radio", :value="choice.id", v-model="value")
+        input(type="radio", :value="choice.id", v-model="value", @change="onInput")
 </template>
 
 <style>

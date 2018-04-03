@@ -8,11 +8,17 @@ export default {
 </script>
 
 <template lang="pug">
-  div
+  div.input-date
     label.label {{label}}
-    input(type="date", v-model="value")
+    input(type="date", v-model="value", @change="onInput")
 </template>
 
 <style>
+
+.input-date {
+  & input {
+    width: 20em;
+  }
+}
 
 </style>

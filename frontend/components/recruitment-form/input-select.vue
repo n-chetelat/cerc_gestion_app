@@ -18,7 +18,7 @@ export default {
 <template lang="pug">
   div.input-select
     label.label {{label}}
-    select(v-model="value")
+    select(v-model="value", @change="onInput")
       option(:value="null") --
       option(v-for="choice in options.choices", :value="choice.id") {{choice.label}}
 </template>

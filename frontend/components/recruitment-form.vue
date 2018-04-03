@@ -26,13 +26,14 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         positionId: null,
         applicationForm: null,
         applicationSent: false,
+        formIsValid: false,
         translations: {
           send: {en: "Send", fr: "Envoyer"},
           position: {en: "Select the type of application you wish to send",
             fr: "Sélectionnez le type d'application que vous désirez envoyer"
           },
           back: {en: "Back to the home page",
-            fr: "Aller à l'accueil"
+            fr: "Retour à l'accueil"
           }
         }
       }
@@ -57,6 +58,10 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         await this.fetchInitialData()
         await this.generatePositionForm()
       },
+      calculateFormIsValid() {
+        const fieldsValid = this.$refs.field.every((field) => field.isValid)
+        this.formIsValid = this.positionId && fieldsValid
+      },
       async generatePositionForm() {
         if (!this.positionId) {
           this.applicationForm = null
@@ -68,6 +73,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         }
       },
       async submitApplication() {
+        if (!!this.formIsValid || this.loading) return
         this.loading = true
         try {
           await this.sendApplication([...this.$refs.field,
@@ -79,7 +85,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         }
         this.applicationForm = null
         this.loading = false
-      }
+      },
     },
     components: {
       LocaleSwitcher,
@@ -93,7 +99,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       InputTextarea,
       RecruitmentFormSuccessModal,
       RecruitmentFormErrorModal
-    }
+    },
   }
   </script>
 
@@ -113,19 +119,24 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         form(enctype="multipart/form-data")
 
         div(v-if="!applicationSent")
-          div.position-select
+          div.position-select.mandatory
             label.label {{translations["position"][currentLocale]}}
             select(v-model="positionId", @change="generatePositionForm")
               option(:value="null") --
               option(v-for="position in allPositions", :value="position.id") {{position.title}}
 
           div.position-fields(v-if="applicationForm && !loading")
-            component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
+            component.form-row(
+              ref="field", v-for="field in applicationForm.form",
+              :is="field.type", :label="field.label", :options="field.options",
+              :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
+              @input="calculateFormIsValid"
+            )
             div.form-row
-              button.submit(type="button", @click="submitApplication") {{translations["send"][currentLocale]}}
+              button.submit(type="button", @click="submitApplication", :disabled="!formIsValid", :class="{'--disabled': !formIsValid}") {{translations["send"][currentLocale]}}
 
         div(v-else)
-          p.back-btn
+          p.back-link
             a(href="http://cerc-datascience.polymtl.ca/") {{translations["back"][currentLocale]}}
 
   </template>
@@ -151,7 +162,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         display: inline-block;
         width: 30%;
         margin-right: 10px;
-        vertical-align: middle;
+        vertical-align: top;
         text-align: right;
       }
       & .choice-group {
@@ -165,12 +176,6 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       }
       & .position-select {
         padding-bottom: 20px;
-        & select {
-          display: inline-block;
-          padding: .7em;
-          width: 20em;
-          background-color: white;
-        }
       }
       & .position-fields {
         & .form-row {
@@ -178,6 +183,12 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         }
       }
     }
+  }
+
+  .mandatory .label:after {
+    content: "*";
+    color: red;
+    margin-left: 2px;
   }
 
   .file-list {
@@ -202,13 +213,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     }
   }
 
-  .info-message {
-    text-align: center;
-    width: 33%;
-    margin: auto;
-  }
-
-  .back-btn {
+  .back-link {
     text-align: center;
   }
 

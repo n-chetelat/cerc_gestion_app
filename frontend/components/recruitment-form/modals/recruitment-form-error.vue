@@ -29,9 +29,13 @@ export default {
       div(v-if="currentLocale === 'en'")
         p There was an error with the submission of your application.
         p Please try again later.
+        p
+          a(href="http://cerc-datascience.polymtl.ca/") Back to the home page
       div(v-if="currentLocale === 'fr'")
         p Il s'est produit une erreur avec la soumission de votre application.
         p Veuillez réessayer plus tard.
+        p
+          a(href="http://cerc-datascience.polymtl.ca/") Retour à l'accueil
 
 
 
@@ -63,6 +67,10 @@ export default {
       padding: 1em;
       font-size: 1.4em;
       border-radius: 5px;
+
+      & a {
+        color: white;
+      }
     }
   }
 

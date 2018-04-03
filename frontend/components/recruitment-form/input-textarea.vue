@@ -10,12 +10,13 @@ export default {
 <template lang="pug">
   div.input-textarea
     label.label {{label}}
-    textarea(v-model="value")
+    textarea(v-model="value", @change="onInput")
 </template>
 
 <style>
   .input-textarea textarea {
     width: 20em;
+    min-height: 10em;
   }
 
 </style>

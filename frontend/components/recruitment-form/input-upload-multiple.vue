@@ -11,8 +11,17 @@ export default {
       value: [],
     }
   },
+  computed: {
+    isValid() {
+      if (!this.options.optional) {
+        return !!this.value.length
+      }
+      return true
+    }
+  },
   methods: {
     onChange(files) {
+      this.$emit("input")
       if (!files.length) return
 
       const that = this
@@ -30,7 +39,7 @@ export default {
 </script>
 
 <template lang="pug">
-  div
+  div.input-upload-multiple
     label.label {{label}}
     input(type="file", accept=".pdf", multiple, @change="onChange($event.target.files)")
     ul.file-list
@@ -40,4 +49,5 @@ export default {
 </template>
 
 <style>
+
 </style>

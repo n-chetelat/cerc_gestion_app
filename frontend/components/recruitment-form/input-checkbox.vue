@@ -16,6 +16,14 @@ export default {
     return {
       value: []
     }
+  },
+  computed: {
+    isValid() {
+      if (!this.options.optional) {
+        return !!this.value.length
+      }
+      return true
+    }
   }
 }
 </script>
@@ -26,7 +34,7 @@ export default {
     fieldset.choice-group
       span(v-for="choice in options.choices")
         label.check {{choice.label}}
-        input(type="checkbox", :value="choice.id", v-model="value")
+        input(type="checkbox", :value="choice.id", v-model="value", @change="onInput")
 </template>
 
 <style>

@@ -6,6 +6,7 @@ export default {
   mixins: [FormFieldMixin],
   methods: {
     onChange(files) {
+      this.$emit("input")
       if (!files.length) return
       this.value = files[0]
     },
