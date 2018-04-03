@@ -4,7 +4,7 @@ class Person < ApplicationRecord
   validates :email, uniqueness: true
   validate :validate_email_format
 
-  has_one :application, foreign_key: "person_id"
+  has_one :application, foreign_key: "person_id", dependent: :destroy
 
   has_many :persons_phases, class_name: "PersonPhase", foreign_key: "person_id", dependent: :destroy
 

@@ -25,10 +25,14 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       return {
         positionId: null,
         applicationForm: null,
+        applicationSent: false,
         translations: {
           send: {en: "Send", fr: "Envoyer"},
           position: {en: "Select the type of application you wish to send",
             fr: "Sélectionnez le type d'application que vous désirez envoyer"
+          },
+          back: {en: "Back to the home page",
+            fr: "Aller à l'accueil"
           }
         }
       }
@@ -68,6 +72,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         try {
           await this.sendApplication([...this.$refs.field,
             {value: this.positionId, inputName: "position_id"}])
+            this.applicationSent = true
           this.openModal("recruitment-form-success")
         } catch(error) {
           this.openModal("recruitment-form-error")
@@ -107,6 +112,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       div.application-form
         form(enctype="multipart/form-data")
 
+        div(v-if="!applicationSent")
           div.position-select
             label.label {{translations["position"][currentLocale]}}
             select(v-model="positionId", @change="generatePositionForm")
@@ -117,6 +123,10 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
             component.form-row(ref="field", v-for="field in applicationForm.form", :is="field.type", :label="field.label", :options="field.options", :field-id="field.id", :field-type="field.type")
             div.form-row
               button.submit(type="button", @click="submitApplication") {{translations["send"][currentLocale]}}
+
+        div(v-else)
+          p.back-btn
+            a(href="http://cerc-datascience.polymtl.ca/") {{translations["back"][currentLocale]}}
 
   </template>
 
@@ -196,6 +206,10 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     text-align: center;
     width: 33%;
     margin: auto;
+  }
+
+  .back-btn {
+    text-align: center;
   }
 
   </style>

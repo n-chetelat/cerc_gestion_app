@@ -10,16 +10,16 @@ export default {
 </script>
 
 <template lang="pug">
-  div.modal
-    div.modal-backdrop
-    //- div.modal-content
+  div.loading
+    div.loading-backdrop
+    div.loading-content
 
 
 </template>
 
 <style>
 
-  .modal {
+  .loading {
     z-index: 200;
     position: fixed;
     top: 0;
@@ -30,13 +30,22 @@ export default {
     justify-content: center;
     align-items: center;
 
-    & .modal-backdrop {
+    & .loading-backdrop {
       position: fixed;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
       background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    & .loading-content {
+      z-index: 201;
+      background: url("../../static/spinner.gif") center center no-repeat white;
+      border-radius: 20px;
+      height: 200px;
+      width: 200px;
+      box-shadow: 0 0 20px 2px black;
     }
 
   }
