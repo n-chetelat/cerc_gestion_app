@@ -4,7 +4,8 @@ class ApplicationController < ActionController::Base
 
   before_action :set_locale
 
-  rescue_from "::GmailOauthError" do |error|
+  rescue_from ::GmailOauthError do |error|
+    ::GmailOauthMailer.authorization_needed.deliver_now
     render json: {error: "#{error.msg}"}, status: 500
   end
 

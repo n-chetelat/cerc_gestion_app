@@ -23,7 +23,7 @@ class GoogleService
   }}
   CREDENTIALS_PATH = File.join(Dir.home, ".credentials", "cerc-datascience.yaml")
   SCOPES = ['https://mail.google.com/']
-  USER_ID = 'natalia.buitrago1@gmail.com'
+  USER_ID = ENV['GMAIL_ADDRESS']
 
   def initialize(request)
     @request = request
