@@ -69,13 +69,14 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     div.boards(v-if="isLoaded")
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
 
-      div.navigation.--left
-        span.arrow-icon(@click="scrollLeft")
-      div.phases-wrapper
-        div.phases(:style="{width: (board.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
-          phase(v-for="phase in board.phases", :phase="phase", @modal="openModalByName")
-      div.navigation.--right
-        span.arrow-icon(@click="scrollRight")
+      div.carrousel
+        div.navigation.--left
+          span.arrow-icon(@click="scrollLeft")
+        div.phases-wrapper
+          div.phases(:style="{width: (board.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
+            phase(v-for="phase in board.phases", :phase="phase", @modal="openModalByName")
+        div.navigation.--right
+          span.arrow-icon(@click="scrollRight")
   </template>
 
   <style scoped>
@@ -85,7 +86,10 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     top: 0;
     left: 0;
     right: 0;
-    display: flex;
+
+    & .carrousel {
+      display: flex;
+    }
 
     & .navigation {
       width: 7em;
@@ -119,9 +123,9 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
   }
 
   .phases-wrapper {
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     height: 100%;
-    box-shadow: 0 0 30px 0 inset;
     padding: 1em;
   }
 

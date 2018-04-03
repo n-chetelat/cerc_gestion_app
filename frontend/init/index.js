@@ -2,12 +2,17 @@ import "babel-polyfill"
 
 import "./index.css";
 import "./recruitment-info.css";
+import "./tooltip.css";
 
 import Vue from 'vue'
 import store from '../store'
 import router from '../router'
 import App from '../components/app.vue'
 import AppAdmin from '../components/app-admin.vue'
+
+import VTooltip from 'v-tooltip'
+
+Vue.use(VTooltip)
 
 import axios from "axios"
 axios.defaults.headers.common["X-CSRF-TOKEN"] = document.querySelector("meta[name='csrf-token']").getAttribute("content")
