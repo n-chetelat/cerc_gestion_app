@@ -23,6 +23,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     mixins: [SceneMixin, ModalMixin],
     data() {
       return {
+        loadingApplication: false,
         positionId: null,
         applicationForm: null,
         applicationSent: false,
@@ -66,10 +67,10 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         if (!this.positionId) {
           this.applicationForm = null
         } else {
-          this.loading = true
+          this.loadingApplication = true
           await this.getPositionForm(this.positionId)
           this.applicationForm = this.positionFormsById[this.positionId]
-          this.loading = false
+          this.loadingApplication = false
         }
       },
       async submitApplication() {
@@ -111,53 +112,82 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       recruitment-form-error-modal(v-if="modalVisible && modalName === 'recruitment-form-error'", @close="closeModal")
 
       nav
+        a.logo-link(href="http://cerc-datascience.polymtl.ca/", target="_blank")
+          img.logo(src="../static/images/DSDMlogo_Full.png")
         locale-switcher.locale-switcher(@switch="fetchAllData")
 
-      div.application-information(v-html="recruitmentInfo")
+      div.application-form-content
+        div.application-information
+          div(v-html="recruitmentInfo")
 
-      div.application-form
-        form(enctype="multipart/form-data")
+        div.application-form
+          form(enctype="multipart/form-data")
 
-        div(v-if="!applicationSent")
-          div.position-select.mandatory
-            label.label {{translations["position"][currentLocale]}}
-            select(v-model="positionId", @change="generatePositionForm")
-              option(:value="null") --
-              option(v-for="position in allPositions", :value="position.id") {{position.title}}
+          div(v-if="!applicationSent")
+            div.position-select.mandatory
+              label.label {{translations["position"][currentLocale]}}
+              select(v-model="positionId", @change="generatePositionForm")
+                option(:value="null") --
+                option(v-for="position in allPositions", :value="position.id") {{position.title}}
 
-          div.position-fields(v-if="applicationForm && !loading")
-            component.form-row(
-              ref="field", v-for="field in applicationForm.form",
-              :is="field.type", :label="field.label", :options="field.options",
-              :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
-              @input="calculateFormIsValid"
-            )
-            div.form-row
-              button.submit(type="button", @click="submitApplication", :disabled="!formIsValid", :class="{'--disabled': !formIsValid}") {{translations["send"][currentLocale]}}
+            transition(name="ease")
+              div.position-fields(v-if="applicationForm && !loadingApplication")
+                component.form-row(
+                  ref="field", v-for="field in applicationForm.form",
+                  :is="field.type", :label="field.label", :options="field.options",
+                  :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
+                  @input="calculateFormIsValid"
+                )
+                div.form-row
+                  button.submit(type="button", @click="submitApplication", :disabled="!formIsValid", :class="{'--disabled': !formIsValid}") {{translations["send"][currentLocale]}}
 
-        div(v-else)
-          p.back-link
-            a(href="http://cerc-datascience.polymtl.ca/") {{translations["back"][currentLocale]}}
+          div(v-else)
+            p.back-link
+              a(href="http://cerc-datascience.polymtl.ca/") {{translations["back"][currentLocale]}}
 
   </template>
 
   <style>
 
+  :root {
+    --navHeight: 8;
+  }
+
   .recruitment-form {
+
     & nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
       width: 100%;
-      height: 5em;
+      height: var(--navHeight)em;
+      background-color: black;
+      padding: 10px;
+      & .logo-link {
+        display: inline-block;
+      }
+
+      & .logo {
+        height: calc(var(--navHeight) + 5)em;
+        margin: -3em;
+      }
       & .locale-switcher {
-        margin: 1em auto;
         float: right;
+        margin: 1.5em;
       }
     }
 
+    & .application-form-content {
+      margin-top: calc(var(--navHeight) + 2)em;
+    }
+
     & .application-form {
+      transition: transform .5s;
       width: 90%;
       margin: auto;
-      border-top: 2px solid black;
       padding-top: 20px;
+
       & .label {
         display: inline-block;
         width: 30%;
@@ -167,7 +197,6 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       }
       & .choice-group {
         display: inline-block;
-        max-width: 20em;
         border: none;
         & label {
           margin: 5px 5px 0 15px;
@@ -185,6 +214,10 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     }
   }
 
+  input, textarea, select, button.submit, .input {
+    width: 25em;
+  }
+
   .mandatory .label:after {
     content: "*";
     color: red;
@@ -194,7 +227,6 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
   .file-list {
     list-style: none;
     padding-left: 0;
-    max-width: 20em;
     margin: auto;
     & .file-line {
       position: relative;
@@ -213,8 +245,17 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     }
   }
 
-  .back-link {
-    text-align: center;
-  }
+.ease-enter-active, .ease-leave-active {
+  transition: all .5s ease-in;
+}
+
+.ease-enter, .ease-leave-to {
+  opacity: 0;
+  transform: translateY(100px);
+}
+
+.back-link {
+  text-align: center;
+}
 
   </style>

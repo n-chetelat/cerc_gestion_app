@@ -1,5 +1,11 @@
 @import "normalize.css";
 
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,400i,600,600i|Raleway:400,400i,700,700i&subset=latin-ext');
+
+:root {
+  --navColor: #4490ce;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -9,7 +15,7 @@ html {
 }
 
 html, body {
-  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
 }
 
 .wrapper {
@@ -19,13 +25,23 @@ html, body {
 }
 
 button {
-  background-color: white;
+  font-family: "Raleway", sans-serif;
+  font-weight: bold;
+  background-color: var(--navColor);
+  color: white;
   padding: 15px;
-  border: 1px solid black;
+  border: none;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 2px;
+  line-height: 20px;
   cursor: pointer;
+  transition: color 300ms, background-color 300ms;
 
   &:hover {
-    text-decoration: underline;
+    background-color: white;
+    color: var(--navColor);
   }
   &.remove {
     width: 1.7em;
@@ -37,16 +53,18 @@ button {
     color: white;
   }
   &.submit {
-    width: 20em;
     margin: auto;
     display: block;
+    border: 1px solid var(--navColor);
     &.--disabled {
       cursor: default;
-      border-color: gray(50%);
-      color: gray(50%);
+      border: 1px solid transparent;
+      background-color: var(--navColor)99;
+      color: white;
     }
     &.--disabled:hover {
-      text-decoration: none;
+      background-color: var(--navColor)99;
+      color: white;
     }
   }
 }
@@ -62,6 +80,5 @@ input[type="file"] {
 select {
   display: inline-block;
   padding: .5em;
-  width: 20em;
   background-color: white;
 }

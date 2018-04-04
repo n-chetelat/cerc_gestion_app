@@ -32,11 +32,25 @@ export default {
   div.input-checkbox
     label.label {{label}}
     fieldset.choice-group
-      span(v-for="choice in options.choices")
-        label.check {{choice.label}}
+      span.input(v-for="choice in options.choices")
         input(type="checkbox", :value="choice.id", v-model="value", @change="onInput")
+        label {{choice.label}}
 </template>
 
 <style>
+
+.input-checkbox {
+  & .input {
+    display: flex;
+    & label {
+      width: 90%;
+    }
+    & input {
+      display: inline;
+      width: 1em;
+      margin-top: .5em;
+    }
+  }
+}
 
 </style>

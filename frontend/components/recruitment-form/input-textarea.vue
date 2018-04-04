@@ -15,7 +15,6 @@ export default {
 
 <style>
   .input-textarea textarea {
-    width: 20em;
     min-height: 10em;
   }
 

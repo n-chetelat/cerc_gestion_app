@@ -15,10 +15,4 @@ export default {
 
 <style>
 
-.input-date {
-  & input {
-    width: 20em;
-  }
-}
-
 </style>

@@ -18,6 +18,7 @@ ActiveAdmin.register_page "Dashboard" do
         panel "Links" do
           ul do
             li link_to("Recruitment form", root_path, target: "_blank")
+            li link_to("Grant Google authorization", "/admin/google/authorize")
             # Post.recent(5).map do |post|
             #   li link_to(post.title, admin_post_path(post))
             # end

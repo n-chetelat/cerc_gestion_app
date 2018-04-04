@@ -25,8 +25,5 @@ export default {
 </template>
 
 <style>
-.input-text input {
-  width: 20em;
-}
 
 </style>
