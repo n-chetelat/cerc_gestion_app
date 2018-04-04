@@ -1,6 +1,6 @@
 class Phase < ApplicationRecord
 
-  validates :title, presence: true
+  validates :title, :gmail_label, presence: true
   validates :title, uniqueness: true
 
   before_save :switch_to_initial

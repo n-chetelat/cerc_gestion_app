@@ -89,6 +89,8 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
 
     & .carrousel {
       display: flex;
+      max-width: 1200px;
+      margin: auto;
     }
 
     & .navigation {

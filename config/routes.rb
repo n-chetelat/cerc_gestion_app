@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  get "/admin/google/authorize", to: "google#authorize"
+
   scope "(:locale)", locale: /en|fr/ do
 
     namespace "api", defaults: {format: "json"} do

@@ -30,6 +30,7 @@ module Api
       :application
     end
 
+
     private
 
       def set_resource

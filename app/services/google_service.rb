@@ -71,6 +71,7 @@ class GoogleService
     draft = Google::Apis::GmailV1::Draft.new(message: message)
     gmail_service.create_user_draft(USER_ID, draft) do |result, error|
       unless error
+        # result.message.thread_id
         gmail_service.send_user_draft(USER_ID, result)
       end
     end
