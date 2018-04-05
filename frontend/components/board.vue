@@ -69,7 +69,10 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     div.boards(v-if="isLoaded")
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
 
-      div.carrousel
+      //- div.board-heading-container
+      //-   h1.board-heading {{board.title}}
+
+      div.carrousel(v-if="board.phases.length")
         div.navigation.--left
           span.arrow-icon(@click="scrollLeft")
         div.phases-wrapper
@@ -77,6 +80,7 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
             phase(v-for="phase in board.phases", :phase="phase", @modal="openModalByName")
         div.navigation.--right
           span.arrow-icon(@click="scrollRight")
+
   </template>
 
   <style scoped>
@@ -86,6 +90,18 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     top: 0;
     left: 0;
     right: 0;
+
+    & .board-heading {
+      &:before {
+        content: "";
+        width: 2em;
+        height: 2em;
+        display: inline-block;
+        background: url("../static/icons/books.svg") center center / 70% no-repeat;
+        margin-bottom: -.5em;
+        margin-right: -.2em;
+      }
+    }
 
     & .carrousel {
       display: flex;
@@ -126,8 +142,8 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
 
   .phases-wrapper {
     overflow-x: auto;
-    overflow-y: hidden;
-    height: 100%;
+    overflow-y: auto;
+    /* height: 100%; */
     padding: 1em;
   }
 

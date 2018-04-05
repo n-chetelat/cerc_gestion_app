@@ -15,13 +15,22 @@ ActiveAdmin.register_page "Dashboard" do
 
     columns do
       column do
+        panel "Links to Boards" do
+          ul do
+            Board.all.map do |board|
+              li link_to(board.title, "/#/admin/boards/#{board.id}", target: "_blank")
+            end
+          end
+        end
+      end
+    end
+
+    columns do
+      column do
         panel "Links" do
           ul do
             li link_to("Recruitment form", root_path, target: "_blank")
             li link_to("Grant Google authorization", "/admin/google/authorize")
-            # Post.recent(5).map do |post|
-            #   li link_to(post.title, admin_post_path(post))
-            # end
           end
         end
       end
