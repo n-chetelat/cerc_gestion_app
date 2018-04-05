@@ -116,7 +116,8 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
           img.logo(src="../static/images/DSDMlogo_Full.png")
         locale-switcher.locale-switcher(@switch="fetchAllData")
 
-      div.application-form-content
+      div.application-form-container
+
         div.application-information
           div(v-html="recruitmentInfo")
 
@@ -178,7 +179,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       }
     }
 
-    & .application-form-content {
+    & .application-form-container {
       margin-top: calc(var(--navHeight) + 2)em;
     }
 
@@ -214,7 +215,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     }
   }
 
-  input, textarea, select, button.submit, .input {
+  input, textarea, select, button.submit, .input, .file-list {
     width: 25em;
   }
 
@@ -230,18 +231,13 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     margin: auto;
     & .file-line {
       position: relative;
-      display: inline-block;
+      display: flex;
       height: 2em;
       line-height: 2em;
       margin-top: 3px;
       & span {
         margin-left: 2em;
       }
-    }
-    & .remove {
-      position: absolute;
-      left: 0;
-      top: 0;
     }
   }
 

@@ -22,7 +22,7 @@ const actions = {
         value.value.forEach((item, index) => {
           formData.append(`${value.inputName}[${index}]`, item)
         })
-      } else {
+      } else if (value.value) {
         formData.append(value.inputName, value.value)
       }
     })

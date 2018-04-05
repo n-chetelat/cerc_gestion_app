@@ -23,13 +23,17 @@ export default {
       header.modal-header
         span.modal-title
           slot(name="header")
-        button.btn-close(type="button", @click="close") x
+        button.btn-close(type="button", @click="close")
       div.modal-body
         slot(name="body")
 
 </template>
 
 <style>
+
+:root {
+  --headerColor: #292929;
+}
 
   .modal {
     z-index: 200;
@@ -66,6 +70,7 @@ export default {
 
     & .modal-header {
       position: relative;
+      color: var(--headerColor);
     }
 
     & .modal-body {
@@ -83,16 +88,11 @@ export default {
       position: absolute;
       right: 0;
       top: 0;
-      border: none;
-      border-radius: 50%;
-      font-size: 20px;
-      width: 2em;
-      height: 2em;
+      width: 3em;
+      height: 3em;
       cursor: pointer;
       font-weight: bold;
-      line-height: 0;
-      color: white;
-      background: black;
+      background: url("../../static/icons/x-charcoal.svg") center center no-repeat;
       margin: 10px;
     }
 

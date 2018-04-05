@@ -45,7 +45,7 @@ export default {
 <style>
 
   :root {
-    --successColor: black;
+    --paragraphColor: #767676;
   }
 
   .success-message {
@@ -54,23 +54,14 @@ export default {
     overflow: auto;
     text-align: center;
 
-    & .success-message-header {
-      color: var(--successColor);
-    }
-
     & .success-message-body {
+      color: var(--paragraphColor);
       width: 70%;
       max-width: 600px;
       margin: auto;
-      background-color: var(--successColor);
-      color: white;
       padding: 1em;
-      font-size: 1.4em;
+      font-size: 1.1em;
       border-radius: 5px;
-
-      & a {
-        color: white;
-      }
     }
   }
 

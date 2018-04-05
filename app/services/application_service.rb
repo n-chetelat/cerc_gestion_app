@@ -30,7 +30,9 @@ class ApplicationService
         form_fields.each do |field|
           attribute_name = "input_#{field.form}_#{field.id}"
           attribute = params[attribute_name]
-          if field.form.to_s =~ /upload_/ # files need to be stored differently
+          if attribute.nil?
+            application.fields[attribute_name] = nil
+          elsif field.form.to_s =~ /upload_/ # files need to be stored differently
             if attribute.class == ActionController::Parameters
               attribute.values.each do |upload|
                 file = Attachment.create!(file: upload)
@@ -86,16 +88,20 @@ class ApplicationService
       when :text, :textarea, :date
         value
       when :radio, :select
-        form_field.locale_choices[value][I18n.locale.to_s]
+        form_field.locale_choices[value].try(:[], I18n.locale.to_s)
       when :checkbox
-        value.map do |val|
+        (value || []).map do |val|
           form_field.locale_choices[val][I18n.locale.to_s]
         end
       when :upload_single
-        file = GlobalID::Locator.locate(value["uri"])
-        {name: file.file.name, url: file.file.url}
+        if value
+          file = GlobalID::Locator.locate(value["uri"])
+          {name: file.file.name, url: file.file.url}
+        else
+          {name: nil, url: nil}
+        end
       when :upload_multiple
-        value.map do |val|
+        (value || []).map do |val|
           file = GlobalID::Locator.locate(val["uri"])
           {name: file.file.name, url: file.file.url}
         end

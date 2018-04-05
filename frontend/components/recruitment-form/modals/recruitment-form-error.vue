@@ -45,7 +45,7 @@ export default {
 <style>
 
   :root {
-    --errorColor: black;
+    --paragraphColor: #767676;
   }
 
   .error-message {
@@ -54,23 +54,15 @@ export default {
     overflow: auto;
     text-align: center;
 
-    & .error-message-header {
-      color: var(--errorColor);
-    }
 
     & .error-message-body {
+    color: var(--paragraphColor);
       width: 70%;
       max-width: 600px;
       margin: auto;
-      background-color: var(--errorColor);
-      color: white;
       padding: 1em;
-      font-size: 1.4em;
+      font-size: 1.1em;
       border-radius: 5px;
-
-      & a {
-        color: white;
-      }
     }
   }
 
