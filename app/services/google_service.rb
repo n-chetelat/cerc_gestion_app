@@ -12,7 +12,7 @@ class GoogleService
   attr_reader :request
   attr_accessor :authorizer, :gmail_service
 
-  APPLICATION_NAME = 'CERC Data Science'
+  APPLICATION_NAME = 'RecruitmentStaging'
   CLIENT_SECRETS_HASH = {"web" => {
     "client_id" => ENV["GOOGLE_API_CLIENT_ID"],
     "project_id" => ENV["GOOGLE_API_PROJECT_ID"],
