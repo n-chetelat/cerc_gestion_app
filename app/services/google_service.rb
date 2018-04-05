@@ -3,6 +3,8 @@ require 'google/apis/gmail_v1'
 require 'googleauth'
 require 'googleauth/web_user_authorizer'
 require 'googleauth/stores/file_token_store'
+require 'googleauth/stores/redis_token_store'
+require 'redis'
 
 require 'signet/oauth_2/client'
 class GoogleService
@@ -21,7 +23,6 @@ class GoogleService
     "redirect_uris" => ENV["GOOGLE_API_REDIRECT_URIS"].split(","),
     "javascript_origins" => ENV["GOOGLE_API_JAVASCRIPT_ORIGINS"].split(",")
   }}
-  CREDENTIALS_PATH = File.join(Dir.home, ".credentials", "cerc-datascience.yaml")
   SCOPES = ['https://mail.google.com/']
   USER_ID = ENV['GMAIL_ADDRESS']
 
@@ -30,7 +31,7 @@ class GoogleService
 
     client_id = Google::Auth::ClientId.from_hash(CLIENT_SECRETS_HASH)
 
-    @token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+    @token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
 
     @authorizer = Google::Auth::WebUserAuthorizer.new(
       client_id, SCOPES, @token_store, '/oauth2callback')
