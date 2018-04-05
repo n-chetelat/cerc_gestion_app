@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180403233858) do
+ActiveRecord::Schema.define(version: 20180405180743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,7 +82,6 @@ ActiveRecord::Schema.define(version: 20180403233858) do
   create_table "email_templates", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "phases_callback_id"
   end
 
   create_table "persons", force: :cascade do |t|
@@ -119,6 +118,15 @@ ActiveRecord::Schema.define(version: 20180403233858) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["phase_id"], name: "index_phases_callbacks_on_phase_id"
+  end
+
+  create_table "phases_callbacks_email_templates", force: :cascade do |t|
+    t.bigint "email_template_id"
+    t.bigint "phases_callback_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_template_id"], name: "index_phases_callbacks_email_templates_on_email_template_id"
+    t.index ["phases_callback_id"], name: "index_phases_callbacks_email_templates_on_phases_callback_id"
   end
 
   create_table "position_translations", force: :cascade do |t|
@@ -196,10 +204,10 @@ ActiveRecord::Schema.define(version: 20180403233858) do
   add_foreign_key "applications", "positions"
   add_foreign_key "boards_phases", "boards"
   add_foreign_key "boards_phases", "phases"
-  add_foreign_key "email_templates", "phases_callbacks"
   add_foreign_key "persons_phases", "persons"
   add_foreign_key "persons_phases", "phases"
   add_foreign_key "phases_callbacks", "phases"
+  add_foreign_key "phases_callbacks_email_templates", "phases_callbacks"
   add_foreign_key "positions_form_fields", "positions_recruitment_forms", column: "recruitment_form_id"
   add_foreign_key "positions_recruitment_forms", "positions"
 end

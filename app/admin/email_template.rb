@@ -1,7 +1,7 @@
 ActiveAdmin.register EmailTemplate do
   menu parent: "Boards"
 
-  permit_params translations_attributes: [:id, :locale, :subject, :body]
+  permit_params :locale, translations_attributes: [:id, :locale, :subject, :body]
 
   config.filters = false
 

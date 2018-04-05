@@ -8,10 +8,11 @@ class EmailTemplate < ApplicationRecord
 
   globalize_accessors :locales => [:en, :fr], :attributes => [:subject, :body]
 
-  belongs_to :phase_callback, class_name: "Phases::Callback", foreign_key: "phases_callback_id", inverse_of: :email_template
+  has_many :callbacks_email_templates, class_name: "Phases::CallbackEmailTemplate", foreign_key: "email_template_id", inverse_of: :email_template
+  has_many :phases_callbacks, through: :callbacks_email_templates
 
   TEMPLATE_VARIABLES = [
-    "name", "last_name", "full_name", "email",
+    "name", "lastname", "full_name", "email",
     "position", "starting_semester_label"
   ]
 
@@ -23,10 +24,11 @@ class EmailTemplate < ApplicationRecord
     compiled_attrs = {}
     ["subject", "body"].each do |attr|
       compiled = self.send(attr)
-      if (matches = /(\{\{.+\}\})/.match(self.send(attr)))
-        matches.captures.uniq.each do |match|
+      if (matches = self.send(attr).scan(/(\{\{\w+\}\})/))
+        matches.flatten.uniq.each do |match|
           method = match.gsub(/[\{|\}]/, "").strip
-          compiled.gsub!(match, recipient.send(method).try(:to_s))
+          replacement = recipient.respond_to?(method) ? recipient.send(method).try(:to_s) : ""
+          compiled.gsub!(match, replacement)
         end
       end
       compiled_attrs[attr.to_sym] = compiled
