@@ -36,6 +36,10 @@ gem 'redis', '~> 4.0'
 # Attachments
 gem 'dragonfly', '~> 1.1.4'
 
+# Cloud
+gem 'fog-aws'
+gem 'dragonfly-s3_data_store'
+
 # UX helpers
 gem 'jquery-rails'
 gem 'select2-rails'
