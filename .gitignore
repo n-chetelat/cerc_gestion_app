@@ -11,7 +11,6 @@
 
 # Only include if you have production secrets in this file, which is no longer a Rails default
 config/secrets.yml
-config/database.yml
 
 # dotenv
 .env
@@ -31,3 +30,8 @@ yarn-debug.log*
 # API keys
 client_secret.json
 aws-cerc-credentials.csv
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
