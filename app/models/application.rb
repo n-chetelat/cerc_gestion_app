@@ -3,6 +3,8 @@ class Application < ApplicationRecord
 
   store_accessor :fields
 
+  before_destroy :delete_attachments
+
   belongs_to :person, foreign_key: "person_id"
   belongs_to :position, foreign_key: "position_id"
 
@@ -11,6 +13,9 @@ class Application < ApplicationRecord
 
   def starting_semester_to_s
     self.class.semester_to_s(self.starting_semester)
+  end
+
+  def delete_attachments
   end
 
 end
