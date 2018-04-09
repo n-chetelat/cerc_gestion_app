@@ -1,9 +1,42 @@
 ActiveAdmin.register Phase do
   menu parent: "Boards"
-  permit_params :title, :description, :initial, :gmail_label,
-    phases_callbacks_attributes: [:id, :_destroy, :title, :position, :email_template_id]
+  permit_params :title, :description, :initial,
+    phases_callbacks_attributes: [:id, :_destroy, :title, :position, :email_template_id],
+    email_label_attributes: [:id, :_destroy, :name]
 
   config.filters = false
+
+  controller do
+
+    def create
+      super
+      create_or_update_email_label(params)
+    end
+
+    def update
+      super
+      create_or_update_email_label(params)
+    end
+
+    def destroy
+      super
+      google_service = ::GoogleService.new(request)
+      google_service.delete_email_label!(resource)
+    end
+
+    def create_or_update_email_label(params)
+      name = params[:phase][:email_label_attributes].try(:[], :name)
+      google_service = ::GoogleService.new(request)
+      if name.presence && !resource.email_label.persisted?
+        google_service.create_email_label!(resource, name)
+      elsif name.blank? && resource.email_label.persisted?
+        google_service.delete_email_label!(resource)
+      elsif name.presence
+        google_service.update_email_label!(resource, name)
+      end
+    end
+
+  end
 
   index do
     selectable_column
@@ -17,7 +50,7 @@ ActiveAdmin.register Phase do
     attributes_table do
       row :title
       row :initial
-      row :gmail_label
+      row :email_label
       row(:description) { resource.description.try(:html_safe) }
     end
   end
@@ -25,7 +58,9 @@ ActiveAdmin.register Phase do
   form do |f|
     f.inputs do
       f.input :title
-      f.input :gmail_label
+      f.inputs "Email Label", for: [:email_label, f.object.email_label || f.object.build_email_label] do |a|
+        a.input :name
+      end
       if f.object.initial
         f.input :initial, hint: "This is currently the tag under which new applications are classified. Deselecting it does not move any existing persons to or from this tag."
       else

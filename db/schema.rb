@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180409184925) do
+ActiveRecord::Schema.define(version: 20180409213637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,15 @@ ActiveRecord::Schema.define(version: 20180409184925) do
     t.string "address"
     t.bigint "person_id"
     t.index ["person_id"], name: "index_email_addresses_on_person_id"
+  end
+
+  create_table "email_labels", force: :cascade do |t|
+    t.string "name"
+    t.string "google_label_id"
+    t.bigint "phase_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["phase_id"], name: "index_email_labels_on_phase_id"
   end
 
   create_table "email_messages", force: :cascade do |t|
@@ -140,7 +149,6 @@ ActiveRecord::Schema.define(version: 20180409184925) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "initial", default: false
-    t.string "gmail_label"
   end
 
   create_table "phases_callbacks", force: :cascade do |t|
@@ -237,6 +245,7 @@ ActiveRecord::Schema.define(version: 20180409184925) do
   add_foreign_key "boards_phases", "boards"
   add_foreign_key "boards_phases", "phases"
   add_foreign_key "email_addresses", "persons"
+  add_foreign_key "email_labels", "phases"
   add_foreign_key "email_messages", "email_threads"
   add_foreign_key "email_persons_threads", "email_threads"
   add_foreign_key "email_persons_threads", "persons"

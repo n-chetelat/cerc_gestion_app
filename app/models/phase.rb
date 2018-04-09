@@ -1,6 +1,6 @@
 class Phase < ApplicationRecord
 
-  validates :title, :gmail_label, presence: true
+  validates :title, :email_label, presence: true
   validates :title, uniqueness: true
 
   before_save :switch_to_initial
@@ -15,10 +15,16 @@ class Phase < ApplicationRecord
 
   has_many :phases_callbacks, class_name: "Phases::Callback", dependent: :destroy
 
+  has_one :email_label, class_name: "Email::Label", foreign_key: "phase_id", dependent: :destroy, inverse_of: :phase
+
   accepts_nested_attributes_for :phases_callbacks, allow_destroy: true
+  accepts_nested_attributes_for :email_label
 
   def to_s
     self.title
+  end
+
+  def email_label_attributes=(email_label_attrs)
   end
 
   def self.current_initial

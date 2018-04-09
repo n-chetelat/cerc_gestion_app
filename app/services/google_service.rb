@@ -88,17 +88,39 @@ class GoogleService
     end
   end
 
-  def create_phase_label!(phase, name)
+  def create_email_label!(phase, name)
     label_object = Google::Apis::GmailV1::Label.new(name: name)
     gmail_service.create_user_label(USER_ID, label_object) do |result, error|
       if error
-        raise "There was an error when creating a new Gmail label."
+        nil
+      else
+        label = Email::Label.new(phase_id: phase.id, name: result.name, google_label_id: result.id)
+        label.save!
       end
-      # phase.email_label.build(google_label_id: result.id, name: name)
     end
   end
 
-  def update_phase_label(phase, new_name)
+  def update_email_label!(phase, new_name)
+    label = phase.email_label
+    label_object = Google::Apis::GmailV1::Label.new(id: label.google_label_id, name: new_name)
+    gmail_service.update_user_label(USER_ID, label.google_label_id, label_object) do |result, error|
+      if error
+        nil
+      else
+        label.update_attributes(name: result.name, google_label_id: result.id)
+      end
+    end
+  end
+
+  def delete_email_label!(phase)
+    label = phase.email_label
+    gmail_service.delete_user_label(USER_ID, label.google_label_id) do |result, error|
+      if error
+        nil
+      else
+        label.destroy
+      end
+    end
   end
 
   def update_thread_labels(thread, add_label_ids, remove_label_ids)

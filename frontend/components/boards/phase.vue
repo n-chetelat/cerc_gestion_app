@@ -29,7 +29,7 @@ export default {
   div.phase
     h2.heading {{phase.title}}
       span.description(v-tooltip="description")
-    span.gmail_label(v-tooltip="'Gmail tag label'") {{phase.gmail_label}}  &#8728;
+    span.email_label(v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
     div.stats
       p #[span.count {{phase.persons.length}}] people in this section
     person-card(v-for="person in phase.persons", :person="person", @modal="openModal")
@@ -62,7 +62,7 @@ export default {
     float: right;
   }
 
-  & .gmail_label {
+  & .email_label {
     font-size: .7em;
     color: gray(60%);
     background-color: beige;
