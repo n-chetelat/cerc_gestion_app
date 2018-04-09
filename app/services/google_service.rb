@@ -71,9 +71,19 @@ class GoogleService
     message = Google::Apis::GmailV1::Message.new(raw: mail.to_s)
     draft = Google::Apis::GmailV1::Draft.new(message: message)
     gmail_service.create_user_draft(USER_ID, draft) do |result, error|
-      unless error
-        # result.message.thread_id
+      if error
+        raise "There was an error when sending a Gmail draft."
+      else
         gmail_service.send_user_draft(USER_ID, result)
+        thread = Email::Thread.new(google_thread_id: result.message.thread_id)
+        thread.messages.build(
+          google_message_id: result.message.id,
+          google_label_ids: result.message.label_ids,
+          content: Base64.encode64(mail.to_s)
+        )
+        thread.persons_threads.build(person_id: person.id)
+        thread.save!
+
       end
     end
   end
