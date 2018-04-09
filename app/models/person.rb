@@ -46,4 +46,8 @@ class Person < ApplicationRecord
     ::Application.semester_to_s(self.application.starting_semester)
   end
 
+  # def swap_gmail_labels(old_label, new_label)
+  #   self.threads.each {|thread| thread.update_gmail_labels([new_label], [old_label]) }
+  # end
+
 end
