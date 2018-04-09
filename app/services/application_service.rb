@@ -15,7 +15,7 @@ class ApplicationService
         end
 
         # Create profile from name and email info
-        person = Person.find_or_create_by(email: person_attributes["email"])
+        person = Person.create(email: person_attributes["email"])
         person.attributes = person_attributes.compact
 
         application = person.application || person.build_application
