@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180405180743) do
+ActiveRecord::Schema.define(version: 20180409184925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,32 @@ ActiveRecord::Schema.define(version: 20180405180743) do
     t.index ["phase_id"], name: "index_boards_phases_on_phase_id"
   end
 
+  create_table "email_addresses", force: :cascade do |t|
+    t.string "address"
+    t.bigint "person_id"
+    t.index ["person_id"], name: "index_email_addresses_on_person_id"
+  end
+
+  create_table "email_messages", force: :cascade do |t|
+    t.bigint "email_thread_id"
+    t.string "google_message_id"
+    t.string "google_timestamp"
+    t.string "google_label_ids", array: true
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_thread_id"], name: "index_email_messages_on_email_thread_id"
+  end
+
+  create_table "email_persons_threads", force: :cascade do |t|
+    t.bigint "person_id"
+    t.bigint "email_thread_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_thread_id"], name: "index_email_persons_threads_on_email_thread_id"
+    t.index ["person_id"], name: "index_email_persons_threads_on_person_id"
+  end
+
   create_table "email_template_translations", force: :cascade do |t|
     t.integer "email_template_id", null: false
     t.string "locale", null: false
@@ -80,6 +106,12 @@ ActiveRecord::Schema.define(version: 20180405180743) do
   end
 
   create_table "email_templates", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "email_threads", force: :cascade do |t|
+    t.string "google_thread_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -204,6 +236,10 @@ ActiveRecord::Schema.define(version: 20180405180743) do
   add_foreign_key "applications", "positions"
   add_foreign_key "boards_phases", "boards"
   add_foreign_key "boards_phases", "phases"
+  add_foreign_key "email_addresses", "persons"
+  add_foreign_key "email_messages", "email_threads"
+  add_foreign_key "email_persons_threads", "email_threads"
+  add_foreign_key "email_persons_threads", "persons"
   add_foreign_key "persons_phases", "persons"
   add_foreign_key "persons_phases", "phases"
   add_foreign_key "phases_callbacks", "phases"
