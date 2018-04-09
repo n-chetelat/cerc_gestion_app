@@ -51,7 +51,7 @@ ActiveAdmin.register Position do
           t.input :title
         end
       end
-      f.input :hidden
+      f.input :hidden, input_html: {checked: true}
       if !f.object.new_record?
         panel "Recruitment Form" do
           para "N.B: Besides the fields below, each position's form asks for: #{Positions::RecruitmentForm.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"

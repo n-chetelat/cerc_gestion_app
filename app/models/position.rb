@@ -1,5 +1,6 @@
 class Position < ApplicationRecord
 
+  after_initialize :add_default_values
   before_save :add_recruitment_form
 
   translates :title
@@ -19,6 +20,10 @@ class Position < ApplicationRecord
     self.title
   end
 
+  def add_default_values
+    self.hidden = true if self.hidden.nil?
+  end
+
   def duplicate!
     self.with_lock do
       copy = self.class.new
@@ -26,6 +31,7 @@ class Position < ApplicationRecord
         tr = copy.translations.build(translation.attributes.slice("locale", "title"))
         tr.title = "#{tr.title} - Copy"
       end
+      copy.hidden = true
       form = copy.build_recruitment_form
       copy.save!
 
