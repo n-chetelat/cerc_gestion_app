@@ -27,12 +27,9 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
       }
     },
     computed: {
-      ...mapGetters("boards", ["boardsById"]),
+      ...mapGetters("boards", ["currentBoard"]),
       isLoaded() {
-        return !!(this.loaded && this.board)
-      },
-      board() {
-        return this.boardsById[this.boardId]
+        return !!(this.loaded && this.currentBoard)
       },
       minScrollX() {
         const phases = document.querySelector(".phases-wrapper")
@@ -69,15 +66,12 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     div.boards(v-if="isLoaded")
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
 
-      //- div.board-heading-container
-      //-   h1.board-heading {{board.title}}
-
-      div.carrousel(v-if="board.phases.length")
+      div.carrousel(v-if="currentBoard.phases.length")
         div.navigation.--left
           span.arrow-icon(@click="scrollLeft")
         div.phases-wrapper
-          div.phases(:style="{width: (board.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
-            phase(v-for="phase in board.phases", :phase="phase", @modal="openModalByName")
+          div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
+            phase(v-for="phase in currentBoard.phases", :phase="phase", @modal="openModalByName")
         div.navigation.--right
           span.arrow-icon(@click="scrollRight")
 

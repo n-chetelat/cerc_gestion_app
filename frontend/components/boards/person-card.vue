@@ -14,6 +14,9 @@ export default {
     openCorrespondenceModal() {
 
     },
+    movePersonCard() {
+      this.$emit('drag', this.person)
+    }
   },
 }
 </script>
@@ -26,7 +29,7 @@ export default {
       p.icon-bg.position {{person.position}}
       p.icon-bg.semester {{person.starting_semester}}
       p.received Received on: {{person.applied_at}}
-
+      button(type="button", @click="movePersonCard")
 </template>
 
 <style>

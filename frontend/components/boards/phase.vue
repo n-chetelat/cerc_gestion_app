@@ -1,5 +1,7 @@
 <script>
 
+import { mapActions } from "vuex"
+
 import PersonCard from "./person-card.vue"
 
 export default {
@@ -12,11 +14,16 @@ export default {
   computed: {
     description() {
       return this.phase.description  || "No description"
-    }
+    },
   },
   methods: {
+    ...mapActions("boards", ["changePersonPhase"]),
     openModal(modalName, data) {
       this.$emit('modal', modalName, data)
+    },
+    movePersonCard(person) {
+      const payload = {phaseId: 3, personId: person.id, oldPhaseId: person.phase_id}
+      this.changePersonPhase(payload)
     }
   },
   components: {
@@ -32,7 +39,7 @@ export default {
     span.email_label(v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
     div.stats
       p #[span.count {{phase.persons.length}}] people in this section
-    person-card(v-for="person in phase.persons", :person="person", @modal="openModal")
+    person-card(v-for="person in phase.persons", :person="person", @modal="openModal", @drag="movePersonCard")
 
 </template>
 
