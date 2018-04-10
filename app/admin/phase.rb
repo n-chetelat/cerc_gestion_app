@@ -1,21 +1,22 @@
 ActiveAdmin.register Phase do
   menu parent: "Boards"
-  permit_params :title, :description, :initial,
-    phases_callbacks_attributes: [:id, :_destroy, :title, :position, :email_template_id],
-    email_label_attributes: [:id, :_destroy, :name]
+  permit_params :title, :description, :initial, :email_label_name,
+    phases_callbacks_attributes: [:id, :_destroy, :title, :position, :email_template_id]
 
   config.filters = false
 
   controller do
 
     def create
-      super
-      create_or_update_email_label(params)
+      resource = resource_class.create!(permitted_params[:phase])
+      create_or_update_email_label(resource, params)
+      resource.save!
+      redirect_to admin_phase_path(resource)
     end
 
     def update
       super
-      create_or_update_email_label(params)
+      create_or_update_email_label(resource, params)
     end
 
     def destroy
@@ -24,10 +25,11 @@ ActiveAdmin.register Phase do
       google_service.delete_email_label!(resource)
     end
 
-    def create_or_update_email_label(params)
-      name = params[:phase][:email_label_attributes].try(:[], :name)
+    def create_or_update_email_label(resource, params)
+      name = params[:phase][:email_label_name]
       google_service = ::GoogleService.new(request)
-      if name.presence && !resource.email_label.persisted?
+      resource.email_label ||= resource.build_email_label
+      if name.presence && (!resource.email_label.persisted? || resource.email_label.google_label_id.nil?)
         google_service.create_email_label!(resource, name)
       elsif name.blank? && resource.email_label.persisted?
         google_service.delete_email_label!(resource)
@@ -58,9 +60,7 @@ ActiveAdmin.register Phase do
   form do |f|
     f.inputs do
       f.input :title
-      f.inputs "Email Label", for: [:email_label, f.object.email_label || f.object.build_email_label] do |a|
-        a.input :name
-      end
+      f.input :email_label_name
       if f.object.initial
         f.input :initial, hint: "This is currently the tag under which new applications are classified. Deselecting it does not move any existing persons to or from this tag."
       else

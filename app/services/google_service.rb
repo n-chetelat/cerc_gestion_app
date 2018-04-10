@@ -94,8 +94,11 @@ class GoogleService
       if error
         nil
       else
-        label = Email::Label.new(phase_id: phase.id, name: result.name, google_label_id: result.id)
-        label.save!
+        phase.email_label ||= phase.build_email_label
+        phase.email_label.name = result.name
+        phase.email_label.google_label_id = result.id
+        phase.email_label.save!
+        phase.email_label.reload
       end
     end
   end
@@ -114,6 +117,7 @@ class GoogleService
 
   def delete_email_label!(phase)
     label = phase.email_label
+    return true unless label
     gmail_service.delete_user_label(USER_ID, label.google_label_id) do |result, error|
       if error
         nil
