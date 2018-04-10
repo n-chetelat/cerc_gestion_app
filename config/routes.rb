@@ -19,7 +19,11 @@ Rails.application.routes.draw do
       resources :applications, only: [:index, :show, :create]
       resources :persons, only: [:index, :show, :update, :delete]
       resources :boards, only: [:show]
-      resources :phases, only: [:index, :show]
+      resources :phases, only: [:index, :show] do
+        scope module: "phases" do
+          resources :persons, only: [:update]
+        end
+      end
     end
   end
 

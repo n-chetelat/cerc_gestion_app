@@ -61,7 +61,7 @@ class GoogleService
         raise "There was an error when sending a Gmail message."
       else
         request_object = Google::Apis::GmailV1::ModifyMessageRequest.new(
-          add_label_ids: options[:label_ids]
+          add_label_ids: options[:label_ids].compact
         )
         gmail_service.modify_message(USER_ID, result.id, request_object) do |res, err|
           thread = Email::Thread.find_or_initialize_by(google_thread_id: result.thread_id)
@@ -119,12 +119,19 @@ class GoogleService
   end
 
   def update_thread_labels(thread, add_label_ids, remove_label_ids)
+    return if add_label_ids.empty? && remove_label_ids.empty?
+    return if add_label_ids.any? {|label| remove_label_ids.include?(label) }
     request_object = Google::Apis::GmailV1::ModifyThreadRequest.new(
       add_label_ids: add_label_ids.compact, remove_label_ids: remove_label_ids.compact)
     gmail_service.modify_thread(USER_ID, thread.google_thread_id, request_object) do |result, error|
       if error
         raise "There was an error when updating Gmail thread labels."
+      else
+        thread.messages.find_each do |message|
+          message.google_label_ids = result.messages.first.try(:label_ids) || []
+        end
       end
+
     end
   end
 

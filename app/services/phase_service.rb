@@ -6,8 +6,9 @@ class PhaseService
     old_phase_label_id = person.current_phase.try(:email_label).try(:google_label_id)
     new_phase_label_id = phase.email_label.try(:google_label_id)
 
-    PersonPhase.create!(person: person, phase: phase)
-    person.persons_phases.where.not(phase_id: phase.id).destroy_all
+    person_phase = PersonPhase.find_or_initialize_by(person: person)
+    person_phase.phase = phase
+    person_phase.save!
 
     # TODO: Put this in a worker
     self.update_email_labels_for(person, [new_phase_label_id], [old_phase_label_id], google_service)
@@ -17,7 +18,7 @@ class PhaseService
   def self.update_email_labels_for(person, add_label_ids, remove_label_ids, google_service)
     if person.threads.any?
       person.threads.each do |thread|
-        gmail_service.update_thread_labels(thread, add_label_ids, remove_label_ids)
+        google_service.update_thread_labels(thread, add_label_ids, remove_label_ids)
       end
     end
   end
@@ -42,7 +43,7 @@ class PhaseService
         mail.html_part = html_part
 
         mail_options = {
-          label_ids: [phase.email_label.google_label_id].compact,
+          label_ids: [phase.email_label.google_label_id],
           thread_id: person.threads.order(created_at: :desc).try(:first).try(:google_thread_id)
         }
         google_service.send_email_to(person, mail, mail_options)
