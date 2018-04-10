@@ -13,8 +13,7 @@ module Api
 
     def create
       if @resource = ApplicationService.create_application(params)
-        ApplicationService.send_receipt_confirmation_email(@resource.person, google_service)
-        render :show
+        PhaseService.place_person_in_phase(@resource.person, Phase.current_initial, google_service)
       else
         render json: {
           error: "There was an error when creating the application", status: 500

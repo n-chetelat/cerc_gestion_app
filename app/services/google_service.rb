@@ -50,39 +50,30 @@ class GoogleService
     authorizer.get_authorization_url(login_hint: USER_ID, request: request)
   end
 
-  def send_email_to(person, email_template)
+  def send_email_to(person, mail_object, options)
 
-    compiled_email = email_template.compile_with_vars(person)
-
-    mail = Mail.new do
-      to person.email
-      subject compiled_email.subject
-    end
-    text_part = Mail::Part.new do
-      body compiled_email.plain
-    end
-    html_part = Mail::Part.new do
-      content_type "text/html; charset=UTF-8"
-      body compiled_email.body
-    end
-    mail.text_part = text_part
-    mail.html_part = html_part
-
-    message = Google::Apis::GmailV1::Message.new(raw: mail.to_s)
-    draft = Google::Apis::GmailV1::Draft.new(message: message)
-    gmail_service.create_user_draft(USER_ID, draft) do |result, error|
+    message = Google::Apis::GmailV1::Message.new(
+      raw: mail_object.to_s,
+      thread_id: options[:thread_id]
+    )
+    gmail_service.send_user_message(USER_ID, message) do |result, error|
       if error
-        raise "There was an error when sending a Gmail draft."
+        raise "There was an error when sending a Gmail message."
       else
-        gmail_service.send_user_draft(USER_ID, result)
-        thread = Email::Thread.new(google_thread_id: result.message.thread_id)
-        thread.messages.build(
-          google_message_id: result.message.id,
-          google_label_ids: result.message.label_ids,
-          content: Base64.encode64(mail.to_s)
+        request_object = Google::Apis::GmailV1::ModifyMessageRequest.new(
+          add_label_ids: options[:label_ids]
         )
-        thread.persons_threads.build(person_id: person.id)
-        thread.save!
+        gmail_service.modify_message(USER_ID, result.id, request_object) do |res, err|
+          thread = Email::Thread.find_or_initialize_by(google_thread_id: result.thread_id)
+          thread.messages.build(
+            google_message_id: result.id,
+            google_label_ids: result.label_ids,
+            content: Base64.encode64(mail_object.to_s)
+          )
+          thread.persons_threads.build(person_id: person.id)
+          thread.save!
+        end
+
 
       end
     end
@@ -129,7 +120,7 @@ class GoogleService
 
   def update_thread_labels(thread, add_label_ids, remove_label_ids)
     request_object = Google::Apis::GmailV1::ModifyThreadRequest.new(
-      add_label_ids: add_label_ids, remove_label_ids: remove_label_ids)
+      add_label_ids: add_label_ids.compact, remove_label_ids: remove_label_ids.compact)
     gmail_service.modify_thread(USER_ID, thread.google_thread_id, request_object) do |result, error|
       if error
         raise "There was an error when updating Gmail thread labels."

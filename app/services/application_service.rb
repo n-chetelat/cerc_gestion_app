@@ -51,12 +51,6 @@ class ApplicationService
         end
 
       if person.save!
-
-        # Classify person under initial phase if there is one
-        if initial = Phase.current_initial
-          PersonPhase.create!(person: person, phase: initial)
-        end
-
         return application
       end
     end
@@ -64,11 +58,6 @@ class ApplicationService
     rescue
       false
     end
-  end
-
-  def self.send_receipt_confirmation_email(person, google_service)
-    initial = Phase.current_initial
-    PhaseService.apply_callbacks_for(person, initial, google_service)
   end
 
   def self.fields_to_hash_for(application)
