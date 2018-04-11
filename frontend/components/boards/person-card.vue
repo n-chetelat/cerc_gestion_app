@@ -1,5 +1,4 @@
 <script>
-import { mapActions } from "vuex"
 
 export default {
   name: "PersonCard",
@@ -8,8 +7,12 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      beingDragged: false
+    }
+  },
   methods: {
-    ...mapActions("boards", ["changePersonPhase"]),
     openPersonInfoModal() {
       this.$emit("modal", "person-info", {person: this.person})
     },
@@ -17,15 +20,16 @@ export default {
 
     },
     onDragStart(event) {
+      this.beingDragged = true
       event.dataTransfer.setData("text/plain", `${this.person.id},${this.person.phase_id}`)
       event.dataTransfer.dropEffect = "move"
-    }
+    },
   },
 }
 </script>
 
 <template lang="pug">
-  div.person-card(:draggable="true", @dragstart="onDragStart")
+  div.person-card(:draggable="true", @dragstart="onDragStart", @dragend.prevent="beingDragged = false" :class="{'--hidden': beingDragged}")
     div.card-content
       h3.heading.link(@click="openPersonInfoModal", v-tooltip="`See person's information`") {{person.full_name}}
       p.icon-bg.email.link(@click="openCorrespondenceModal", v-tooltip="'See correspondence'") {{person.email}}
@@ -83,6 +87,10 @@ export default {
     & .received {
       font-size: .9em;
     }
+  }
+
+  &.--hidden {
+    opacity: .5;
   }
 }
 

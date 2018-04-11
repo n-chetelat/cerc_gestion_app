@@ -10,6 +10,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      beingDraggedOver: false
+    }
+  },
   computed: {
     description() {
       return this.phase.description  || "No description"
@@ -21,12 +26,15 @@ export default {
       this.$emit('modal', modalName, data)
     },
     onDragOver(event) {
+      this.beingDraggedOver = true
       event.dataTransfer.dropEffect = "move"
     },
     onDrop(event) {
+      this.beingDraggedOver = false
       event.dataTransfer.dropEffect = "move"
       const [personId, oldPhaseId] = event.dataTransfer.getData("text")
         .split(",").map((id) => parseInt(id))
+      if (oldPhaseId === this.phase.id) return false
       const payload = {phaseId: this.phase.id, personId, oldPhaseId}
       this.changePersonPhase(payload)
     },
@@ -38,7 +46,11 @@ export default {
 </script>
 
 <template lang="pug">
-  div.phase(@dragover.prevent="onDragOver", @drop.prevent="onDrop")
+  div.phase(@dragover.prevent="onDragOver",
+    @dragend.prevent="beingDraggedOver = false",
+    @dragleave.prevent="beingDraggedOver = false",
+    @drop.prevent="onDrop", :class="{'--target': beingDraggedOver}"
+  )
     h2.heading {{phase.title}}
       span.description(v-tooltip="description")
     span.email_label(v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
@@ -100,6 +112,10 @@ export default {
       margin-right: 4px;
       margin-bottom: -1px;
     }
+  }
+
+  &.--target {
+    background-color: gray;
   }
 }
 
