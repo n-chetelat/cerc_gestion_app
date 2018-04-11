@@ -17,7 +17,13 @@ Rails.application.routes.draw do
       end
       resource :recruitment_info, only: [:show]
       resources :applications, only: [:index, :show, :create]
-      resources :persons, only: [:index, :show, :update, :delete]
+      resources :persons, only: [:index, :show, :update, :delete] do
+        scope module: "persons" do
+          resource :email, only: [:show] do
+            get :fetch
+          end
+        end
+      end
       resources :boards, only: [:show]
       resources :phases, only: [:index, :show] do
         scope module: "phases" do

@@ -17,8 +17,9 @@ class PhaseService
 
   def self.update_email_labels_for(person, add_label_ids, remove_label_ids, google_service)
     if person.threads.any?
+      email_service = ::EmailService.new(google_service)
       person.threads.each do |thread|
-        google_service.update_thread_labels(thread, add_label_ids, remove_label_ids)
+        email_service.update_thread_labels(thread, add_label_ids, remove_label_ids)
       end
     end
   end
@@ -43,10 +44,10 @@ class PhaseService
         mail.html_part = html_part
 
         mail_options = {
-          label_ids: [phase.email_label.google_label_id],
+          label_ids: [phase.email_label.try(:google_label_id)],
           thread_id: person.threads.order(created_at: :desc).try(:first).try(:google_thread_id)
         }
-        google_service.send_email_to(person, mail, mail_options)
+        ::EmailService.new(google_service).send_email_to(person, mail, mail_options)
       end
     end
   end

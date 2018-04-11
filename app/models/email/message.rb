@@ -5,5 +5,13 @@ module Email
 
     belongs_to :thread, class_name: "Email::Thread", foreign_key: "email_thread_id", inverse_of: :messages
 
+    def html_content
+      parsed = Mail.new(Base64.decode64(self.content))
+      parsed.html_part.try(:body).try(:raw_source)
+      if html = parsed.html_part.try(:body).try(:raw_source)
+        Nokogiri::XML.fragment(html).to_html
+      end
+    end
+
   end
 end
