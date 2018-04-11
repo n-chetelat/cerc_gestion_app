@@ -9,7 +9,7 @@ export default {
   },
   data() {
     return {
-      beingDragged: false
+      beingDragged: false,
     }
   },
   methods: {
@@ -22,14 +22,30 @@ export default {
     onDragStart(event) {
       this.beingDragged = true
       event.dataTransfer.setData("text/plain", `${this.person.id},${this.person.phase_id}`)
+      const placeholder = new Image()
+      placeholder.src = require("../../static/icons/user.svg")
+      event.dataTransfer.setDragImage(placeholder, 10, 10)
       event.dataTransfer.dropEffect = "move"
     },
+    onDragOver(event) {
+
+    },
+    onDragLeave(event) {
+
+    },
+    onDragEnd(event) {
+      this.beingDragged = false
+    }
   },
 }
 </script>
 
 <template lang="pug">
-  div.person-card(:draggable="true", @dragstart="onDragStart", @dragend.prevent="beingDragged = false" :class="{'--hidden': beingDragged}")
+  div.person-card(:draggable="true",
+    @dragstart="onDragStart",
+    @dragend.prevent="onDragEnd",
+    @dragleave.prevent="onDragLeave"
+    @dragover="onDragOver", :class="{'--hidden': beingDragged}")
     div.card-content
       h3.heading.link(@click="openPersonInfoModal", v-tooltip="`See person's information`") {{person.full_name}}
       p.icon-bg.email.link(@click="openCorrespondenceModal", v-tooltip="'See correspondence'") {{person.email}}
@@ -51,6 +67,8 @@ export default {
   background-color: var(--themeColor);
   box-shadow: 0 0 20px black;
   margin-bottom: 15px;
+
+  transition: transform .5s ease;
 
   & .card-content {
     font-size: .8em;

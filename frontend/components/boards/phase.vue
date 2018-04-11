@@ -46,21 +46,27 @@ export default {
 </script>
 
 <template lang="pug">
-  div.phase(@dragover.prevent="onDragOver",
-    @dragend.prevent="beingDraggedOver = false",
-    @dragleave.prevent="beingDraggedOver = false",
-    @drop.prevent="onDrop", :class="{'--target': beingDraggedOver}"
-  )
+  div.phase
     h2.heading {{phase.title}}
       span.description(v-tooltip="description")
     span.email_label(v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
     div.stats
       p #[span.count {{phase.persons.length}}] people in this section
-    person-card(v-for="person in phase.persons", :key="person.id", :person="person", @modal="openModal")
-
+    div.drop-card(
+      v-tooltip="`Drop person here to add to '${phase.title}'`",
+      @dragover.prevent="onDragOver",
+      @dragend.prevent="beingDraggedOver = false",
+      @dragleave.prevent="beingDraggedOver = false",
+      @drop.prevent="onDrop"
+      :class="{'--expanded': beingDraggedOver}")
+    person-card.person-card(v-for="person in phase.persons", :key="person.id", :person="person", @modal="openModal")
 </template>
 
 <style>
+
+:root {
+  --themeColor: #00a668;
+}
 
 .phase {
 
@@ -114,8 +120,25 @@ export default {
     }
   }
 
-  &.--target {
-    background-color: gray;
+  & .drop-card {
+    height: 1em;
+    padding: 1em;
+    margin: 1em auto;
+    opacity: .3;
+    border: 3px dashed var(--themeColor);
+    transition-property: opacity, height;
+    background: url("../../static/icons/plus-green.svg") center center / 5% no-repeat;
+    transition-duration: .5s, .2s;
+    transition-timing-function: ease;
+
+    &.--expanded {
+      height: 5em;
+      opacity: 1;
+    }
+  }
+
+  &.--dragged-over {
+
   }
 }
 
