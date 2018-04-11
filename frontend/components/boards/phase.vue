@@ -48,10 +48,10 @@ export default {
 <template lang="pug">
   div.phase
     h2.heading {{phase.title}}
+      span.email-label(v-if="phase.email_label", v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
       span.description(v-tooltip="description")
-    span.email_label(v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
     div.stats
-      p #[span.count {{phase.persons.length}}] people in this section
+      p #[span.count {{phase.persons.length}}] {{phase.persons.length | pluralize('person', 'people')}} in this section
     div.drop-card(
       v-tooltip="`Drop person here to add to '${phase.title}'`",
       @dragover.prevent="onDragOver",
@@ -73,11 +73,10 @@ export default {
   border-radius: 2px;
   width: 300px;
   height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
   margin: 1em;
   padding: .5em;
-  box-shadow: 2px 2px 15px 1px;
+  box-shadow: -2px 2px 6px;
 
   & .heading {
     font-size: 1.2em;
@@ -92,7 +91,7 @@ export default {
     float: right;
   }
 
-  & .email_label {
+  & .email-label {
     font-size: .7em;
     color: gray(60%);
     background-color: beige;
@@ -135,10 +134,6 @@ export default {
       height: 5em;
       opacity: 1;
     }
-  }
-
-  &.--dragged-over {
-
   }
 }
 

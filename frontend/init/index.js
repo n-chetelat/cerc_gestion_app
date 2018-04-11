@@ -10,8 +10,10 @@ import router from '../router'
 import App from '../components/app.vue'
 import AppAdmin from '../components/app-admin.vue'
 
+import Vue2Filters from 'vue2-filters'
 import VTooltip from 'v-tooltip'
 
+Vue.use(Vue2Filters)
 Vue.use(VTooltip)
 
 import axios from "axios"
