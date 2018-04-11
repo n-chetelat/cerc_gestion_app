@@ -1,4 +1,5 @@
 <script>
+import { mapActions } from "vuex"
 
 export default {
   name: "PersonCard",
@@ -8,28 +9,29 @@ export default {
     }
   },
   methods: {
+    ...mapActions("boards", ["changePersonPhase"]),
     openPersonInfoModal() {
       this.$emit("modal", "person-info", {person: this.person})
     },
     openCorrespondenceModal() {
 
     },
-    movePersonCard() {
-      this.$emit('drag', this.person)
+    onDragStart(event) {
+      event.dataTransfer.setData("text/plain", `${this.person.id},${this.person.phase_id}`)
+      event.dataTransfer.dropEffect = "move"
     }
   },
 }
 </script>
 
 <template lang="pug">
-  div.person-card
+  div.person-card(:draggable="true", @dragstart="onDragStart")
     div.card-content
       h3.heading.link(@click="openPersonInfoModal", v-tooltip="`See person's information`") {{person.full_name}}
       p.icon-bg.email.link(@click="openCorrespondenceModal", v-tooltip="'See correspondence'") {{person.email}}
       p.icon-bg.position {{person.position}}
       p.icon-bg.semester {{person.starting_semester}}
       p.received Received on: {{person.applied_at}}
-      button(type="button", @click="movePersonCard")
 </template>
 
 <style>

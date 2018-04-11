@@ -1,7 +1,7 @@
 import axios from "axios"
 import { keyBy, findIndex, find  } from "lodash-es"
 
-const BASE_URL = "api/boards"
+const BOARD_URL = "api/boards"
 const PHASE_URL = "api/phases"
 
 const state = {
@@ -10,21 +10,19 @@ const state = {
 
 // getters
 const getters = {
-  endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
+  endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BOARD_URL}`,
   phaseEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PHASE_URL}`,
   currentBoard: state => state.current
 }
 
 // actions
 const actions = {
-  async fetchBoard({ commit, getters }, board_id) {
-    let board = await axios.get(`${getters.endpoint}/${board_id}`).then(({ data }) => {
+   fetchBoard({ commit, getters }, board_id) {
+    return axios.get(`${getters.endpoint}/${board_id}`).then(({ data }) => {
       commit('setCurrentBoard', data)
-    }).catch((error) => {
-      // TODO handle
     })
   },
-  async changePersonPhase({ commit, getters }, payload) {
+  changePersonPhase({ commit, getters }, payload) {
     const { phaseId, personId, oldPhaseId } = payload
     return axios.put(`${getters.phaseEndpoint}/${phaseId}/persons/${personId}`).then(({ data }) => {
       commit("removePersonFromPhase", { oldPhaseId, person: data })

@@ -66,14 +66,9 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     div.boards(v-if="isLoaded")
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
 
-      div.carrousel(v-if="currentBoard.phases.length")
-        div.navigation.--left
-          span.arrow-icon(@click="scrollLeft")
-        div.phases-wrapper
-          div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
-            phase(v-for="phase in currentBoard.phases", :phase="phase", @modal="openModalByName")
-        div.navigation.--right
-          span.arrow-icon(@click="scrollRight")
+      div.phases-wrapper
+        div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
+          phase(v-for="phase in currentBoard.phases", :phase="phase", @modal="openModalByName")
 
   </template>
 
@@ -84,54 +79,6 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     top: 0;
     left: 0;
     right: 0;
-
-    & .board-heading {
-      &:before {
-        content: "";
-        width: 2em;
-        height: 2em;
-        display: inline-block;
-        background: url("../static/icons/books.svg") center center / 70% no-repeat;
-        margin-bottom: -.5em;
-        margin-right: -.2em;
-      }
-    }
-
-    & .carrousel {
-      display: flex;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    & .navigation {
-      width: 7em;
-      background-color: black;
-      padding: 5px;
-      & .arrow-icon {
-        cursor: pointer;
-        margin-top: 4px;
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        transition: background 1s;
-      }
-      &.--left {
-        & .arrow-icon {
-          background: url("../static/icons/circle-left-black.svg") center center / 100% no-repeat rgb(50, 50, 50);
-        }
-        & .arrow-icon:hover {
-          background: url("../static/icons/circle-left-black.svg") center center / 100% no-repeat white;
-        }
-      }
-      &.--right {
-        & .arrow-icon {
-          background: url("../static/icons/circle-right-black.svg") center center / 100% no-repeat rgb(50, 50, 50);
-        }
-        & .arrow-icon:hover {
-          background: url("../static/icons/circle-right-black.svg") center center / 100% no-repeat white;
-        }
-      }
-    }
   }
 
   .phases-wrapper {

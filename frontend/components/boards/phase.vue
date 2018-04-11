@@ -1,5 +1,4 @@
 <script>
-
 import { mapActions } from "vuex"
 
 import PersonCard from "./person-card.vue"
@@ -21,10 +20,16 @@ export default {
     openModal(modalName, data) {
       this.$emit('modal', modalName, data)
     },
-    movePersonCard(person) {
-      const payload = {phaseId: 3, personId: person.id, oldPhaseId: person.phase_id}
+    onDragOver(event) {
+      event.dataTransfer.dropEffect = "move"
+    },
+    onDrop(event) {
+      event.dataTransfer.dropEffect = "move"
+      const [personId, oldPhaseId] = event.dataTransfer.getData("text")
+        .split(",").map((id) => parseInt(id))
+      const payload = {phaseId: this.phase.id, personId, oldPhaseId}
       this.changePersonPhase(payload)
-    }
+    },
   },
   components: {
     PersonCard
@@ -33,13 +38,13 @@ export default {
 </script>
 
 <template lang="pug">
-  div.phase
+  div.phase(@dragover.prevent="onDragOver", @drop.prevent="onDrop")
     h2.heading {{phase.title}}
       span.description(v-tooltip="description")
     span.email_label(v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
     div.stats
       p #[span.count {{phase.persons.length}}] people in this section
-    person-card(v-for="person in phase.persons", :person="person", @modal="openModal", @drag="movePersonCard")
+    person-card(v-for="person in phase.persons", :key="person.id", :person="person", @modal="openModal")
 
 </template>
 
