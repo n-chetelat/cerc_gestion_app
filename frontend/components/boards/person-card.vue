@@ -52,13 +52,14 @@ export default {
 
 :root {
   --themeColor: #00a668;
+  --cardBg: #fafafa;
 }
 
 .person-card {
   padding: 10px;
   margin: 5px;
   border-radius: 5px;
-  background-color: color(var(--themeColor) alpha(70%));
+  background-color: var(--cardBg);
   box-shadow: -1px 1px 4px black;
   margin-bottom: 15px;
 

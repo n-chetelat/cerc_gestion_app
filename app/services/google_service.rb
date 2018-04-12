@@ -2,7 +2,6 @@ require 'google/apis/gmail_v1'
 
 require 'googleauth'
 require 'googleauth/web_user_authorizer'
-require 'googleauth/stores/file_token_store'
 require 'googleauth/stores/redis_token_store'
 require 'redis'
 

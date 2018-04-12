@@ -7,6 +7,10 @@ module Api
     end
 
     def show
+      # preload correspondence with person
+      token = SecureRandom.base58(24)
+      Redis.current.set("email-fetch-#{@resource.id}", token)
+      EmailWorker.perform_async(@resource.id)
     end
 
     def update
@@ -30,7 +34,7 @@ module Api
 
       def set_resource
         @resource = Person.find(params[:id])
-        @scopes = params[:scopes].values || []
+        @scopes = params[:scopes].try(:values) || []
       end
 
   end

@@ -1,10 +1,12 @@
 require 'googleauth'
+require 'sidekiq/web'
 Rails.application.routes.draw do
 
   root to: "pages#home"
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+  mount Sidekiq::Web => '/admin/sidekiq'
 
   get "/admin/google/authorize", to: "google#authorize"
 

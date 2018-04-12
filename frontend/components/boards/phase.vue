@@ -47,7 +47,8 @@ export default {
 
 <template lang="pug">
   div.phase
-    h2.heading {{phase.title}}
+    h2.heading
+      span.title {{phase.title}}
       span.email-label(v-if="phase.email_label", v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
       span.description(v-tooltip="description")
     div.stats
@@ -127,11 +128,11 @@ export default {
     border: 3px dashed var(--themeColor);
     transition-property: opacity, height;
     background: url("../../static/icons/plus-green.svg") center center / 5% no-repeat;
-    transition-duration: .5s, .2s;
+    transition-duration: .2s;
     transition-timing-function: ease;
 
     &.--expanded {
-      height: 5em;
+      height: 6em;
       opacity: 1;
     }
   }
