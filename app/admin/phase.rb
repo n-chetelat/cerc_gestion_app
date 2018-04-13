@@ -21,13 +21,13 @@ ActiveAdmin.register Phase do
 
     def destroy
       super
-      email_service = ::EmailService.new(::GoogleService.new(request))
+      email_service = ::EmailService.new(request)
       email_service.delete_email_label!(resource)
     end
 
     def create_or_update_email_label(resource, params)
       name = params[:phase][:email_label_name]
-      email_service = ::EmailService.new(::GoogleService.new(request))
+      email_service = ::EmailService.new(request)
       resource.email_label ||= resource.build_email_label
       if name.presence && (!resource.email_label.persisted? || resource.email_label.google_label_id.nil?)
         email_service.create_email_label!(resource, name)

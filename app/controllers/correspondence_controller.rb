@@ -4,9 +4,9 @@ class CorrespondenceController < ApplicationController
 
   def fetch
     if params[:token].present? && params[:token] == Redis.current.get("email-fetch-#{@person.id}")
-      email_service = ::EmailService.new(google_service)
+      email_service = ::EmailService.new(request)
       @person.threads.each do |thread|
-        email_service.fetch_thread_messages(thread)
+        email_service.fetch_thread_details(thread)
       end
       Redis.current.del("email-fetch-#{@person.id}")
       head :ok

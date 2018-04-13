@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180409213637) do
+ActiveRecord::Schema.define(version: 20180413191334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,10 +87,10 @@ ActiveRecord::Schema.define(version: 20180409213637) do
     t.bigint "email_thread_id"
     t.string "google_message_id"
     t.string "google_timestamp"
-    t.string "google_label_ids", array: true
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "from_address"
     t.index ["email_thread_id"], name: "index_email_messages_on_email_thread_id"
   end
 

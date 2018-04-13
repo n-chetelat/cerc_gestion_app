@@ -13,7 +13,7 @@ module Api
 
     def create
       if @resource = ApplicationService.create_application(params)
-        PhaseService.place_person_in_phase(@resource.person, Phase.current_initial, google_service)
+        PhaseService.place_person_in_phase(@resource.person, Phase.current_initial, request)
       else
         render json: {
           error: "There was an error when creating the application", status: 500

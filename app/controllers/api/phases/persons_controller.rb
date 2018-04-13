@@ -6,7 +6,7 @@ module Api
 
       def update
         PhaseService.place_person_in_phase(@resource,
-          @phase, google_service)
+          @phase, request)
         render :show
       end
 
