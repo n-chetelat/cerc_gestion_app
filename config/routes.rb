@@ -21,9 +21,7 @@ Rails.application.routes.draw do
       resources :applications, only: [:index, :show, :create]
       resources :persons, only: [:index, :show, :update, :delete] do
         scope module: "persons" do
-          resource :email, only: [:show] do
-            get :fetch
-          end
+          resource :email, only: [:show]
         end
       end
       resources :boards, only: [:show]
@@ -33,6 +31,8 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    get "/correspondence/:person_id/fetch", to: "correspondence#fetch"
   end
 
   match '/oauth2callback',

@@ -1,5 +1,6 @@
 module Api
   class PersonsController < ApiController
+    before_action :authenticate_admin_user!
     before_action :set_resource, only: [:show,:update, :delete]
 
     def index
