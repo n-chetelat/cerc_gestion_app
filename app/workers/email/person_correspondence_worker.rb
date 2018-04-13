@@ -1,4 +1,4 @@
-class EmailWorker
+class Email::PersonCorrespondenceWorker
   include Sidekiq::Worker
 
   def perform(person_id)

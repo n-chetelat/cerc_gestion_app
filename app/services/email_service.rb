@@ -45,20 +45,17 @@ class EmailService
     end
   end
 
-  def fetch_new_threads
-    fetch_after_date = DateTime.now.strftime("%y/%m/%d")
-    fetch_threads_from_date(fetch_after_date)
-  end
-
   def fetch_threads_from_date(date, options={})
     max_results = 100
-    query = "after:#{date} -in:chats"
+    query = "after:#{date.strftime("%y/%m/%d")} -in:chats"
     response = nil
 
     gmail_service.list_user_threads(USER_ID, q: query, max_results: max_results, page_token: options[:next_page_token]) do |result, error|
-      result.threads.each do |thread|
-        next if Email::Thread.find_by(google_thread_id: thread.id)
-        Email::Thread.create!(google_thread_id: thread.id)
+      result.threads.each do |thread_object|
+        unless thread = Email::Thread.find_by(google_thread_id: thread_object.id)
+          thread = Email::Thread.new(google_thread_id: thread_object.id)
+        end
+        associate_thread_with_persons!(thread, thread_object.id)
       end
       response = result
     end
@@ -68,9 +65,27 @@ class EmailService
     end
   end
 
-  def fetch_thread_details(thread)
+  def associate_thread_with_persons!(thread, gmail_thread_object_id)
+
+    gmail_service.get_user_thread(USER_ID, gmail_thread_object_id) do |result, error|
+      addresses = extract_thread_participants(result).uniq
+      persons = Person.where(id: Persons::EmailAddress
+        .where(address: addresses).select(:person_id)
+      )
+      persons.each do |person|
+        association = thread.persons_threads.find_or_initialize_by(person_id: person.id)
+        if association.save
+          # preload correspondence with person
+          token = SecureRandom.base58(24)
+          Redis.current.set("email-fetch-#{person.id}", token)
+          Email::PersonCorrespondenceWorker.perform_async(person.id)
+        end
+      end
+    end
+  end
+
+  def fetch_thread_message_details(thread)
     gmail_service.get_user_thread(USER_ID, thread.google_thread_id) do |result, error|
-      extract_thread_participants(thread, result)
       extract_thread_message_details(thread, result)
     end
   end
@@ -87,7 +102,7 @@ class EmailService
 
   private
 
-    def extract_thread_participants(thread, gmail_thread_object)
+    def extract_thread_participants(gmail_thread_object)
       value_from = gmail_thread_object.messages.map do |message|
         message.payload.headers.map.find {|header| header.name == "From" }.value
       end.flatten
@@ -95,11 +110,12 @@ class EmailService
         message.payload.headers.map.find {|header| header.name == "To" }.value
       end.flatten
       mail = Mail.new { to value_to; from value_from }
-      persons = Person.where(id: Persons::EmailAddress
-        .where(address: (mail.from_addrs + mail.to_addrs)).select(:person_id)
-      )
-      persons.each {|person| thread.persons_threads.find_or_initialize_by(person: person) }
-      thread.save!
+      mail.from_addrs + mail.to_addrs
+      # persons = Person.where(id: Persons::EmailAddress
+      #   .where(address: (mail.from_addrs + mail.to_addrs)).select(:person_id)
+      # )
+      # persons.each {|person| thread.persons_threads.find_or_initialize_by(person: person) }
+      # thread.save!
     end
 
     def extract_thread_message_details(thread, gmail_thread_object)

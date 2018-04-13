@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/admin/sidekiq'
 
   get "/admin/google/authorize", to: "google#authorize"
+  get "/correspondence/new", to: "correspondence#new"
   get "/correspondence/:person_id/fetch", to: "correspondence#fetch"
 
   scope "(:locale)", locale: /en|fr/ do
