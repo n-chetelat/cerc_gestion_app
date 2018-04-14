@@ -6,6 +6,7 @@ import { mapGetters, mapActions } from "vuex"
 
 import Phase from "./boards/phase.vue"
 import PersonInfoModal from "./boards/modals/person-info.vue"
+import CorrespondenceModal from "./boards/modals/correspondence.vue"
 
   export default {
     name: "Board",
@@ -51,13 +52,16 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
           this.person = data.person
-          this.openModal(modalName)
+        } else if (modalName === "correspondence") {
+          this.person = data.person
         }
+        this.openModal(modalName)
       }
     },
     components: {
       Phase,
-      PersonInfoModal
+      PersonInfoModal,
+      CorrespondenceModal
     }
   }
   </script>
@@ -65,9 +69,10 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
   <template lang="pug">
     div.boards(v-if="isLoaded")
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
+      correspondence-modal(@close="closeModal", v-if="modalVisible && modalName === 'correspondence'", :person="person")
 
       div.phases-wrapper
-        div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px', transform: 'translate(' + phasesScrollX + 'px)'}")
+        div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px'}")
           phase(v-for="phase in currentBoard.phases", :phase="phase", @modal="openModalByName")
 
   </template>
@@ -84,7 +89,6 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
   .phases-wrapper {
     overflow-x: auto;
     overflow-y: auto;
-    /* height: 100%; */
     padding: 1em;
   }
 

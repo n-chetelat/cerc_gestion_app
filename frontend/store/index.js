@@ -7,6 +7,7 @@ import recruitmentInfo from './modules/recruitment-info'
 import positions from './modules/positions'
 import application from './modules/application'
 import boards from './modules/boards'
+import email from './modules/email'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     recruitmentInfo,
     positions,
     application,
-    boards
+    boards,
+    email
   },
 })

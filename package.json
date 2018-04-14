@@ -5,7 +5,7 @@
     "@rails/webpacker": "^3.3.1",
     "axios": "^0.18.0",
     "lodash-es": "^4.17.7",
-    "moment": "^2.21.0",
+    "moment": "^2.22.0",
     "normalize.css": "^8.0.0",
     "postcss-nested": "^3.0.0",
     "pug": "^2.0.1",

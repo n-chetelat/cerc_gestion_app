@@ -17,7 +17,7 @@ export default {
       this.$emit("modal", "person-info", {person: this.person})
     },
     openCorrespondenceModal() {
-
+      this.$emit("modal", "correspondence", {person: this.person})
     },
     onDragStart(event) {
       this.beingDragged = true
