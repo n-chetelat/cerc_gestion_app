@@ -111,24 +111,18 @@ class EmailService
       end.flatten
       mail = Mail.new { to value_to; from value_from }
       mail.from_addrs + mail.to_addrs
-      # persons = Person.where(id: Persons::EmailAddress
-      #   .where(address: (mail.from_addrs + mail.to_addrs)).select(:person_id)
-      # )
-      # persons.each {|person| thread.persons_threads.find_or_initialize_by(person: person) }
-      # thread.save!
     end
 
     def extract_thread_message_details(thread, gmail_thread_object)
       gmail_thread_object.messages.each do |message|
         next if thread.messages.find_by(google_message_id: message.id)
         formatted_message = format_new_email_message(message)
-        thread.messages.build(google_message_id: message.id,
+        thread.messages.create!(google_message_id: message.id,
           content: formatted_message.to_s,
           from_address: formatted_message.from_addrs.first,
           google_timestamp: message.internal_date
         )
       end
-      thread.save!
     end
 
     def format_new_email_message(gmail_message_object)
