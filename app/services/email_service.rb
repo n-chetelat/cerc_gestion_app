@@ -19,30 +19,50 @@ class EmailService
   end
 
   def create_email_label!(phase, name)
-    label_object = Google::Apis::GmailV1::Label.new(name: name)
-    gmail_service.create_user_label(USER_ID, label_object) do |result, error|
-      phase.email_label ||= phase.build_email_label
-      phase.email_label.name = result.name
-      phase.email_label.google_label_id = result.id
-      phase.email_label.save!
-      phase.email_label.reload
+    if label = Email::Label.find_by(name: name)
+      raise "Label '#{name}' already associated with phase '#{label.phase.title}'"
     end
+    # Check if label already exists (Gmail API does not have 'upsert labels')
+    existing_label = nil
+    gmail_service.list_user_labels(USER_ID) do |result, error|
+      raise error if error
+      if label = result.labels.find {|lb| lb.name == name}
+        existing_label = label
+      end
+    end
+    phase.email_label ||= phase.build_email_label
+    if existing_label.nil?
+      label_object = Google::Apis::GmailV1::Label.new(name: name)
+      gmail_service.create_user_label(USER_ID, label_object) do |result, error|
+        raise error if error
+        phase.email_label.name = result.name
+        phase.email_label.google_label_id = result.id
+      end
+    else
+      phase.email_label.name = existing_label.name
+      phase.email_label.google_label_id = existing_label.id
+    end
+    phase.email_label.save!
   end
 
   def update_email_label!(phase, new_name)
     label = phase.email_label
+    # Check if label has been erased
+    gmail_service.get_user_label(USER_ID, label.google_label_id) do |result, error|
+      unless result
+        return create_email_label!(phase, new_name)
+      end
+    end
     label_object = Google::Apis::GmailV1::Label.new(id: label.google_label_id, name: new_name)
     gmail_service.update_user_label(USER_ID, label.google_label_id, label_object) do |result, error|
+      raise error if error
       label.update_attributes(name: result.name, google_label_id: result.id)
     end
   end
 
   def delete_email_label!(phase)
     label = phase.email_label
-    return true unless label
-    gmail_service.delete_user_label(USER_ID, label.google_label_id) do |result, error|
-      label.destroy
-    end
+    label.destroy if label
   end
 
   def fetch_threads_from_date(date, options={})
@@ -51,6 +71,7 @@ class EmailService
     response = nil
 
     gmail_service.list_user_threads(USER_ID, q: query, max_results: max_results, page_token: options[:next_page_token]) do |result, error|
+      raise error if error
       result.threads.each do |thread_object|
         unless thread = Email::Thread.find_by(google_thread_id: thread_object.id)
           thread = Email::Thread.new(google_thread_id: thread_object.id)
@@ -68,6 +89,7 @@ class EmailService
   def associate_thread_with_persons!(thread, gmail_thread_object_id)
 
     gmail_service.get_user_thread(USER_ID, gmail_thread_object_id) do |result, error|
+      raise error if error
       addresses = extract_thread_participants(result).uniq
       persons = Person.where(id: Persons::EmailAddress
         .where(address: addresses).select(:person_id)
@@ -86,6 +108,7 @@ class EmailService
 
   def fetch_thread_message_details(thread)
     gmail_service.get_user_thread(USER_ID, thread.google_thread_id) do |result, error|
+      raise error if error
       extract_thread_message_details(thread, result)
     end
   end

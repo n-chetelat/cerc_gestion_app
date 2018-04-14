@@ -10,9 +10,14 @@ class PhaseService
     person_phase.phase = phase
     person_phase.save!
 
-    # TODO: Put this in a worker
     self.update_email_labels_for(person, [new_phase_label_id], [old_phase_label_id], request)
     self.apply_callbacks_for(person, phase, request)
+  end
+
+  def self.update_email_labels(phase, add_label_ids, remove_label_ids, request)
+    phase.persons.each do |person|
+      self.update_email_labels_for(person, add_label_ids, remove_label_ids, request)
+    end
   end
 
   def self.update_email_labels_for(person, add_label_ids, remove_label_ids, request)

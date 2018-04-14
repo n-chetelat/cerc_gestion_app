@@ -32,10 +32,17 @@ ActiveAdmin.register Phase do
       if name.presence && (!resource.email_label.persisted? || resource.email_label.google_label_id.nil?)
         email_service.create_email_label!(resource, name)
       elsif name.blank? && resource.email_label.persisted?
+        label_id = resource.email_label.google_label_id
         email_service.delete_email_label!(resource)
+        PhaseService.update_email_labels(resource, [], [label_id], request)
+        return
       elsif name.presence
         email_service.update_email_label!(resource, name)
+      else
+        return
       end
+      label_id = resource.email_label.google_label_id
+      PhaseService.update_email_labels(resource, [label_id], [], request)
     end
 
   end
@@ -60,7 +67,7 @@ ActiveAdmin.register Phase do
   form do |f|
     f.inputs do
       f.input :title
-      f.input :email_label_name
+      f.input :email_label_name, hint: "The label you input here can only be associated with this tag!"
       if f.object.initial
         f.input :initial, hint: "This is currently the tag under which new applications are classified. Deselecting it does not move any existing persons to or from this tag."
       else
