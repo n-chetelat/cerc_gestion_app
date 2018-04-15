@@ -1,3 +1,5 @@
-json.extract! thread, :id, :created_at, :updated_at
+json.extract! thread, :id
 json.subject thread.subject
+json.timestamp epoch_to_timesamp(thread.google_timestamp.to_i / 1000)
+json.participants thread.participants + ["juet@hasd.ca"]
 json.messages thread.messages.new_to_old, partial: "api/persons/message", as: :message

@@ -1,4 +1,5 @@
-json.extract! message, :id, :google_message_id
+json.extract! message, :id, :google_message_id, :from_address
 json.thread_id message.email_thread_id
 json.content message.html_content
-json.timestamp message.timestamp
+json.snippet message.snippet
+epoch_to_timesamp(message.google_timestamp.to_i / 1000)

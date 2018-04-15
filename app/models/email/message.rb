@@ -15,8 +15,19 @@ module Email
       end
     end
 
+    def text_content
+      parsed = Mail.new(self.content)
+      parsed.text_part.try(:body).try(:raw_source)
+    end
+
     def timestamp
       Time.at(self.google_timestamp.to_i / 1000).to_datetime
+    end
+
+    def snippet
+      if text = self.text_content
+        text.lines.first.try(:truncate, 30)
+      end
     end
 
   end
