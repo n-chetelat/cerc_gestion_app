@@ -93,12 +93,13 @@ export default {
                 span.message-count ({{thread.messages.length}})
               span.snippet {{getThreadSnippet(thread) || truncate(25)}}
               span.timestamp {{formattedDate(thread.timestamp)}}
-        div.wrapper.message-list(v-if="openThread")
+        div.wrapper.thread(v-if="openThread")
           span.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") Message sent.
           span.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") Error when sending message.
-          h2 {{openThread.subject || `Thread#` + openThread.id}}
-          a.back-btn(@click="goToThreadList") Back
-          button.edit-btn(type="button", @click="composing = true") Compose
+          div
+            button.icon.back-btn(@click="goToThreadList") Back
+            h2 {{getThreadSubject(openThread)}}
+            button.icon.edit-btn(type="button", @click="composing = true", v-tooltip="'Write a reply'")
           message-list(:thread="openThread")
           compose-email(v-if="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
 
@@ -149,11 +150,27 @@ export default {
       color: gray(190);
       display: inline-block;
     }
-    & .back-btn {
+    & .icon {
       display: inline-block;
-      padding: 2px;
-      color: gray(100);
-      font-size: .9em;
+      padding: 5px;
+      margin: auto 5px;
+      width: 32px;
+      height: 32px;
+    }
+    & .back-btn {
+      display: block;
+      background: url("../../../static/icons/arrow-left-charcoal.svg") left center / 60% no-repeat;
+      padding-left: 40px;
+      color: black;
+      &:hover {
+        background: url("../../../static/icons/arrow-left.svg") left center / 70% no-repeat;
+      }
+    }
+    & .edit-btn {
+      background: url("../../../static/icons/pencil-charcoal.svg") left center / 60% no-repeat;
+      &:hover {
+        background: url("../../../static/icons/pencil.svg") left center / 70% no-repeat;
+      }
     }
     & .flash {
       position: absolute;
@@ -164,6 +181,11 @@ export default {
       }
       &.error {
         background-color: red;
+      }
+    }
+    & .thread {
+      & h2 {
+        display: inline-block;
       }
     }
   }
