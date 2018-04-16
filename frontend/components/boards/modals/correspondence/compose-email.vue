@@ -1,4 +1,5 @@
 <script>
+import { mapActions } from "vuex"
 
 import DatesMixin from "../../../../mixins/dates-mixin"
 
@@ -21,13 +22,14 @@ export default {
       composedMessage: "",
       newAddress: null,
       newCcAddress: null,
-      newBCcAddress: null
+      newBCcAddress: null,
     }
   },
   computed: {
 
   },
   methods: {
+    ...mapActions("email", ["sendEmail"]),
     addNewAddressToList(kind) {
       let list, address
       if (kind === "recipient") {
@@ -69,7 +71,20 @@ export default {
       this.messageBCc = []
     },
     sendMessage() {
-
+      const payload = {
+        threadId: this.thread.id,
+        params: {
+          recipients: this.messageRecipients,
+          cc: this.messageCc,
+          bcc: this.messageBCc,
+          body: this.composedMessage
+        }
+      }
+      this.sendEmail(payload).then(() => {
+        this.$emit("success")
+      }).catch((error) => {
+        this.$emit("error")
+      })
     }
   },
 }

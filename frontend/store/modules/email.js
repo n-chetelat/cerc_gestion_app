@@ -1,7 +1,8 @@
 import axios from "axios"
 import { keyBy } from "lodash-es"
 
-const BASE_URL = `api/persons`
+const PERSON_EMAIL_URL = `api/persons`
+const THREADS_URL = `api/email/threads`
 
 const state = {
   allByPerson: {}
@@ -9,7 +10,8 @@ const state = {
 
 // getters
 const getters = {
-  endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
+  endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSON_EMAIL_URL}`,
+  threadsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${THREADS_URL}`,
   emailByPerson: state => state.allByPerson,
 }
 
@@ -21,7 +23,8 @@ const actions = {
     })
   },
   sendEmail({ commit, getters }, payload) {
-
+    const { threadId, params } = payload
+    return axios.put(`${getters.threadsEndpoint}/${threadId}`, params)
   }
 }
 

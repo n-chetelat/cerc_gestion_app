@@ -14,7 +14,7 @@ module Email
     scope :new_to_old, -> { order(google_timestamp: :desc) }
 
     def email_labels
-      self.persons.map do |person|
+      @labels ||= self.persons.map do |person|
         person.current_phase.email_label.try(:google_label_id)
       end.compact
     end

@@ -22,8 +22,7 @@ export default {
       correspondenceNotFound: false,
       openThread: null,
       composing: false,
-      composedMessage: "",
-      newAddress: null
+      flashMessage: null
     }
   },
   async created() {
@@ -50,6 +49,14 @@ export default {
     },
     scrapMessage() {
       this.composing = false
+    },
+    messageSuccess() {
+      this.composing = false
+      this.flashMessage = "success"
+    },
+    messageError() {
+      this.composing = false
+      this.flashMessage = "error"
     }
   },
   components: {
@@ -72,12 +79,13 @@ export default {
               h2 {{thread.subject || `Thread#` + thread.id}}
               span.timestamp {{formattedDate(thread.timestamp)}}
         div.wrapper.message-list(v-if="openThread")
+          span.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") Message sent.
+          span.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") Error when sending message.
           h2 {{openThread.subject || `Thread#` + openThread.id}}
           a.back-btn(@click="goToThreadList") Back
           button.edit-btn(type="button", @click="composing = true") Compose
           message-list(:thread="openThread")
-          div(v-if="composing")
-            compose-email(:thread="openThread", @scrap="scrapMessage")
+          compose-email(v-if="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
 
 
 
@@ -94,6 +102,7 @@ export default {
       height: var(--windowHeight)px;
       max-height: var(--windowHeight)px;
       overflow: auto;
+      position: relative;
     }
     & .thread-line {
       & h2 {
@@ -110,6 +119,17 @@ export default {
       padding: 2px;
       color: gray(100);
       font-size: .9em;
+    }
+    & .flash {
+      position: absolute;
+      display: inline-block;
+      padding: 5px;
+      &.success {
+        background-color: green;
+      }
+      &.error {
+        background-color: red;
+      }
     }
   }
 

@@ -49,10 +49,9 @@ class PhaseService
         mail.html_part = html_part
 
         mail_options = {
-          label_ids: [phase.email_label.try(:google_label_id)],
           thread_id: person.threads.order(created_at: :desc).try(:first).try(:google_thread_id)
         }
-        ::EmailService.new(request).send_email_to(person, mail, mail_options)
+        ::EmailService.new(request).send_email_to(mail, mail_options)
       end
     end
   end

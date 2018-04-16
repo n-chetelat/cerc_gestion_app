@@ -9,7 +9,7 @@ class EmailService
 
   USER_ID = ENV['GMAIL_ADDRESS']
 
-  def send_email_to(person, mail_object, options={})
+  def send_email_to(mail_object, options={})
 
     message = Google::Apis::GmailV1::Message.new(
       raw: mail_object.to_s,

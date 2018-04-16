@@ -32,6 +32,9 @@ Rails.application.routes.draw do
           resources :persons, only: [:update]
         end
       end
+      namespace :email do
+        resources :threads, only: [:update]
+      end
     end
 
   end
