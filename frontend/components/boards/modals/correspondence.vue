@@ -91,7 +91,7 @@ export default {
             li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
               h2 {{getThreadSubject(thread) | truncate(25)}}
                 span.message-count ({{thread.messages.length}})
-              span.snippet {{getThreadSnippet(thread) || truncate(25)}}
+              span.snippet {{getThreadSnippet(thread) | truncate(25)}}
               span.timestamp {{formattedDate(thread.timestamp)}}
         div.wrapper.thread(v-if="openThread")
           span.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") Message sent.
@@ -99,7 +99,7 @@ export default {
           div
             button.icon.back-btn(@click="goToThreadList") Back
             h2 {{getThreadSubject(openThread)}}
-            button.icon.edit-btn(type="button", @click="composing = true", v-tooltip="'Write a reply'")
+            button.icon.edit-btn(type="button", @click="composing = true", v-tooltip="'Compose message'")
           message-list(:thread="openThread")
           compose-email(v-if="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
 
