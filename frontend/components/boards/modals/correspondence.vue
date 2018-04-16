@@ -46,6 +46,15 @@ export default {
     closeModal() {
       this.$emit("close")
     },
+    getThreadSubject(thread) {
+      return thread.subject || "(no subject)"
+    },
+    getThreadSnippet(thread) {
+      if (thread.messages.length) {
+        return thread.messages[0].snippet
+      }
+      return "(no content)"
+    },
     goToThreadList() {
       this.composing = false
       this.openThread = null
@@ -80,7 +89,9 @@ export default {
         div.wrapper.thread-list(v-if="!openThread")
           ul
             li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
-              h2 {{thread.subject || `Thread#` + thread.id}}
+              h2 {{getThreadSubject(thread) | truncate(25)}}
+                span.message-count ({{thread.messages.length}})
+              span.snippet {{getThreadSnippet(thread) || truncate(25)}}
               span.timestamp {{formattedDate(thread.timestamp)}}
         div.wrapper.message-list(v-if="openThread")
           span.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") Message sent.
@@ -109,11 +120,31 @@ export default {
       position: relative;
     }
     & .thread-line {
+      padding: 1em .5em;
+      margin-bottom: 3px;
+      border-bottom: 1px solid gray(190);
       & h2 {
-        margin-bottom: 3px;
+        width: 40%;
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        font-size: 1.1em;
+      }
+      & .message-count {
+        margin-left: 5px;
+      }
+      & .timestamp {
+        width: 20%;
+      }
+      & .snippet {
+        width: 40%;
+        padding: 0 1em;
+      }
+      & .timestamp, & .message-count, & .snippet {
+        font-size: 1em;;
       }
     }
-    & .timestamp {
+    & .timestamp, & .message-count, & .snippet {
       font-size: .8em;
       color: gray(190);
       display: inline-block;
