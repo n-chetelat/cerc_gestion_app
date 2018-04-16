@@ -15,7 +15,11 @@ class EmailService
       raw: mail_object.to_s,
       thread_id: options[:thread_id]
     )
-    gmail_service.send_user_message(USER_ID, message)
+    gmail_service.send_user_message(USER_ID, message) do |result, error|
+      raise error if error
+      thread = ::Email::Thread.find_by(google_thread_id: result.thread_id)
+      self.fetch_thread_message_details(thread)
+    end
   end
 
   def create_email_label!(phase, name)

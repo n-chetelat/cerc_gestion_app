@@ -25,12 +25,8 @@ export default {
       flashMessage: null
     }
   },
-  async created() {
-    await this.fetchPersonEmail(this.person.id).then(() => {
-      this.correspondence = this.emailByPerson[this.person.id]
-    }).catch((error) => {
-      this.correspondenceNotFound = true
-    })
+  created() {
+    this.loadPersonCorrespondence()
   },
   computed: {
     ...mapGetters("email", ["emailByPerson"]),
@@ -40,6 +36,13 @@ export default {
   },
   methods: {
     ...mapActions("email", ["fetchPersonEmail"]),
+    loadPersonCorrespondence() {
+      this.fetchPersonEmail(this.person.id).then(() => {
+        this.correspondence = this.emailByPerson[this.person.id]
+      }).catch((error) => {
+        this.correspondenceNotFound = true
+      })
+    },
     closeModal() {
       this.$emit("close")
     },
@@ -50,7 +53,8 @@ export default {
     scrapMessage() {
       this.composing = false
     },
-    messageSuccess() {
+    async messageSuccess() {
+      await this.loadPersonCorrespondence()
       this.composing = false
       this.flashMessage = "success"
     },
