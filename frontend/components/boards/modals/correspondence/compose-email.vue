@@ -60,6 +60,16 @@ export default {
       if (index > -1) {
         list.splice(index, 1)
       }
+    },
+    scrapMessage() {
+      this.$emit("scrap")
+      this.composedMessage = ""
+      this.messageRecipients = []
+      this.messageCc = []
+      this.messageBCc = []
+    },
+    sendMessage() {
+
     }
   },
 }
@@ -67,6 +77,8 @@ export default {
 
 <template lang="pug">
   div.compose-email
+    button(type="button", @click="scrapMessage") Scrap Message
+    button(type="button", @click="sendMessage") Send
     div.address-list
       div.address-list-row
         label To
@@ -87,12 +99,6 @@ export default {
             button.remove-btn(type="button", @click="removeAddressFromList('bcc', address)") x
           input.respond-to-address(v-model="newBCcAddress", @blur="addNewAddressToList('bcc')", @keyup.enter="addNewAddressToList('bcc')", placeholder="Add Bcc")
     textarea.composing-window(v-model="composedMessage")
-    div.earlier-messages
-      ul
-        li(v-for="message in thread.messages")
-          h3 From {{message.from_address}}
-          span.timestamp Sent on {{formattedDateTime(message.timestamp)}}
-          div(v-html="message.snippet")
 
 
 

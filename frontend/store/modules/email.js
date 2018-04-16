@@ -20,6 +20,9 @@ const actions = {
       commit("setPersonEmail", data)
     })
   },
+  sendEmail({ commit, getters }, payload) {
+
+  }
 }
 
 // mutations
