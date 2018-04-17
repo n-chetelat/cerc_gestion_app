@@ -41,7 +41,7 @@ export default {
 
     & .loading-content {
       z-index: 201;
-      background: url("../../static/images/spinner.gif") center center no-repeat white;
+      background: url("../../static/images/spinner.gif") center center / 70% no-repeat white;
       border-radius: 20px;
       height: 200px;
       width: 200px;

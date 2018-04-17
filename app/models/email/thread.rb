@@ -41,7 +41,7 @@ module Email
     end
 
     def participants
-      self.messages.pluck(:from_address).uniq - [ENV["GMAIL_ADDRESS"]]
+      self.persons.pluck(:email).uniq
     end
 
   end

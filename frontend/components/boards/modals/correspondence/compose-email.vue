@@ -143,8 +143,8 @@ export default {
 
     & .loading {
       position: absolute;
-      box-shadow: inset 2px 2px 30px rgba(0,0,0,.5);
-      background: url("../../../../static/images/spinner.gif") center center / 10% no-repeat rgba(0,0,0,.3);
+      box-shadow: inset 1px 1px 50px rgba(0, 0, 0, .2);
+      background: url("../../../../static/images/spinner-solid.gif") center center / 10% no-repeat rgba(0,0,0,.3);
     }
 
     & .address-list-row {
