@@ -41,10 +41,17 @@ export default {
       li.message-line(v-for="message in thread.messages")
         div.heading(@click="toggleSelectMessage(message)")
           h3 {{message.from_address | truncate(25)}}
-          div.snippet(v-show="!openMessages[message.id]") {{message.snippet | truncate(25)}}
+          div.snippet {{message.snippet | truncate(25)}}
           span.timestamp {{formattedDate(message.timestamp)}}
         collapse-transition
-          div.content(v-html="message.content", v-if="openMessages[message.id]")
+          div.content(v-if="openMessages[message.id]")
+            div.info-row
+              label From
+              div.info {{message.from_address}}
+            div.info-row
+              label Date
+              div.info {{formattedDateTime(message.timestamp)}}
+            div.message(v-html="message.content")
 
 </template>
 
@@ -84,6 +91,24 @@ export default {
       }
       & .content {
         padding: 1em;
+        & .info-row {
+          display: flex;
+          width: 50%;
+          padding: 5px 0;
+          font-size: .8em;
+          color: gray(95);
+          & label {
+            width: 20%;
+            padding-right: 10px;
+            font-weight: bold;
+          }
+          & .info {
+            width: 80%;
+          }
+        }
+        & .message {
+          margin-top: 1em;
+        }
       }
     }
   }

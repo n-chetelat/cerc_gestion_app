@@ -130,6 +130,7 @@ export default {
     & .wrapper {
       max-height: var(--windowHeight)px;
       overflow: auto;
+      padding-bottom: 2em;
     }
     & .thread-line {
       cursor: pointer;
