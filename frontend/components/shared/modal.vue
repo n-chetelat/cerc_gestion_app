@@ -1,5 +1,7 @@
 <script>
 
+import { FadeTransition } from 'vue2-transitions'
+
 export default {
   name: "Modal",
   data() {
@@ -12,20 +14,24 @@ export default {
     close() {
       this.$emit("close")
     }
+  },
+  components: {
+    FadeTransition
   }
 }
 </script>
 
 <template lang="pug">
-  div.modal
-    div.modal-backdrop(@click="close")
-    div.modal-content
-      header.modal-header
-        span.modal-title
-          slot(name="header")
-        button.btn-close(type="button", @click="close")
-      div.modal-body
-        slot(name="body")
+  fade-transition
+    div.modal
+      div.modal-backdrop(@click="close")
+      div.modal-content
+        header.modal-header
+          span.modal-title
+            slot(name="header")
+          button.btn-close(type="button", @click="close")
+        div.modal-body
+          slot(name="body")
 
 </template>
 
@@ -59,6 +65,7 @@ export default {
       z-index: 201;
       background: white;
       min-width: 200px;
+      min-height: 400px;
       width: 80%;
       max-width: 900px;
       box-shadow: 2px 2px 20px 1px;

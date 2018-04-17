@@ -2,6 +2,8 @@
 
 import { mapGetters, mapActions } from "vuex"
 
+import { SlideXLeftTransition, CollapseTransition } from 'vue2-transitions'
+
 import DatesMixin from "../../../mixins/dates-mixin"
 
 import Modal from "../../shared/modal.vue"
@@ -22,7 +24,7 @@ export default {
       correspondenceNotFound: false,
       openThread: null,
       composing: false,
-      flashMessage: null
+      flashMessage: null,
     }
   },
   created() {
@@ -75,7 +77,9 @@ export default {
   components: {
     Modal,
     ComposeEmail,
-    MessageList
+    MessageList,
+    SlideXLeftTransition,
+    CollapseTransition
   }
 }
 </script>
@@ -86,22 +90,25 @@ export default {
       h1 Correspondence with {{person.full_name}}
     template(slot="body")
       div.correspondence(v-if="isLoaded")
-        div.wrapper.thread-list(v-if="!openThread")
-          ul
-            li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
-              h2 {{getThreadSubject(thread) | truncate(25)}}
-                span.message-count ({{thread.messages.length}})
-              span.snippet {{getThreadSnippet(thread) | truncate(25)}}
-              span.timestamp {{formattedDate(thread.timestamp)}}
-        div.wrapper.thread(v-if="openThread")
-          span.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") Message sent.
-          span.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") Error when sending message.
-          div
-            button.icon.back-btn(@click="goToThreadList") Back
-            h2 {{getThreadSubject(openThread)}}
-            button.icon.edit-btn(type="button", @click="composing = true", v-tooltip="'Compose message'")
-          message-list(:thread="openThread")
-          compose-email(v-if="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
+        slide-x-left-transition(group)
+          div.wrapper.thread-list(v-if="!openThread", :key="'threadList'")
+            ul
+              li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
+                h2 {{getThreadSubject(thread) | truncate(25)}}
+                  span.message-count ({{thread.messages.length}})
+                span.snippet {{getThreadSnippet(thread) | truncate(25)}}
+                span.timestamp {{formattedDate(thread.timestamp)}}
+
+          div.wrapper.thread(v-else, :key="'threadShow'")
+            span.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") Message sent.
+            span.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") Error when sending message.
+            div
+              button.icon.back-btn(@click="goToThreadList") Back
+              h2 {{getThreadSubject(openThread)}}
+              button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
+            collapse-transition
+              compose-email(v-if="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
+            message-list(:thread="openThread")
 
 
 
@@ -115,7 +122,6 @@ export default {
 
   .correspondence {
     & .wrapper {
-      height: var(--windowHeight)px;
       max-height: var(--windowHeight)px;
       overflow: auto;
       position: relative;
@@ -158,6 +164,7 @@ export default {
       height: 32px;
     }
     & .back-btn {
+      border: none;
       display: block;
       background: url("../../../static/icons/arrow-left-charcoal.svg") left center / 60% no-repeat;
       padding-left: 40px;

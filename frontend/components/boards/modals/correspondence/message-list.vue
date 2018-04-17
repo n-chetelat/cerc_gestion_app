@@ -1,6 +1,9 @@
 <script>
 
+import Vue from "vue"
 import DatesMixin from "../../../../mixins/dates-mixin"
+
+import { CollapseTransition } from 'vue2-transitions'
 
 export default {
   name: "MessageList",
@@ -12,20 +15,23 @@ export default {
   },
   data() {
     return {
+      openMessages: {}
     }
   },
   computed: {
   },
   methods: {
-    toggleSelectMessage(event) {
-      const messageEl = event.currentTarget.parentElement
-      if (messageEl.classList.contains("--open")) {
-        messageEl.classList.remove("--open")
+    toggleSelectMessage(message) {
+      if (this.openMessages[message.id]) {
+        Vue.delete(this.openMessages, message.id)
       } else {
-        messageEl.classList.add("--open")
+        Vue.set(this.openMessages, message.id, true)
       }
     },
   },
+  components: {
+    CollapseTransition
+  }
 }
 </script>
 
@@ -33,11 +39,12 @@ export default {
   div.message-list
     ul
       li.message-line(v-for="message in thread.messages")
-        div.heading(@click="toggleSelectMessage($event)")
+        div.heading(@click="toggleSelectMessage(message)")
           h3 {{message.from_address | truncate(25)}}
-          div.snippet {{message.snippet | truncate(25)}}
+          div.snippet(v-show="!openMessages[message.id]") {{message.snippet | truncate(25)}}
           span.timestamp {{formattedDate(message.timestamp)}}
-        div.content(v-html="message.content")
+        collapse-transition
+          div.content(v-html="message.content", v-if="openMessages[message.id]")
 
 </template>
 
@@ -75,17 +82,7 @@ export default {
         color: gray(100);
       }
       & .content {
-        max-height: 0;
-        padding: 0 1em;
-        overflow-y: auto;
-        transition: max-height 0.2s ease-in, padding 0.3s ease-in;
-      }
-      &.--open .content {
-        max-height: 200px;
         padding: 1em;
-      }
-      &.--open .snippet {
-        visibility: hidden;
       }
     }
   }
