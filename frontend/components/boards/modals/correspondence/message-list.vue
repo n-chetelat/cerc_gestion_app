@@ -28,6 +28,9 @@ export default {
         Vue.set(this.openMessages, message.id, true)
       }
     },
+    getToAddresses(message) {
+      return message.to_addresses.join(", ")
+    }
   },
   components: {
     CollapseTransition
@@ -48,6 +51,9 @@ export default {
             div.info-row
               label From
               div.info {{message.from_address}}
+            div.info-row
+              label To
+              div.info {{getToAddresses(message)}}
             div.info-row
               label Date
               div.info {{formattedDateTime(message.timestamp)}}

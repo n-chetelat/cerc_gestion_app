@@ -15,6 +15,8 @@ module Email
     scope :new_to_old, -> { order(google_create_timestamp: :desc) }
     scope :recently_updated, -> { order(google_update_timestamp: :desc) }
 
+    validates :google_thread_id, presence: true
+
     def email_labels
       @labels ||= self.persons.map do |person|
         person.current_phase.email_label.try(:google_label_id)
