@@ -1,6 +1,8 @@
 <script>
 import { mapActions } from "vuex"
 
+import LoadingScreen from "../../../shared/loading-screen.vue"
+
 import DatesMixin from "../../../../mixins/dates-mixin"
 
 export default {
@@ -8,7 +10,7 @@ export default {
   mixins: [DatesMixin],
   props: {
     thread: {
-      required: true
+      required: true,
     }
   },
   created() {
@@ -16,6 +18,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       messageRecipients: [],
       messageCc: [],
       messageBCc: [],
@@ -70,7 +73,8 @@ export default {
       this.messageCc = []
       this.messageBCc = []
     },
-    sendMessage() {
+    async sendMessage() {
+      if (this.isLoading) return
       const payload = {
         threadId: this.thread.id,
         params: {
@@ -80,18 +84,24 @@ export default {
           body: this.composedMessage
         }
       }
-      this.sendEmail(payload).then(() => {
+      this.isLoading = true
+      await this.sendEmail(payload).then(() => {
         this.$emit("success")
       }).catch((error) => {
         this.$emit("error")
       })
+      this.isLoading = false
     }
   },
+  components: {
+    LoadingScreen
+  }
 }
 </script>
 
 <template lang="pug">
   div.compose-email
+    div.loading(v-if="isLoading")
     div.address-list
       div.address-list-row
         label To
@@ -129,6 +139,14 @@ export default {
   }
 
   .compose-email {
+    position: relative;
+
+    & .loading {
+      position: absolute;
+      box-shadow: inset 2px 2px 30px rgba(0,0,0,.5);
+      background: url("../../../../static/images/spinner.gif") center center / 10% no-repeat rgba(0,0,0,.3);
+    }
+
     & .address-list-row {
       display: flex;
       padding: .5em;

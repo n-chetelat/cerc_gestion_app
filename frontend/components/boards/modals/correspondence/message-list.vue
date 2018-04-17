@@ -60,6 +60,7 @@ export default {
       margin-bottom: 3px;
       border-bottom: 1px solid gray(190);
       & .heading {
+        cursor: pointer;
         padding: .5em;
       }
       & h3 {

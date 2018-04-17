@@ -2,7 +2,7 @@
 
 import { mapGetters, mapActions } from "vuex"
 
-import { SlideXLeftTransition, CollapseTransition } from 'vue2-transitions'
+import { SlideXLeftTransition, CollapseTransition, SlideYUpTransition } from 'vue2-transitions'
 
 import DatesMixin from "../../../mixins/dates-mixin"
 
@@ -64,22 +64,26 @@ export default {
     scrapMessage() {
       this.composing = false
     },
-    async messageSuccess() {
-      await this.loadPersonCorrespondence()
+    async showFlash(status) {
+      if (status === "success") {
+        await this.loadPersonCorrespondence()
+      }
       this.composing = false
-      this.flashMessage = "success"
+      this.flashMessage = status
+      const wrapper = this.$el.querySelector(".wrapper")
+      wrapper.scrollTo({top: -10000, behavior: "smooth"})
+      setTimeout(() => {
+        this.flashMessage = null
+      }, 5000)
     },
-    messageError() {
-      this.composing = false
-      this.flashMessage = "error"
-    }
   },
   components: {
     Modal,
     ComposeEmail,
     MessageList,
     SlideXLeftTransition,
-    CollapseTransition
+    CollapseTransition,
+    SlideYUpTransition
   }
 }
 </script>
@@ -100,14 +104,16 @@ export default {
                 span.timestamp {{formattedDate(thread.timestamp)}}
 
           div.wrapper.thread(v-else, :key="'threadShow'")
-            span.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") Message sent.
-            span.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") Error when sending message.
+            slide-y-up-transition
+              div.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") The message has been sent.
+            slide-y-up-transition
+              div.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") There was an error when sending the message.
             div
               button.icon.back-btn(@click="goToThreadList") Back
               h2 {{getThreadSubject(openThread)}}
               button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
             collapse-transition
-              compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
+              compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
             message-list(:thread="openThread")
 
 
@@ -124,9 +130,9 @@ export default {
     & .wrapper {
       max-height: var(--windowHeight)px;
       overflow: auto;
-      position: relative;
     }
     & .thread-line {
+      cursor: pointer;
       padding: 1em .5em;
       margin-bottom: 3px;
       border-bottom: 1px solid gray(190);
@@ -180,14 +186,17 @@ export default {
       }
     }
     & .flash {
-      position: absolute;
-      display: inline-block;
-      padding: 5px;
+      width: 70%;
+      margin: auto;
+      padding: 15px;
+      border-radius: 5px;
+      color: white;
+      text-align: center;
       &.success {
-        background-color: green;
+        background-color: color(green alpha(50%));
       }
       &.error {
-        background-color: red;
+        background-color: color(red alpha(50%));
       }
     }
     & .thread {
