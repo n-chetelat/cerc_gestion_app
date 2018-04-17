@@ -10,12 +10,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
-   width="32"
-   height="32"
-   viewBox="0 0 32 32"
+   width="28"
+   height="28"
+   viewBox="0 0 28 28"
    id="svg2"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="bin-charcoal.svg">
+   sodipodi:docname="paper-plane-charcoal.svg">
   <metadata
      id="metadata12">
     <rdf:RDF>
@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>bin2</dc:title>
+        <dc:title>paper-plane2</dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -43,17 +43,17 @@
      inkscape:window-height="721"
      id="namedview8"
      showgrid="false"
-     inkscape:zoom="7.375"
-     inkscape:cx="-5.8983051"
-     inkscape:cy="15.254237"
+     inkscape:zoom="8.4285714"
+     inkscape:cx="14"
+     inkscape:cy="13.762712"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <title
-     id="title4">bin2</title>
+     id="title4">paper-plane2</title>
   <path
-     d="M6 32h20l2-22h-24zM20 4v-4h-8v4h-10v6l2-2h24l2 2v-6h-10zM18 4h-4v-2h4v2z"
+     d="M27.563 0.172c0.328 0.234 0.484 0.609 0.422 1l-4 24c-0.047 0.297-0.234 0.547-0.5 0.703-0.141 0.078-0.313 0.125-0.484 0.125-0.125 0-0.25-0.031-0.375-0.078l-7.078-2.891-3.781 4.609c-0.187 0.234-0.469 0.359-0.766 0.359-0.109 0-0.234-0.016-0.344-0.063-0.391-0.141-0.656-0.516-0.656-0.938v-5.453l13.5-16.547-16.703 14.453-6.172-2.531c-0.359-0.141-0.594-0.469-0.625-0.859-0.016-0.375 0.172-0.734 0.5-0.922l26-15c0.156-0.094 0.328-0.141 0.5-0.141 0.203 0 0.406 0.063 0.562 0.172z"
      id="path6"
      style="fill:#6f6f6f;fill-opacity:1" />
 </svg>

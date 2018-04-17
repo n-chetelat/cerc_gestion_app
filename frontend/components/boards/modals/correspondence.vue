@@ -107,7 +107,7 @@ export default {
               h2 {{getThreadSubject(openThread)}}
               button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
             collapse-transition
-              compose-email(v-if="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
+              compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="messageSuccess", @error="messageError")
             message-list(:thread="openThread")
 
 

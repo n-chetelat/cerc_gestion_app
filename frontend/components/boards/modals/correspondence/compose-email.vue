@@ -12,7 +12,7 @@ export default {
     }
   },
   created() {
-    this.messageRecipients = this.thread.participants
+    this.messageRecipients = this.thread.participants.slice(0)
   },
   data() {
     return {
@@ -66,7 +66,7 @@ export default {
     scrapMessage() {
       this.$emit("scrap")
       this.composedMessage = ""
-      this.messageRecipients = []
+      this.messageRecipients = this.thread.participants.slice(0)
       this.messageCc = []
       this.messageBCc = []
     },
@@ -92,28 +92,30 @@ export default {
 
 <template lang="pug">
   div.compose-email
-    button(type="button", @click="scrapMessage") Scrap Message
-    button(type="button", @click="sendMessage") Send
     div.address-list
       div.address-list-row
         label To
         div.respond-to-address-list
           span.respond-to-address(v-for="address in messageRecipients") {{address}}
             button.remove-btn(type="button", @click="removeAddressFromList('recipient', address)") x
-          input.respond-to-address(v-model="newAddress", @blur="addNewAddressToList('recipient')", @keyup.enter="addNewAddressToList('recipient')", placeholder="Add Recipient")
+          input.respond-to-address-input(v-model="newAddress", @blur="addNewAddressToList('recipient')", @keyup.enter="addNewAddressToList('recipient')", placeholder="Add Recipient")
       div.address-list-row
         label Cc
         div.respond-to-address-list
           span.respond-to-address(v-for="address in messageCc") {{address}}
             button.remove-btn(type="button", @click="removeAddressFromList('cc', address)") x
-          input.respond-to-address(v-model="newCcAddress", @blur="addNewAddressToList('cc')", @keyup.enter="addNewAddressToList('cc')", placeholder="Add Cc")
+          input.respond-to-address-input(v-model="newCcAddress", @blur="addNewAddressToList('cc')", @keyup.enter="addNewAddressToList('cc')", placeholder="Add Cc")
       div.address-list-row
-        label BCc
+        label Bcc
         div.respond-to-address-list
           span.respond-to-address(v-for="address in messageBCc") {{address}}
             button.remove-btn(type="button", @click="removeAddressFromList('bcc', address)") x
-          input.respond-to-address(v-model="newBCcAddress", @blur="addNewAddressToList('bcc')", @keyup.enter="addNewAddressToList('bcc')", placeholder="Add Bcc")
-    textarea.composing-window(v-model="composedMessage")
+          input.respond-to-address-input(v-model="newBCcAddress", @blur="addNewAddressToList('bcc')", @keyup.enter="addNewAddressToList('bcc')", placeholder="Add Bcc")
+    div.composing-window
+      div.action-menu
+        button.icon.scrap-btn(type="button", @click="scrapMessage", v-tooltip="'Scrap'")
+        button.icon.send-btn(type="button", @click="sendMessage", v-tooltip="'Send'")
+      textarea(v-model="composedMessage")
 
 
 
@@ -133,32 +135,65 @@ export default {
       & label {
         width: 10%;
       }
+      & .respond-to-address-list {
+        width: 90%;
+        max-width: 90%;
+      }
     }
-    & span.respond-to-address {
+    & .respond-to-address {
       display: inline-block;
-      padding: 3px;
+      padding: 3px 10px;
       margin: 0 5px 5px 0;
       border-radius: 5px;
       background-color: gray(200);
     }
-    & input.respond-to-address {
+    & .respond-to-address-input {
       border: none;
       box-shadow: var(--fieldsBoxShadow);
       display: block;
     }
     & .remove-btn {
+      padding: 0;
+      padding-left: 3px;
       background-color: transparent;
+      &:hover {
+        color: black;
+      }
+    }
+    & .action-menu {
+      height: 32px;
+      & .icon {
+        float: right;
+      }
+    }
+    & .scrap-btn {
+      background: url("../../../../static/icons/bin-charcoal.svg") left center / 60% no-repeat;
+      &:hover {
+        background: url("../../../../static/icons/bin.svg") left center / 70% no-repeat;
+      }
+    }
+    & .send-btn {
+      background: url("../../../../static/icons/paper-plane-charcoal.svg") left center / 60% no-repeat;
+      &:hover {
+        background: url("../../../../static/icons/paper-plane.svg") left center / 70% no-repeat;
+      }
     }
 
     & .composing-window {
-      min-width: 25em;
-      min-height: calc(var(--windowHeight) * .3)px;
-      max-height: calc(var(--windowHeight) * .5)px;
       display: block;
       width: 90%;
       margin: 1em auto;
-      border: none;
-      box-shadow: var(--fieldsBoxShadow);
+      min-width: 25em;
+      textarea {
+        min-height: calc(var(--windowHeight) * .3)px;
+        max-height: calc(var(--windowHeight) * .5)px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+        box-shadow: var(--fieldsBoxShadow);
+        border: none;
+        padding: 1em;
+      }
     }
   }
 
