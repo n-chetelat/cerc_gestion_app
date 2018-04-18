@@ -1,5 +1,5 @@
 scopes ||= @scopes
-json.extract! person, :id
+json.extract! person, :id, :name, :lastname
 json.full_name person.full_name
 json.email person.email
 json.phase_id person.current_phase.try(:id)

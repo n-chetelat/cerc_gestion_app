@@ -70,7 +70,7 @@ export default {
       }
       this.composing = false
       this.flashMessage = status
-      const wrapper = this.$el.querySelector(".wrapper")
+      const wrapper = this.$el.querySelector(".correspondence-wrapper")
       wrapper.scrollTo({top: -10000, behavior: "smooth"})
       setTimeout(() => {
         this.flashMessage = null
@@ -93,9 +93,13 @@ export default {
     template(slot="header")
       h1 Correspondence with {{person.full_name}}
     template(slot="body")
+      div(v-if="correspondenceNotFound", style="text-align: center;")
+        p There was an error while fetching this applicant's correspondence.
+        p Please try again later.
+
       div.correspondence(v-if="isLoaded")
         slide-x-left-transition(group)
-          div.wrapper.thread-list(v-if="!openThread", :key="'threadList'")
+          div.correspondence-wrapper.thread-list(v-if="!openThread", :key="'threadList'")
             ul
               li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
                 h2 {{getThreadSubject(thread) | truncate(25)}}
@@ -103,7 +107,7 @@ export default {
                 span.snippet {{getThreadSnippet(thread) | truncate(25)}}
                 span.timestamp {{formattedDate(thread.timestamp)}}
 
-          div.wrapper.thread(v-else, :key="'threadShow'")
+          div.correspondence-wrapper.thread(v-else, :key="'threadShow'")
             slide-y-up-transition
               div.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") The message has been sent.
             slide-y-up-transition
@@ -127,10 +131,10 @@ export default {
   }
 
   .correspondence {
-    & .wrapper {
+    & .correspondence-wrapper {
       max-height: var(--windowHeight)px;
       overflow: auto;
-      padding-bottom: 2em;
+      padding: 2em 2em;
     }
     & .thread-line {
       cursor: pointer;

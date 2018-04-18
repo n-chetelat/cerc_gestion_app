@@ -2,6 +2,8 @@
 
 import { mapGetters, mapActions } from "vuex"
 
+import { CollapseTransition } from 'vue2-transitions'
+
 import Modal from "../../shared/modal.vue"
 
 import DisplayText from "../form-fields/display-text.vue"
@@ -57,7 +59,8 @@ export default {
     DisplayTextarea,
     DisplayCheckbox,
     DisplayUploadSingle,
-    DisplayUploadMultiple
+    DisplayUploadMultiple,
+    CollapseTransition
   }
 }
 </script>
@@ -65,43 +68,56 @@ export default {
 <template lang="pug">
   modal(@close="closeModal")
     template(slot="header")
-      h1 {{person.full_name}}
+      h1 Information on {{person.full_name}}
     template(slot="body")
       div(v-if="applicationNotFound", style="text-align: center;")
         p There was an error while fetching this applicant's information.
         p Please try again later.
 
       div.person-info(v-if="isLoaded")
-
         div.info-section.person-info-profile(:class="{'--open': infoOpen}")
-          h2.collapsable-header(@click="infoOpen = !infoOpen") Info
+          h2.collapsable-header(@click="infoOpen = !infoOpen") General
             span.icon.arrow-icon
-          div.collapsable-content(v-if="infoOpen")
-            div.field-row
-              label Email
-              span {{person.email}}
+          collapse-transition
+            div.collapsable-content(v-if="infoOpen")
+              div.field-row
+                label Name
+                span {{person.name}}
+              div.field-row
+                label Lastname
+                span {{person.lastname}}
+              div.field-row
+                label Email
+                span {{person.email}}
 
         div.info-section.person-info-application(:class="{'--open': applicationOpen}")
           h2.collapsable-header(@click="applicationOpen = !applicationOpen") Application
             span.icon.arrow-icon
-          div.collapsable-content(v-if="applicationOpen")
-            div.field-row
-              label For position
-              span {{application.position}}
-            div.field-row
-              label Starting on
-              span {{application.starting_semester}}
-            div.display-fields
-              component.field-row(v-for="field in application.form_fields", :is="`display-${field.type}`", :field="field")
+          collapse-transition
+            div.collapsable-content(v-if="applicationOpen")
+              div.field-row
+                label For position
+                span {{application.position}}
+              div.field-row
+                label Starting on
+                span {{application.starting_semester}}
+              div.display-fields
+                component.field-row(v-for="field in application.form_fields", :is="`display-${field.type}`", :field="field")
 
 </template>
 
 <style>
 
+  :root {
+    --themeColor: #00a668;
+    --windowHeight: 400;
+  }
+
   .person-info {
     min-height: 300px;
-    max-height: 500px;
+    max-height: var(--windowHeight)px;
     overflow: auto;
+    padding: 2em 2em;
 
     & .collapsable-header {
       height: 32px;
@@ -113,6 +129,9 @@ export default {
       &:hover {
         border-bottom: 1px solid black;
       }
+    }
+    & .collapsable-content {
+      padding-bottom: 30px;
     }
     & .icon {
       height: 25px;
@@ -133,8 +152,8 @@ export default {
       margin: .5em;
 
       & label {
-        background-color: black;
-        color: white;
+        background-color: gray(200);
+        border-radius: 3px;
         display: inline-block;
         vertical-align: top;
         font-weight: bold;
@@ -154,15 +173,15 @@ export default {
         background: url("../../../static/icons/file-pdf.svg") left bottom / 70% no-repeat;
       }
     }
-  }
+    &.--open {
+      & .collapsable-header {
+        border-bottom: 1px solid black;
+      }
+      & .arrow-icon {
+        background: url("../../../static/icons/circle-up.svg") bottom left / 70% no-repeat;
+      }
+    }
 
-  .--open {
-    & .collapsable-header {
-      border-bottom: 1px solid black;
-    }
-    & .arrow-icon {
-      background: url("../../../static/icons/circle-up.svg") bottom left / 70% no-repeat;
-    }
   }
 
 </style>
