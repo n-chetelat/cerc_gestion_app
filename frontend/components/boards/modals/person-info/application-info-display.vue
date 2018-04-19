@@ -31,7 +31,7 @@ export default {
   computed: {
     applicationFormFieldsById() {
       return keyBy(this.applicationForm.form, "id")
-    }
+    },
   },
   methods: {
     getOptions(field) {
@@ -54,21 +54,6 @@ export default {
 
 <template lang="pug">
   div.application-info-display
-    div.field-row
-      label Name
-      span {{person.name}}
-    div.field-row
-      label Lastname
-      span {{person.lastname}}
-    div.field-row
-      label Email
-      span {{person.email}}
-    div.field-row
-      label For position
-      span {{application.position}}
-    div.field-row
-      label Starting on
-      span {{application.starting_semester}}
     div.display-fields
       component.field-row(v-for="field in application.form_fields", :is="`display-${field.type}`", :field="field", :options="getOptions(field)")
 
@@ -77,9 +62,6 @@ export default {
 
 <style>
 
-  :root {
-
-  }
 
   .application-info-display {
   }

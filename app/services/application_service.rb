@@ -31,12 +31,21 @@ class ApplicationService
   end
 
   def self.fields_to_hash_for(application)
-    application.fields.map do |key, value|
+    custom_fields = application.fields_for_current_position.map do |key, value|
       form_field_type, form_field_id = /input_(\w+)_(\d+)/.match(key).captures
-      form_field = Positions::FormField.find(form_field_id.to_i)
+      form_field = Positions::FormField.find_by(id: form_field_id.to_i)
       next unless form_field
       self.field_to_hash(form_field, value)
     end.compact
+    common_fields = Positions::RecruitmentForm.common_fields.map do |field|
+      {form_field_id: field[:id], label: field[:label],
+        type: field[:type].split("input-").last, value: application.person.send(field[:id])}
+    end
+    position = [
+      {form_field_id: "position_id", label: "Position", type: "select",
+        value: application.position_id}
+    ]
+    position + common_fields + custom_fields
   end
 
   private
@@ -56,7 +65,7 @@ class ApplicationService
     end
 
     def self.set_application_common_attributes(application, params)
-      position = Position.find(params[:position_id])
+      position = Position.find(params[:input_select_position_id])
       starting_semester = params.delete(:input_select_starting_semester)
 
       application.position = position

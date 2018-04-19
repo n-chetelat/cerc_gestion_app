@@ -14,6 +14,7 @@ class Person < ApplicationRecord
   has_many :threads, through: :persons_threads
 
   scope :not_in_phase, -> { where.not(id: joins(:persons_phases).select(:person_id)) }
+  delegate :starting_semester, to: :application
 
   def create_email_address
     self.email_addresses.build(address: self.email)
@@ -43,7 +44,7 @@ class Person < ApplicationRecord
   end
 
   def starting_semester_label
-    ::Application.semester_to_s(self.application.starting_semester)
+    ::Application.semester_to_s(self.starting_semester)
   end
 
 end

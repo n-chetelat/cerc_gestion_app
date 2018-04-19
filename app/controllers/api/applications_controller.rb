@@ -23,7 +23,6 @@ module Api
 
     def update
       if @resource = ApplicationService.update_application(@resource, params)
-        @form_fields = ::ApplicationService.fields_to_hash_for(@resource)
         render :show
       else
         render json: {

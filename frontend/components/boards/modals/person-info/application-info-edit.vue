@@ -1,6 +1,6 @@
 <script>
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from "vuex"
 import { keyBy } from "lodash-es"
 
 import InputText from '../../../recruitment-form/form-fields/input-text.vue'
@@ -32,18 +32,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("positions", ["allPositions"]), // TODO get rid of
-    positionSelectField() {
-      return {
-        id:"position_id",
-        label:"Position",
-        options: { choices: this.allPositions.map((p) => {
-          p.label = p.title
-          return p
-        }) },
-        type:"input-select"
-      }
-    },
     formFieldsById() {
       return keyBy(this.application.form_fields, "id")
     }
@@ -55,18 +43,14 @@ export default {
       this.formIsValid = this.application && fieldsValid
     },
     getSavedValue(field) {
-      if (["name", "lastname", "email"].indexOf(field.id) > -1) {
-        return this.person[field.id]
-      } else if (field.id === "starting_semester") {
-        return this.person["starting_semester_id"]
-      }
-      return this.formFieldsById[field.id].value
+      const formField = this.formFieldsById[field.id]
+      if (formField) return formField.value
     },
     async saveApplication() {
       if (!this.formIsValid || this.loading) return
       this.loading = true
       await this.updateApplication({applicationId: this.application.id,
-        values: [...this.$refs.field, {value: this.$refs.position.value, inputName: "position_id"}]
+        values: [...this.$refs.field]
       }
     ).then(({data}) => {
         this.$emit("update", data)
@@ -92,11 +76,6 @@ export default {
 <template lang="pug">
   div.application-info-display
     div(v-if="applicationForm")
-      input-select.field-row(
-        ref="position", :label="positionSelectField.label", :options="positionSelectField.options",
-        :field-id="positionSelectField.id", :field-type="positionSelectField.type", :class="{'mandatory': !positionSelectField.options.optional}",
-        @input="calculateFormIsValid", :saved-value="application.position_id"
-      )
       component.field-row(
         ref="field", v-for="field in applicationForm.form",
         :is="field.type", :label="field.label", :options="field.options",

@@ -11,7 +11,7 @@ export default {
 <template lang="pug">
 div.display-select
   label {{field.label}}
-  span {{choicesById[field.value].label}}
+  span {{choicesById[field.value] && choicesById[field.value].label}}
 
 </template>
 
