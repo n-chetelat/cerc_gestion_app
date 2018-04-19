@@ -2,18 +2,10 @@
 
 import { mapGetters, mapActions } from "vuex"
 
-import { CollapseTransition } from 'vue2-transitions'
-
+import { CollapseTransition, SlideYUpTransition } from 'vue2-transitions'
 import Modal from "../../shared/modal.vue"
-
-import DisplayText from "../form-fields/display-text.vue"
-import DisplayTextarea from "../form-fields/display-textarea.vue"
-import DisplayDate from "../form-fields/display-date.vue"
-import DisplayRadio from "../form-fields/display-radio.vue"
-import DisplaySelect from "../form-fields/display-select.vue"
-import DisplayCheckbox from "../form-fields/display-checkbox.vue"
-import DisplayUploadSingle from "../form-fields/display-upload-single.vue"
-import DisplayUploadMultiple from "../form-fields/display-upload-multiple.vue"
+import ApplicationInfoDisplay from "./person-info/application-info-display.vue"
+import ApplicationInfoEdit from "./person-info/application-info-edit.vue"
 
 export default {
   name: "PersonInfo",
@@ -28,6 +20,7 @@ export default {
       infoOpen: false,
       applicationOpen: false,
       applicationNotFound: false,
+      editing: false,
     }
   },
   async created() {
@@ -52,15 +45,10 @@ export default {
   },
   components: {
     Modal,
-    DisplayText,
-    DisplayDate,
-    DisplayRadio,
-    DisplaySelect,
-    DisplayTextarea,
-    DisplayCheckbox,
-    DisplayUploadSingle,
-    DisplayUploadMultiple,
-    CollapseTransition
+    CollapseTransition,
+    SlideYUpTransition,
+    ApplicationInfoDisplay,
+    ApplicationInfoEdit,
   }
 }
 </script>
@@ -95,14 +83,12 @@ export default {
             span.icon.arrow-icon
           collapse-transition
             div.collapsable-content(v-if="applicationOpen")
-              div.field-row
-                label For position
-                span {{application.position}}
-              div.field-row
-                label Starting on
-                span {{application.starting_semester}}
-              div.display-fields
-                component.field-row(v-for="field in application.form_fields", :is="`display-${field.type}`", :field="field")
+              button.icon.pencil(type="button", @click="editing = !editing")
+              slide-y-up-transition
+                application-info-display(:application="application", :key="'display'", v-if="!editing")
+              slide-y-up-transition
+                application-info-edit(:application="application", :key="'edit'", v-if="editing")
+
 
 </template>
 
@@ -145,6 +131,9 @@ export default {
       height: 30px;
       width: 30px;
       background: url("../../../static/icons/circle-down.svg") bottom left / 70% no-repeat;
+    }
+    & .pencil {
+      background: url("../../../static/icons/pencil.svg") bottom left / 70% no-repeat;
     }
     & .field-row {
       padding: .5em;

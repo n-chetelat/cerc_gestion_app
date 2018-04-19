@@ -1,4 +1,4 @@
-json.extract! application, :id
+json.extract! application, :id, :position_id
 json.starting_semester application.starting_semester_to_s
 json.person_id application.person.id
 json.position application.position.title

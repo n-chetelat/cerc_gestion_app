@@ -106,15 +106,37 @@ select {
   background-color: white;
 }
 
-.correspondence .message-line {
-  & .content {
-    /* max-height: 0;
-    padding: 0 1em;
-    overflow-y: auto;
-    transition: max-height 0.2s ease-in, padding 0.3s ease-in; */
+input, textarea, select, button.submit, .input, .file-list {
+  width: 25em;
+}
+
+.mandatory .label:after {
+  content: "*";
+  color: red;
+  margin-left: 2px;
+}
+
+.file-list {
+  list-style: none;
+  padding-left: 0;
+  margin: auto;
+  & .file-line {
+    position: relative;
+    display: flex;
+    height: 2em;
+    line-height: 2em;
+    margin-top: 3px;
+    & span {
+      margin-left: 2em;
+    }
   }
-  &.--open .content {
-    /* max-height: 200px;
-    padding: 1em; */
+}
+
+.choice-group {
+  display: inline-block;
+  border: none;
+  & label {
+    margin: 5px 5px 0 15px;
+    display: inline-block;
   }
 }

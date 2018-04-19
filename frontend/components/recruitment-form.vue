@@ -6,14 +6,14 @@ import ModalMixin from 'mixins/modal-mixin.js'
 
 import LocaleSwitcher from './shared/locale-switcher.vue'
 
-import InputText from './recruitment-form/input-text.vue'
-import InputUploadSingle from './recruitment-form/input-upload-single.vue'
-import InputUploadMultiple from './recruitment-form/input-upload-multiple.vue'
-import InputTextarea from './recruitment-form/input-textarea.vue'
-import InputCheckbox from './recruitment-form/input-checkbox.vue'
-import InputRadio from './recruitment-form/input-radio.vue'
-import InputDate from './recruitment-form/input-date.vue'
-import InputSelect from './recruitment-form/input-select.vue'
+import InputText from './recruitment-form/form-fields/input-text.vue'
+import InputUploadSingle from './recruitment-form/form-fields/input-upload-single.vue'
+import InputUploadMultiple from './recruitment-form/form-fields/input-upload-multiple.vue'
+import InputTextarea from './recruitment-form/form-fields/input-textarea.vue'
+import InputCheckbox from './recruitment-form/form-fields/input-checkbox.vue'
+import InputRadio from './recruitment-form/form-fields/input-radio.vue'
+import InputDate from './recruitment-form/form-fields/input-date.vue'
+import InputSelect from './recruitment-form/form-fields/input-select.vue'
 
 import RecruitmentFormSuccessModal from './recruitment-form/modals/recruitment-form-success.vue'
 import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-form-error.vue'
@@ -154,92 +154,58 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
     --navHeight: 8;
   }
 
-  .recruitment-form {
+.recruitment-form {
 
-    & nav {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      width: 100%;
-      height: var(--navHeight)em;
-      background-color: black;
-      padding: 10px;
-      & .logo-link {
-        display: inline-block;
-      }
-
-      & .logo {
-        height: calc(var(--navHeight) + 5)em;
-        margin: -3em;
-      }
-      & .locale-switcher {
-        float: right;
-        margin: 1.5em;
-      }
+  & nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: var(--navHeight)em;
+    background-color: black;
+    padding: 10px;
+    & .logo-link {
+      display: inline-block;
     }
 
-    & .application-form-container {
-      margin-top: calc(var(--navHeight) + 2)em;
+    & .logo {
+      height: calc(var(--navHeight) + 5)em;
+      margin: -3em;
     }
-
-    & .application-form {
-      transition: transform .5s;
-      width: 90%;
-      margin: auto;
-      padding-top: 20px;
-
-      & .label {
-        display: inline-block;
-        width: 30%;
-        margin-right: 10px;
-        vertical-align: top;
-        text-align: right;
-      }
-      & .choice-group {
-        display: inline-block;
-        border: none;
-        & label {
-          margin: 5px 5px 0 15px;
-          display: inline-block;
-        }
-      }
-      & .position-select {
-        padding-bottom: 20px;
-      }
-      & .position-fields {
-        & .form-row {
-          margin: 10px auto;
-        }
-      }
+    & .locale-switcher {
+      float: right;
+      margin: 1.5em;
     }
   }
 
-  input, textarea, select, button.submit, .input, .file-list {
-    width: 25em;
+  & .application-form-container {
+    margin-top: calc(var(--navHeight) + 2)em;
   }
 
-  .mandatory .label:after {
-    content: "*";
-    color: red;
-    margin-left: 2px;
-  }
-
-  .file-list {
-    list-style: none;
-    padding-left: 0;
+  & .application-form {
+    transition: transform .5s;
+    width: 90%;
     margin: auto;
-    & .file-line {
-      position: relative;
-      display: flex;
-      height: 2em;
-      line-height: 2em;
-      margin-top: 3px;
-      & span {
-        margin-left: 2em;
+    padding-top: 20px;
+
+    & .label {
+      display: inline-block;
+      width: 30%;
+      margin-right: 10px;
+      vertical-align: top;
+      text-align: right;
+    }
+    & .position-select {
+      padding-bottom: 20px;
+    }
+    & .position-fields {
+      & .form-row {
+        margin: 10px auto;
       }
     }
   }
+}
 
 .ease-enter-active, .ease-leave-active {
   transition: all .5s ease-in;

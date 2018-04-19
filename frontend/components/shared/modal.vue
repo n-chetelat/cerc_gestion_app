@@ -79,7 +79,6 @@ export default {
       position: relative;
       color: var(--headerColor);
       padding: 5px 10px;
-      box-shadow: 0 3px 10px;
     }
 
     & .modal-body {
