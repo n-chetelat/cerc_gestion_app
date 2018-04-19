@@ -21,6 +21,17 @@ module Api
       end
     end
 
+    def update
+      if @resource = ApplicationService.update_application(@resource, params)
+        @form_fields = ::ApplicationService.fields_to_hash_for(@resource)
+        render :show
+      else
+        render json: {
+          error: "There was an error when updating the application", status: 500
+          }, status: 500
+      end
+    end
+
     def partial_path
       "api/applications/application"
     end

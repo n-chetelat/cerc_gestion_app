@@ -22,13 +22,7 @@ export default {
     }
   },
   async created() {
-    if (this.person.application_id) {
-      await this.fetchApplication(this.person.application_id).then(({data}) => {
-        this.application = data
-      }).catch((error) => {
-        this.applicationNotFound = true
-      })
-    }
+    await this.getApplication()
   },
   computed: {
     isLoaded() {
@@ -39,6 +33,19 @@ export default {
     ...mapActions("application", ["fetchApplication"]),
     closeModal() {
       this.$emit("close")
+    },
+    getApplication() {
+      if (this.person.application_id) {
+        this.fetchApplication(this.person.application_id).then(({data}) => {
+          this.application = data
+        }).catch((error) => {
+          this.applicationNotFound = true
+        })
+      }
+    },
+    async onUpdateApplication() {
+      await this.getApplication()
+      this.editing = false
     }
   },
   components: {
@@ -57,7 +64,6 @@ export default {
     template(slot="body")
       div(v-if="applicationNotFound", style="text-align: center;")
         p There was an error while fetching this applicant's information.
-        p Please try again later.
 
       div.person-info(v-if="isLoaded")
         div.action-menu
@@ -65,7 +71,7 @@ export default {
         slide-y-up-transition
           application-info-display(:application="application", :person="person", v-if="!editing")
         slide-y-up-transition
-          application-info-edit(:application="application", :person="person", v-if="editing")
+          application-info-edit(:application="application", :person="person", v-if="editing", @update="onUpdateApplication")
 
 
 </template>

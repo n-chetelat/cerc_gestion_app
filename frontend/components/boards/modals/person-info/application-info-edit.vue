@@ -25,7 +25,8 @@ export default {
   data() {
     return {
       applicationForm: null,
-      formIsValid: false
+      formIsValid: false,
+      loading: false,
     }
   },
   async created() {
@@ -37,8 +38,8 @@ export default {
     ...mapGetters("positions", ["allPositions", "positionFormsById"]),
     positionSelectField() {
       return {
-        id:"starting_semester",
-        label:"Starting Semester",
+        id:"position_id",
+        label:"Position",
         options: { choices: this.allPositions.map((p) => {
           p.label = p.title
           return p
@@ -52,6 +53,7 @@ export default {
   },
   methods: {
     ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
+    ...mapActions("application", ["updateApplication"]),
     calculateFormIsValid() {
       const fieldsValid = this.$refs.field.every((field) => field.isValid)
       this.formIsValid = this.application && fieldsValid
@@ -65,7 +67,20 @@ export default {
         return this.formFieldsById[field.id].value_id
       }
       return this.formFieldsById[field.id].value
-    }
+    },
+    async saveApplication() {
+      if (!this.formIsValid || this.loading) return
+      this.loading = true
+      await this.updateApplication({applicationId: this.application.id,
+        values: [...this.$refs.field, {value: this.$refs.position.value, inputName: "position_id"}]
+      }
+    ).then(() => {
+        this.$emit("update")
+      }).catch(() => {
+
+      })
+      this.loading = false
+    },
   },
   components: {
     InputText,
@@ -84,7 +99,7 @@ export default {
   div.application-info-display
     div(v-if="applicationForm")
       input-select.field-row(
-        ref="field", :label="positionSelectField.label", :options="positionSelectField.options",
+        ref="position", :label="positionSelectField.label", :options="positionSelectField.options",
         :field-id="positionSelectField.id", :field-type="positionSelectField.type", :class="{'mandatory': !positionSelectField.options.optional}",
         @input="calculateFormIsValid", :saved-value="application.position_id"
       )
@@ -94,7 +109,7 @@ export default {
         :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
         @input="calculateFormIsValid", :saved-value="getSavedValue(field)"
       )
-      button(type="button", :disabled="!formIsValid") Save
+      button(type="button", :disabled="!formIsValid", @click="saveApplication") Save
 
 
 </template>

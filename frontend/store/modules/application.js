@@ -28,6 +28,20 @@ const actions = {
     })
     return axios.post(getters.endpoint, formData)
   },
+  updateApplication({ commit, getters }, payload) {
+    const { applicationId, values } = payload
+    const formData = new FormData()
+    const data = Array.from(values).forEach((value) => {
+      if (value.value && (value.value.constructor === Array)) {
+        value.value.forEach((item, index) => {
+          formData.append(`${value.inputName}[${index}]`, item)
+        })
+      } else if (value.value) {
+        formData.append(value.inputName, value.value)
+      }
+    })
+    return axios.put(`${getters.endpoint}/${applicationId}`, formData)
+  },
   async fetchApplication({ commit, getters }, applicationId) {
     return axios.get(`${getters.endpoint}/${applicationId}`)
   },
