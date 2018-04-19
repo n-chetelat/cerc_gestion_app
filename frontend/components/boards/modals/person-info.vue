@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       application: null,
-      applicationNotFound: false,
+      applicationError: false,
       editing: false,
     }
   },
@@ -39,11 +39,11 @@ export default {
         this.fetchApplication(this.person.application_id).then(({data}) => {
           this.application = data
         }).catch((error) => {
-          this.applicationNotFound = true
+          this.applicationError = true
         })
       }
     },
-    async onUpdateApplication() {
+    async onUpdateApplication(data) {
       await this.getApplication()
       this.editing = false
     }
@@ -62,7 +62,7 @@ export default {
     template(slot="header")
       h1 Information on {{person.full_name}}
     template(slot="body")
-      div(v-if="applicationNotFound", style="text-align: center;")
+      div(v-if="applicationError", style="text-align: center;")
         p There was an error while fetching this applicant's information.
 
       div.person-info(v-if="isLoaded")
@@ -71,7 +71,7 @@ export default {
         slide-y-up-transition
           application-info-display(:application="application", :person="person", v-if="!editing")
         slide-y-up-transition
-          application-info-edit(:application="application", :person="person", v-if="editing", @update="onUpdateApplication")
+          application-info-edit(:application="application", :person="person", v-if="editing", @update="onUpdateApplication", @error="applicationError = true")
 
 
 </template>

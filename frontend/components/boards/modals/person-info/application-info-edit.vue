@@ -74,10 +74,10 @@ export default {
       await this.updateApplication({applicationId: this.application.id,
         values: [...this.$refs.field, {value: this.$refs.position.value, inputName: "position_id"}]
       }
-    ).then(() => {
-        this.$emit("update")
+    ).then(({data}) => {
+        this.$emit("update", data)
       }).catch(() => {
-
+        this.$emit("error")
       })
       this.loading = false
     },
@@ -115,10 +115,6 @@ export default {
 </template>
 
 <style>
-
-  :root {
-
-  }
 
   .application-info-display {
     & .choice-group label {
