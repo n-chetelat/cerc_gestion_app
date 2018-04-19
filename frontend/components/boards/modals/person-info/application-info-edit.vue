@@ -1,6 +1,7 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
+import { keyBy } from "lodash-es"
 
 import InputText from '../../../recruitment-form/form-fields/input-text.vue'
 import InputUploadSingle from '../../../recruitment-form/form-fields/input-upload-single.vue'
@@ -14,6 +15,9 @@ import InputSelect from '../../../recruitment-form/form-fields/input-select.vue'
 export default {
   name: "ApplicationInfoEdit",
   props: {
+    person: {
+      required: true
+    },
     application: {
       required: true
     },
@@ -41,6 +45,9 @@ export default {
         }) },
         type:"input-select"
       }
+    },
+    formFieldsById() {
+      return keyBy(this.application.form_fields, "id")
     }
   },
   methods: {
@@ -49,6 +56,16 @@ export default {
       const fieldsValid = this.$refs.field.every((field) => field.isValid)
       this.formIsValid = this.application && fieldsValid
     },
+    getSavedValue(field) {
+      if (["name", "lastname", "email"].indexOf(field.id) > -1) {
+        return this.person[field.id]
+      } else if (field.id === "starting_semester") {
+        return this.person["starting_semester_id"]
+      } else if (this.formFieldsById[field.id].value_id) {
+        return this.formFieldsById[field.id].value_id
+      }
+      return this.formFieldsById[field.id].value
+    }
   },
   components: {
     InputText,
@@ -69,13 +86,13 @@ export default {
       input-select.field-row(
         ref="field", :label="positionSelectField.label", :options="positionSelectField.options",
         :field-id="positionSelectField.id", :field-type="positionSelectField.type", :class="{'mandatory': !positionSelectField.options.optional}",
-        @input="calculateFormIsValid"
+        @input="calculateFormIsValid", :saved-value="application.position_id"
       )
       component.field-row(
         ref="field", v-for="field in applicationForm.form",
         :is="field.type", :label="field.label", :options="field.options",
         :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
-        @input="calculateFormIsValid"
+        @input="calculateFormIsValid", :saved-value="getSavedValue(field)"
       )
       button(type="button", :disabled="!formIsValid") Save
 

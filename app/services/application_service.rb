@@ -97,6 +97,13 @@ class ApplicationService
       else
         nil
       end
+
+      attrs[:value_id] = case form_field.form
+      when :radio, :select, :checkbox
+        value
+      else
+        nil
+      end
       attrs
     end
 

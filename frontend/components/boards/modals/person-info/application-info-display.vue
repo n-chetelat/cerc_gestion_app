@@ -12,6 +12,9 @@ import DisplayUploadMultiple from "../../form-fields/display-upload-multiple.vue
 export default {
   name: "ApplicationInfoDisplay",
   props: {
+    person: {
+      required: true
+    },
     application: {
       required: true
     }
@@ -39,6 +42,15 @@ export default {
 
 <template lang="pug">
   div.application-info-display
+    div.field-row
+      label Name
+      span {{person.name}}
+    div.field-row
+      label Lastname
+      span {{person.lastname}}
+    div.field-row
+      label Email
+      span {{person.email}}
     div.field-row
       label For position
       span {{application.position}}

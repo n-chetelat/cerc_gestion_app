@@ -9,11 +9,17 @@ export default {
     label: {
       required: true
     },
+    savedValue: {},
     options: {}
   },
   data() {
     return {
       value: null
+    }
+  },
+  created() {
+    if (this.savedValue) {
+      this.value = this.savedValue
     }
   },
   computed: {

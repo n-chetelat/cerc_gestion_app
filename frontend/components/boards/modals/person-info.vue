@@ -2,7 +2,7 @@
 
 import { mapGetters, mapActions } from "vuex"
 
-import { CollapseTransition, SlideYUpTransition } from 'vue2-transitions'
+import { SlideYUpTransition } from 'vue2-transitions'
 import Modal from "../../shared/modal.vue"
 import ApplicationInfoDisplay from "./person-info/application-info-display.vue"
 import ApplicationInfoEdit from "./person-info/application-info-edit.vue"
@@ -17,8 +17,6 @@ export default {
   data() {
     return {
       application: null,
-      infoOpen: false,
-      applicationOpen: false,
       applicationNotFound: false,
       editing: false,
     }
@@ -34,7 +32,7 @@ export default {
   },
   computed: {
     isLoaded() {
-      return this.person && this.application
+      return !!(this.person && this.application)
     }
   },
   methods: {
@@ -45,7 +43,6 @@ export default {
   },
   components: {
     Modal,
-    CollapseTransition,
     SlideYUpTransition,
     ApplicationInfoDisplay,
     ApplicationInfoEdit,
@@ -63,31 +60,12 @@ export default {
         p Please try again later.
 
       div.person-info(v-if="isLoaded")
-        div.info-section.person-info-profile(:class="{'--open': infoOpen}")
-          h2.collapsable-header(@click="infoOpen = !infoOpen") General
-            span.icon.arrow-icon
-          collapse-transition
-            div.collapsable-content(v-if="infoOpen")
-              div.field-row
-                label Name
-                span {{person.name}}
-              div.field-row
-                label Lastname
-                span {{person.lastname}}
-              div.field-row
-                label Email
-                span {{person.email}}
-
-        div.info-section.person-info-application(:class="{'--open': applicationOpen}")
-          h2.collapsable-header(@click="applicationOpen = !applicationOpen") Application
-            span.icon.arrow-icon
-          collapse-transition
-            div.collapsable-content(v-if="applicationOpen")
-              button.icon.pencil(type="button", @click="editing = !editing")
-              slide-y-up-transition
-                application-info-display(:application="application", :key="'display'", v-if="!editing")
-              slide-y-up-transition
-                application-info-edit(:application="application", :key="'edit'", v-if="editing")
+        div.action-menu
+          button.icon.pencil(type="button", @click="editing = !editing")
+        slide-y-up-transition
+          application-info-display(:application="application", :person="person", v-if="!editing")
+        slide-y-up-transition
+          application-info-edit(:application="application", :person="person", v-if="editing")
 
 
 </template>
@@ -104,36 +82,25 @@ export default {
     max-height: var(--windowHeight)px;
     overflow: auto;
     padding: 2em 2em;
+    padding-top: 0;
 
-    & .collapsable-header {
+    & .action-menu {
+      width: 100%;
       height: 32px;
-      width: 50%;
-      padding-bottom: 40px;
-      border-bottom: 1px solid transparent;
-      position: relative;
+    }
 
-      &:hover {
-        border-bottom: 1px solid black;
-      }
-    }
-    & .collapsable-content {
-      padding-bottom: 30px;
-    }
     & .icon {
-      height: 25px;
-      width: 25px;
+      height: 32px;
+      width: 32px;
       display: inline-block;
       margin-bottom: -3px;
     }
-    & .arrow-icon {
-      position: absolute;
-      right: 0;
-      height: 30px;
-      width: 30px;
-      background: url("../../../static/icons/circle-down.svg") bottom left / 70% no-repeat;
-    }
     & .pencil {
-      background: url("../../../static/icons/pencil.svg") bottom left / 70% no-repeat;
+      background: url("../../../static/icons/pencil-charcoal.svg") bottom left / 90% no-repeat;
+      float: right;
+      &:hover {
+        background: url("../../../static/icons/pencil.svg") bottom left / 100% no-repeat;
+      }
     }
     & .field-row {
       padding: .5em;
@@ -160,14 +127,6 @@ export default {
       }
       & .pdf-icon {
         background: url("../../../static/icons/file-pdf.svg") left bottom / 70% no-repeat;
-      }
-    }
-    &.--open {
-      & .collapsable-header {
-        border-bottom: 1px solid black;
-      }
-      & .arrow-icon {
-        background: url("../../../static/icons/circle-up.svg") bottom left / 70% no-repeat;
       }
     }
 

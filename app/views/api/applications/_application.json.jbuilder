@@ -9,4 +9,5 @@ json.form_fields @form_fields do |field|
   json.type field[:type].to_s.gsub(/_/, "-")
   json.label field[:label]
   json.value field[:value]
+  json.value_id field[:value_id]
 end
