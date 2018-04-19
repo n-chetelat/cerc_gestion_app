@@ -92,14 +92,8 @@ class ApplicationService
     def self.field_to_hash(form_field, value)
       attrs = {form_field_id: form_field.id, label: form_field.label, type: form_field.form}
       attrs[:value] = case form_field.form
-      when :text, :textarea, :date
+      when :text, :textarea, :date, :radio, :select, :checkbox
         value
-      when :radio, :select
-        form_field.locale_choices[value].try(:[], I18n.locale.to_s)
-      when :checkbox
-        (value || []).map do |val|
-          form_field.locale_choices[val][I18n.locale.to_s]
-        end
       when :upload_single
         if value
           file = GlobalID::Locator.locate(value["uri"])
@@ -116,12 +110,6 @@ class ApplicationService
         nil
       end
 
-      attrs[:value_id] = case form_field.form
-      when :radio, :select, :checkbox
-        value
-      else
-        nil
-      end
       attrs
     end
 

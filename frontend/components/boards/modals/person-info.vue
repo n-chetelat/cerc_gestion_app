@@ -17,26 +17,32 @@ export default {
   data() {
     return {
       application: null,
+      applicationForm: null,
       applicationError: false,
       editing: false,
     }
   },
   async created() {
     await this.getApplication()
+    await this.getPositionForm(this.application.position_id)
+    await this.getAllPositions()
+    this.applicationForm = this.positionFormsById[this.application.position_id]
   },
   computed: {
+    ...mapGetters("positions", ["allPositions", "positionFormsById"]),
     isLoaded() {
-      return !!(this.person && this.application)
+      return !!(this.person && this.application && this.applicationForm)
     }
   },
   methods: {
     ...mapActions("application", ["fetchApplication"]),
+    ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
     closeModal() {
       this.$emit("close")
     },
     getApplication() {
       if (this.person.application_id) {
-        this.fetchApplication(this.person.application_id).then(({data}) => {
+        return this.fetchApplication(this.person.application_id).then(({data}) => {
           this.application = data
         }).catch((error) => {
           this.applicationError = true
@@ -69,9 +75,9 @@ export default {
         div.action-menu
           button.icon.pencil(type="button", @click="editing = !editing")
         slide-y-up-transition
-          application-info-display(:application="application", :person="person", v-if="!editing")
+          application-info-display(:application="application", :person="person", :application-form="applicationForm", v-if="!editing")
         slide-y-up-transition
-          application-info-edit(:application="application", :person="person", v-if="editing", @update="onUpdateApplication", @error="applicationError = true")
+          application-info-edit(:application="application", :person="person", :application-form="applicationForm" v-if="editing", @update="onUpdateApplication", @error="applicationError = true")
 
 
 </template>

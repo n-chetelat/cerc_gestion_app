@@ -21,21 +21,18 @@ export default {
     application: {
       required: true
     },
+    applicationForm: {
+      required: true
+    }
   },
   data() {
     return {
-      applicationForm: null,
       formIsValid: false,
       loading: false,
     }
   },
-  async created() {
-    await this.getPositionForm(this.application.position_id)
-    await this.getAllPositions()
-    this.applicationForm = this.positionFormsById[this.application.position_id]
-  },
   computed: {
-    ...mapGetters("positions", ["allPositions", "positionFormsById"]),
+    ...mapGetters("positions", ["allPositions"]), // TODO get rid of
     positionSelectField() {
       return {
         id:"position_id",
@@ -52,7 +49,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
     ...mapActions("application", ["updateApplication"]),
     calculateFormIsValid() {
       const fieldsValid = this.$refs.field.every((field) => field.isValid)
@@ -63,8 +59,6 @@ export default {
         return this.person[field.id]
       } else if (field.id === "starting_semester") {
         return this.person["starting_semester_id"]
-      } else if (this.formFieldsById[field.id].value_id) {
-        return this.formFieldsById[field.id].value_id
       }
       return this.formFieldsById[field.id].value
     },

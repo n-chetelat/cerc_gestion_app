@@ -11,7 +11,7 @@ export default {
 <template lang="pug">
   div.display-radio
     label {{field.label}}
-    span {{field.value}}
+    span {{choicesById[field.value].label}}
 
 </template>
 

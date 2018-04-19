@@ -12,7 +12,7 @@ export default {
   div.display-checkbox
     label {{field.label}}
     ul
-      li.value(v-for="val in field.value") {{val}}
+      li.value(v-for="val in field.value") {{choicesById[val].label}}
 
 </template>
 

@@ -1,5 +1,7 @@
 <script>
 
+import { keyBy } from "lodash-es"
+
 import DisplayText from "../../form-fields/display-text.vue"
 import DisplayTextarea from "../../form-fields/display-textarea.vue"
 import DisplayDate from "../../form-fields/display-date.vue"
@@ -17,6 +19,9 @@ export default {
     },
     application: {
       required: true
+    },
+    applicationForm: {
+      required: true
     }
   },
   data() {
@@ -24,8 +29,15 @@ export default {
     }
   },
   computed: {
+    applicationFormFieldsById() {
+      return keyBy(this.applicationForm.form, "id")
+    }
   },
   methods: {
+    getOptions(field) {
+      const value = this.applicationFormFieldsById[field.id]
+      return value && value.options
+    }
   },
   components: {
     DisplayText,
@@ -58,7 +70,7 @@ export default {
       label Starting on
       span {{application.starting_semester}}
     div.display-fields
-      component.field-row(v-for="field in application.form_fields", :is="`display-${field.type}`", :field="field")
+      component.field-row(v-for="field in application.form_fields", :is="`display-${field.type}`", :field="field", :options="getOptions(field)")
 
 
 </template>
