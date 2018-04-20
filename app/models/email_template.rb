@@ -13,7 +13,7 @@ class EmailTemplate < ApplicationRecord
 
   TEMPLATE_VARIABLES = [
     "name", "lastname", "full_name", "email",
-    "position", "starting_semester_label"
+    "position", "starting_date_label"
   ]
 
   def to_s

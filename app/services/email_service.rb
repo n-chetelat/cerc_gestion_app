@@ -81,6 +81,7 @@ class EmailService
           thread = Email::Thread.new(google_thread_id: thread_object.id)
         end
         associate_thread_with_persons!(thread, thread_object.id)
+        thread.save!
       end
       response = result
     end

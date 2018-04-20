@@ -43,8 +43,10 @@ class Person < ApplicationRecord
     self.application.try(:position)
   end
 
-  def starting_semester_label
-    ::Application.starting_date_to_s(self.starting_date)
+  def starting_date_label
+    if self.application.present?
+      self.application.starting_date_to_s
+    end
   end
 
 end
