@@ -165,13 +165,15 @@ class EmailService
       end
       if text_part = gmail_message_object.payload.parts.find {|part| part.mime_type == "text/plain" }
         new_message.text_part = Mail::Part.new do
-          body text_part.body.data
+          body text_part.body.data.force_encoding("UTF-8")
+          body_encoding "utf-8"
         end
       end
       if html_part = gmail_message_object.payload.parts.find {|part| part.mime_type == "text/html" }
         new_message.html_part = Mail::Part.new do
           content_type "text/html; charset=UTF-8"
-          body html_part.body.data
+          body html_part.body.data.force_encoding("UTF-8")
+          body_encoding "utf-8"
         end
       end
       new_message
