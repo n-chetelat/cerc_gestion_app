@@ -4,14 +4,23 @@ import FormFieldMixin from "../../../mixins/form-field-mixin.js"
 export default {
   name: "InputUploadSingle",
   mixins: [FormFieldMixin],
+  computed: {
+    fieldData() {
+      if (this.value.constructor === Object) {
+        return this.value.name
+      }
+      return this.value
+    }
+  },
   methods: {
     onChange(files) {
-      this.$emit("input")
       if (!files.length) return
       this.value = files[0]
+      this.$emit("input")
     },
     removeFile() {
       this.value = null
+      this.$emit("input")
     },
   }
 }

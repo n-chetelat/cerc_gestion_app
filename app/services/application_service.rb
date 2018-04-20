@@ -17,7 +17,7 @@ class ApplicationService
   end
 
   def self.update_application(application, params)
-    begin
+    # begin
       application.with_lock do
         person = self.set_person_attributes(application.person, params)
         self.set_application_common_attributes(application, params)
@@ -25,9 +25,9 @@ class ApplicationService
         application.save!
         application
       end
-    rescue
-      nil
-    end
+    # rescue
+    #   nil
+    # end
   end
 
   def self.fields_to_hash_for(application)
@@ -81,14 +81,22 @@ class ApplicationService
           application.fields[attribute_name] = nil
         elsif field.form.to_s =~ /upload_/ # files need to be stored differently
           if attribute.class == ActionController::Parameters
+            application.fields[attribute_name] ||= []
+            # Remove unused saved uploads
+            application.fields[attribute_name].select! do |attr|
+              attribute.values.include?(GlobalID::Locator.locate(attr["uri"]).try(:file_name))
+            end
+            # Add new uploads
             attribute.values.each do |upload|
+              next if upload.is_a?(String)
               file = Attachment.create!(file: upload)
-              application.fields[attribute_name] ||= []
               application.fields[attribute_name] << file.to_global_id
             end
           else
-            file = Attachment.create!(file: attribute)
-            application.fields[attribute_name] = file.to_global_id
+            unless attribute.is_a?(String)
+              file = Attachment.create!(file: attribute)
+              application.fields[attribute_name] = file.to_global_id
+            end
           end
         elsif attribute.class == ActionController::Parameters # many values under same field name
           application.fields[attribute_name] = attribute.values

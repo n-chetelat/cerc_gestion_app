@@ -1,7 +1,7 @@
 <script>
 import FormFieldMixin from "../../../mixins/form-field-mixin.js"
 
-import { find, difference } from "lodash-es"
+import { find, difference, filter } from "lodash-es"
 
 export default {
   name: "InputUploadMultiple",
@@ -12,6 +12,14 @@ export default {
     }
   },
   computed: {
+    fieldData() {
+      return this.value.map((val) => {
+        if (val.constructor === Object) {
+          return val.name
+        }
+        return val
+      })
+    },
     isValid() {
       if (!this.options.optional) {
         return !!this.value.length
@@ -49,5 +57,6 @@ export default {
 </template>
 
 <style>
+
 
 </style>

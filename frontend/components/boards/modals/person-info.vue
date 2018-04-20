@@ -137,6 +137,10 @@ export default {
         padding: 0;
         margin: 0;
       }
+      & ul.file-list {
+        display: block;
+        margin: auto;
+      }
       & .pdf-icon {
         background: url("../../../static/icons/file-pdf.svg") left bottom / 70% no-repeat;
       }

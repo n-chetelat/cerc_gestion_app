@@ -32,12 +32,12 @@ const actions = {
     const { applicationId, values } = payload
     const formData = new FormData()
     const data = Array.from(values).forEach((value) => {
-      if (value.value && (value.value.constructor === Array)) {
-        value.value.forEach((item, index) => {
+      if (value.fieldData && (value.fieldData.constructor === Array)) {
+        value.fieldData.forEach((item, index) => {
           formData.append(`${value.inputName}[${index}]`, item)
         })
-      } else if (value.value) {
-        formData.append(value.inputName, value.value)
+      } else if (value.fieldData) {
+        formData.append(value.inputName, value.fieldData)
       }
     })
     return axios.put(`${getters.endpoint}/${applicationId}`, formData)

@@ -31,6 +31,9 @@ export default {
       loading: false,
     }
   },
+  mounted() {
+    this.calculateFormIsValid()
+  },
   computed: {
     formFieldsById() {
       return keyBy(this.application.form_fields, "id")
@@ -50,7 +53,7 @@ export default {
       if (!this.formIsValid || this.loading) return
       this.loading = true
       await this.updateApplication({applicationId: this.application.id,
-        values: [...this.$refs.field]
+        values: this.$refs.field
       }
     ).then(({data}) => {
         this.$emit("update", data)
