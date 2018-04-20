@@ -5,6 +5,13 @@ import DisplayFieldMixin from "../../../mixins/display-field-mixin"
 export default {
   name: "DisplayCheckbox",
   mixins: [DisplayFieldMixin],
+  methods: {
+    calculatedValue(val) {
+      return this.choicesById &&
+        this.choicesById[val] &&
+        this.choicesById[val].label
+    }
+  }
 }
 </script>
 
@@ -12,7 +19,7 @@ export default {
   div.display-checkbox
     label {{field.label}}
     ul
-      li.value(v-for="val in field.value") {{choicesById[val] && choicesById[val].label}}
+      li.value(v-for="val in field.value") {{calculatedValue(val)}}
 
 </template>
 

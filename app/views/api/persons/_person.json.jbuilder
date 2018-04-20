@@ -7,7 +7,7 @@ json.phase_id person.current_phase.try(:id)
 if scopes.include?("application")
   json.application_id person.application.id
   json.position person.position.try(:title)
-  json.starting_semester person.application.starting_semester_to_s
-  json.starting_semester_id person.application.starting_semester
+  json.starting_date person.application.starting_date_to_s
+  json.starting_date_id person.application.starting_date
   json.applied_at person.application.created_at.to_formatted_s(:short)
 end

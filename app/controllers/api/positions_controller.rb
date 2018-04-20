@@ -11,7 +11,7 @@ module Api
         type: "input-select",
         options: {choices: Position.all.map {|po| {id: po.id, label: po.title}}
         }}]
-      @form_fields += Positions::RecruitmentForm.common_fields
+      @form_fields += @resource.recruitment_form.common_fields
       @form_fields += @resource.recruitment_form.form_fields.order(position: :asc).map do |field|
         options = { choices: field.choices_with_locale, optional: field.optional }
         field.attributes.symbolize_keys.slice(:id, :label).merge(

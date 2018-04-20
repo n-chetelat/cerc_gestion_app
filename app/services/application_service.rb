@@ -37,7 +37,7 @@ class ApplicationService
       next unless form_field
       self.field_to_hash(form_field, value)
     end.compact
-    common_fields = Positions::RecruitmentForm.common_fields.map do |field|
+    common_fields = application.position.recruitment_form.common_fields.map do |field|
       {form_field_id: field[:id], label: field[:label],
         type: field[:type].split("input-").last, value: application.person.send(field[:id])}
     end
@@ -52,8 +52,7 @@ class ApplicationService
 
     def self.set_person_attributes(person, params)
       person_attributes = {}
-      common_fields = Positions::RecruitmentForm.common_fields.reject {|field| field[:id] == "starting_semester"}
-      common_field_names = common_fields.map do |attr|
+      Positions::RecruitmentForm.immutable_common_fields.map do |attr|
         field_name = "#{attr[:type].gsub(/-/, "_")}_#{attr[:id]}"
         person_attributes[attr[:id]] = params.delete(field_name)
       end
@@ -67,10 +66,10 @@ class ApplicationService
     def self.set_application_common_attributes(application, params)
       position_id = params[:input_select_position_id]
       position = Position.find(position_id)
-      starting_semester = params.delete(:input_select_starting_semester)
+      starting_date = params.delete(:input_select_starting_date)
 
       application.position = position
-      application.starting_semester = starting_semester
+      application.starting_date = starting_date
     end
 
     def self.set_form_fields(application, params)

@@ -1,5 +1,5 @@
 json.extract! application, :id, :position_id
-json.starting_semester application.starting_semester_to_s
+json.starting_date application.starting_date_to_s
 json.person_id application.person.id
 json.position application.position.title
 json.created_at application.created_at.to_formatted_s(:short)

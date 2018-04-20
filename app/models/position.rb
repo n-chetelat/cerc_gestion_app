@@ -16,6 +16,11 @@ class Position < ApplicationRecord
   scope :visible, -> { where(hidden: false) }
   scope :hidden, -> { where(hidden: true) }
 
+  as_enum :time_interval, {
+    month: 0,
+    semester: 1,
+  }
+
   def to_s
     self.title
   end
@@ -32,6 +37,7 @@ class Position < ApplicationRecord
         tr.title = "#{tr.title} - Copy"
       end
       copy.hidden = true
+      copy.time_interval_cd = self.time_interval_cd
       form = copy.build_recruitment_form
       copy.save!
 

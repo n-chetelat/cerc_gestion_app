@@ -9,6 +9,9 @@ fr:
       select: Menu déroulant
       upload_single: Téléversement (un seule fichier)
       upload_multiple: Téléversement (plusieurs fichiers)
+    time_interval:
+      semester: Session
+      month: Mois
   activerecord:
     models:
       admin_user: Administateurs
@@ -19,13 +22,16 @@ fr:
         email: Courriel
         name: Prénom
         lastname: Nom
-        starting_semester: Session de début
+        starting_date: Date de début
       form_default: &form_default
         form_cd: Mode de saisie
         label_en: Titre en anglais
         label_fr: Titre en français
       admin_user:
         <<: *default
+      position:
+        <<: *default
+        time_interval_cd: Unités de temps pour le champ "pour commencer en"
       positions/recruitment_form:
         <<: *default
       positions/form_field:

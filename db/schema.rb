@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180417211214) do
+ActiveRecord::Schema.define(version: 20180420175142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,11 +35,11 @@ ActiveRecord::Schema.define(version: 20180417211214) do
   create_table "applications", force: :cascade do |t|
     t.bigint "person_id"
     t.string "locale"
-    t.date "starting_semester"
     t.jsonb "fields", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "position_id"
+    t.date "starting_date"
     t.index ["person_id"], name: "index_applications_on_person_id"
     t.index ["position_id"], name: "index_applications_on_position_id"
   end
@@ -187,6 +187,7 @@ ActiveRecord::Schema.define(version: 20180417211214) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "hidden", default: false
+    t.integer "time_interval_cd", default: 0
   end
 
   create_table "positions_form_field_translations", force: :cascade do |t|

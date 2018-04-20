@@ -5,5 +5,5 @@ json.phase_id person.current_phase.try(:id)
 
 json.application_id person.application.id
 json.position person.position.try(:title)
-json.starting_semester person.application.starting_semester_to_s
+json.starting_date person.application.starting_date_to_s
 json.applied_at person.application.created_at.to_formatted_s(:short)

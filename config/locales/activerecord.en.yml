@@ -9,6 +9,9 @@ en:
       select: Pull-down menu
       upload_single: Upload (single file)
       upload_multiple: Upload (multiple files)
+    time_interval:
+      semester: Semester
+      month: Month
   activerecord:
     models:
       admin_user: Admin Users
@@ -19,13 +22,16 @@ en:
         email: Email
         name: Name
         lastname: Last Name
-        starting_semester: Starting Semester
+        starting_date: Starting date
       form_default: &form_default
         form_cd: Input type
         label_en: English label
         label_fr: French label
       admin_user:
         <<: *default
+      position:
+        <<: *default
+        time_interval_cd: Time units for field "starting on"
       positions/recruitment_form:
         <<: *default
       positions/form_field:

@@ -5,7 +5,7 @@ ActiveAdmin.register Position do
   scope :visible
   scope :hidden
 
-  permit_params :hidden,
+  permit_params :hidden, :time_interval_cd,
   translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
       :id, :_destroy, :position, :form_cd, :optional, :choices,
@@ -32,6 +32,7 @@ ActiveAdmin.register Position do
     attributes_table do
       row :title
       row :hidden
+      row(:time_interval_cd) { te(resource, :time_interval) }
     end
     panel "Recruitment Form" do
       table_for resource.recruitment_form.form_fields.order(position: :asc) do
@@ -52,9 +53,10 @@ ActiveAdmin.register Position do
         end
       end
       f.input :hidden, input_html: {checked: true}
+      f.input :time_interval_cd, as: :select, collection: enum_option_pairs(Position, :time_interval, true), hint: "The starting date for the applicant will be divided into this unit.", input_html: {class: "select2"}
       if !f.object.new_record?
         panel "Recruitment Form" do
-          para "N.B: Besides the fields below, each position's form asks for: #{Positions::RecruitmentForm.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"
+          para "N.B: Besides the fields below, each position's form asks for: #{f.object.recruitment_form.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"
           f.inputs "", for: [:recruitment_form, f.object.recruitment_form || Positions::RecruitmentForm.new] do |a|
             a.has_many :form_fields, sortable: :position, sortable_start: 1, heading: "", allow_destroy: true, new_record: "New Form Field" do |b|
               Globalize.with_locale(:en) do
