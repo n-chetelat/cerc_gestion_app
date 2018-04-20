@@ -1,5 +1,6 @@
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from "vuex"
+import { omitBy } from "lodash-es"
 
 import SceneMixin from 'mixins/scene-mixin.js'
 import ModalMixin from 'mixins/modal-mixin.js'
@@ -46,6 +47,10 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       ...mapGetters("locales", ["currentLocale"]),
       ...mapGetters("positions", ["allPositions", "positionFormsById"]),
       ...mapGetters("recruitmentInfo", ["recruitmentInfo"]),
+      recruitmentFormFields() {
+        // excludes positions to avoid repetition
+        return omitBy(this.applicationForm.form, (field) => field.id === "position_id")
+      },
     },
     methods: {
       ...mapActions("positions", ["getAllPositions", "getPositionForm"]),
@@ -78,7 +83,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         this.loading = true
         try {
           await this.sendApplication([...this.$refs.field,
-            {value: this.positionId, inputName: "position_id"}])
+            {value: this.positionId, inputName: "input_select_position_id"}])
             this.applicationSent = true
           this.openModal("recruitment-form-success")
         } catch(error) {
@@ -134,7 +139,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
             transition(name="ease")
               div.position-fields(v-if="applicationForm && !loadingApplication")
                 component.form-row(
-                  ref="field", v-for="field in applicationForm.form",
+                  ref="field", v-for="field in recruitmentFormFields",
                   :is="field.type", :label="field.label", :options="field.options",
                   :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
                   @input="calculateFormIsValid"
@@ -157,6 +162,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
 .recruitment-form {
 
   & nav {
+    z-index: 2;
     position: fixed;
     top: 0;
     right: 0;

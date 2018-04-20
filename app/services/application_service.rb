@@ -17,7 +17,7 @@ class ApplicationService
   end
 
   def self.update_application(application, params)
-    # begin
+    begin
       application.with_lock do
         person = self.set_person_attributes(application.person, params)
         self.set_application_common_attributes(application, params)
@@ -25,9 +25,9 @@ class ApplicationService
         application.save!
         application
       end
-    # rescue
-    #   nil
-    # end
+    rescue
+      nil
+    end
   end
 
   def self.fields_to_hash_for(application)
@@ -65,7 +65,8 @@ class ApplicationService
     end
 
     def self.set_application_common_attributes(application, params)
-      position = Position.find(params[:input_select_position_id])
+      position_id = params[:input_select_position_id]
+      position = Position.find(position_id)
       starting_semester = params.delete(:input_select_starting_semester)
 
       application.position = position
