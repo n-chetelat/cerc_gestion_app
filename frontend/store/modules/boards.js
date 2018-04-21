@@ -17,8 +17,8 @@ const getters = {
 
 // actions
 const actions = {
-   fetchBoard({ commit, getters }, board_id) {
-    return axios.get(`${getters.endpoint}/${board_id}`).then(({ data }) => {
+   fetchBoard({ commit, getters }, boardId) {
+    return axios.get(`${getters.endpoint}/${boardId}`).then(({ data }) => {
       commit('setCurrentBoard', data)
     })
   },
@@ -39,14 +39,14 @@ const mutations = {
   addPersonToPhase(state, payload) {
     const { phaseId, person } = payload
 
-    find(state.current.phases, (phase) => phase.id === phaseId)
+    find(state.current.phases, (phase) => phase.uuid === phaseId)
       .persons.push(person)
   },
   removePersonFromPhase(state, payload) {
     const { oldPhaseId, person } = payload
 
-    const persons = find(state.current.phases, (phase) => phase.id === oldPhaseId).persons
-    const personIndex = findIndex(persons, (p) => p.id === person.id)
+    const persons = find(state.current.phases, (phase) => phase.uuid === oldPhaseId).persons
+    const personIndex = findIndex(persons, (p) => p.uuid === person.uuid)
     persons.splice(personIndex, 1)
   }
 }

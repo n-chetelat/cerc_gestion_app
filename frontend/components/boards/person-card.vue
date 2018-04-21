@@ -21,7 +21,7 @@ export default {
     },
     onDragStart(event) {
       this.beingDragged = true
-      event.dataTransfer.setData("text/plain", `${this.person.id},${this.person.phase_id}`)
+      event.dataTransfer.setData("text/plain", `${this.person.uuid},${this.person.phase_id}`)
 
       const placeholder = new Image()
       placeholder.src = require("../../static/icons/user-round-charcoal.svg")

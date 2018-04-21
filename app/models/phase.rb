@@ -1,4 +1,5 @@
 class Phase < ApplicationRecord
+  include Uuid
 
   validates :title, presence: true
   validates :title, uniqueness: true

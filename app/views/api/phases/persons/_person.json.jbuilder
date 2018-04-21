@@ -1,7 +1,7 @@
-json.extract! person, :id, :name, :lastname
+json.extract! person, :id, :name, :lastname, :uuid
 json.full_name person.full_name
 json.email person.email
-json.phase_id person.current_phase.try(:id)
+json.phase_id person.current_phase.try(:uuid)
 
 json.application_id person.application.id
 json.position person.position.try(:title)

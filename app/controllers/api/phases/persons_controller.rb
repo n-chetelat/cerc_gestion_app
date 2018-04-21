@@ -21,8 +21,8 @@ module Api
       private
 
         def set_resource
-          @phase ||= Phase.find(params[:phase_id])
-          @resource ||= Person.find(params[:id])
+          @phase ||= Phase.find_by(uuid: params[:phase_id])
+          @resource ||= Person.find_by(uuid: params[:id])
         end
 
     end

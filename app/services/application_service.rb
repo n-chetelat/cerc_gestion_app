@@ -1,7 +1,7 @@
 class ApplicationService
 
   def self.create_application(params)
-    begin
+    # begin
       Application.new.with_lock do
         person = self.set_person_attributes(Person.new, params)
         application = person.application || person.build_application
@@ -11,9 +11,9 @@ class ApplicationService
         application.save!
         application
       end
-    rescue
-      nil
-    end
+    # rescue
+    #   nil
+    # end
   end
 
   def self.update_application(application, params)

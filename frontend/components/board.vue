@@ -12,12 +12,12 @@ import CorrespondenceModal from "./boards/modals/correspondence.vue"
     name: "Board",
     mixins: [SceneMixin, ModalMixin],
     props: {
-      boardId: {
+      boardSlug: {
         required: true
       }
     },
     async created() {
-      await this.fetchBoard(this.boardId)
+      await this.fetchBoard(this.boardSlug)
     },
     data() {
       return {

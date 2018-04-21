@@ -104,8 +104,8 @@ class EmailService
         if association.save
           # preload correspondence with person
           token = SecureRandom.base58(24)
-          Redis.current.set("email-fetch-#{person.id}", token)
-          Email::PersonCorrespondenceWorker.perform_async(person.id)
+          Redis.current.set("email-fetch-#{person.uuid}", token)
+          Email::PersonCorrespondenceWorker.perform_async(person.uuid)
         end
       end
     end

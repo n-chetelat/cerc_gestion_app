@@ -33,9 +33,9 @@ export default {
       this.beingDraggedOver = false
       event.dataTransfer.dropEffect = "move"
       const [personId, oldPhaseId] = event.dataTransfer.getData("text")
-        .split(",").map((id) => parseInt(id))
-      if (oldPhaseId === this.phase.id) return false
-      const payload = {phaseId: this.phase.id, personId, oldPhaseId}
+        .split(",")
+      if (oldPhaseId === this.phase.uuid) return false
+      const payload = {phaseId: this.phase.uuid, personId, oldPhaseId}
       this.changePersonPhase(payload)
     },
   },
@@ -60,7 +60,7 @@ export default {
       @dragleave.prevent="beingDraggedOver = false",
       @drop.prevent="onDrop"
       :class="{'--expanded': beingDraggedOver}")
-    person-card.person-card(v-for="person in phase.persons", :key="person.id", :person="person", @modal="openModal")
+    person-card.person-card(v-for="person in phase.persons", :key="person.uuid", :person="person", @modal="openModal")
 </template>
 
 <style>

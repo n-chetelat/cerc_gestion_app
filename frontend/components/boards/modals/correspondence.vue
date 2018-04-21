@@ -39,8 +39,8 @@ export default {
   methods: {
     ...mapActions("email", ["fetchPersonEmail"]),
     loadPersonCorrespondence() {
-      this.fetchPersonEmail(this.person.id).then(() => {
-        this.correspondence = this.emailByPerson[this.person.id]
+      this.fetchPersonEmail(this.person.uuid).then(() => {
+        this.correspondence = this.emailByPerson[this.person.uuid]
       }).catch((error) => {
         this.correspondenceNotFound = true
       })

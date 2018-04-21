@@ -15,16 +15,10 @@ const routes = [
     component: RecruitmentForm
   },
   {
-    path: "/admin/applications",
-    name: "applications",
-    component: Board,
-    props:  { boardId: "1" }
-  },
-  {
-    path: "/admin/boards/:boardId",
+    path: "/admin/boards/:boardSlug",
     name: "board",
     component: Board,
-    props:  (route) => ({ boardId: route.params.boardId })
+    props:  (route) => ({ boardSlug: route.params.boardSlug })
   }
 ]
 

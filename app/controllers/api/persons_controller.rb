@@ -30,7 +30,7 @@ module Api
     private
 
       def set_resource
-        @resource = Person.find(params[:id])
+        @resource = Person.find_by(uuid: params[:id])
         @scopes = params[:scopes].try(:values) || []
       end
 

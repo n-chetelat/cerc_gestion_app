@@ -18,7 +18,7 @@ ActiveAdmin.register_page "Dashboard" do
         panel "Links to Boards" do
           ul do
             Board.all.map do |board|
-              li link_to(board.title, "/#/admin/boards/#{board.id}", target: "_blank")
+              li link_to(board.title, "/#/admin/boards/#{board.slug}", target: "_blank")
             end
           end
         end

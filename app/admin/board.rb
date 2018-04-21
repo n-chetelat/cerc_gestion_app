@@ -30,9 +30,15 @@ ActiveAdmin.register Board do
     f.inputs do
       f.input :title
       f.input :description, input_html: {class: "tinymce"}
-      f.inputs do
-        f.has_many :boards_phases, sortable: :position, sortable_start: 1, heading: "", allow_destroy: true, new_record: "Add a Tag" do |a|
-          a.input :phase_id, as: :select, collection: Phase.limit(10).map {|ph| [ph.title, ph.id]}, input_html: {class: "select2", data: {placeholder: "Select a Tag", "ajax--url" => autocomplete_admin_phases_url(:format => :json)}}
+      unless f.object.new_record?
+        f.inputs do
+          f.has_many :boards_phases, sortable: :position, sortable_start: 1, heading: "", allow_destroy: true, new_record: "Add a Tag" do |a|
+            a.input :phase_id, as: :select, collection: Phase.limit(10).map {|ph| [ph.title, ph.id]}, input_html: {class: "select2", data: {placeholder: "Select a Tag", "ajax--url" => autocomplete_admin_phases_url(:format => :json)}}
+          end
+        end
+      else
+        panel "" do
+          para "N.B.: You must save the board before adding tags to it."
         end
       end
     end

@@ -16,7 +16,7 @@ module Api
     private
 
       def set_resource
-        @resource = Board.find(params[:id])
+        @resource = Board.find_by(slug: params[:id])
       end
 
   end

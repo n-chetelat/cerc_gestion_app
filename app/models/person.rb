@@ -1,4 +1,5 @@
 class Person < ApplicationRecord
+  include Uuid
 
   before_save :create_email_address
 
