@@ -1,4 +1,4 @@
-scopes ||= @scopes
+scopes ||= (@scopes || [])
 json.extract! person, :id, :name, :lastname, :uuid
 json.full_name person.full_name
 json.email person.email

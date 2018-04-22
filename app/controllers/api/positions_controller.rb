@@ -20,7 +20,7 @@ module Api
         )
       end
 
-      render json: {position_id: @resource.id, form: @form_fields, hi: 4}
+      render json: {position_id: @resource.id, form: @form_fields}
     end
 
     def partial_path
