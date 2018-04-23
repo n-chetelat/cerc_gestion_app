@@ -100,12 +100,16 @@ export default {
       div.correspondence(v-if="isLoaded")
         slide-x-left-transition(group)
           div.correspondence-wrapper.thread-list(v-if="!openThread", :key="'threadList'")
-            ul
-              li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
-                h2 {{getThreadSubject(thread) | truncate(25)}}
-                  span.message-count ({{thread.messages.length}})
-                span.snippet {{getThreadSnippet(thread) | truncate(25)}}
-                span.timestamp {{formattedDate(thread.timestamp)}}
+            div(v-if="!correspondence.threads.length")
+              p You have no correspondence with this applicant so far.
+            div(v-else)
+              h2 All Threads
+              ul
+                li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
+                  h3 {{getThreadSubject(thread) | truncate(25)}}
+                    span.message-count ({{thread.messages.length}})
+                  span.snippet {{getThreadSnippet(thread) | truncate(25)}}
+                  span.timestamp {{formattedDate(thread.timestamp)}}
 
           div.correspondence-wrapper.thread(v-else, :key="'threadShow'")
             slide-y-up-transition
@@ -114,7 +118,7 @@ export default {
               div.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") There was an error when sending the message.
             div
               button.icon.back-btn(@click="goToThreadList") Back
-              h2 {{getThreadSubject(openThread)}}
+              h2 Messages from thread "{{getThreadSubject(openThread)}}"
               button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
             collapse-transition
               compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
@@ -141,7 +145,7 @@ export default {
       padding: 1em .5em;
       margin-bottom: 3px;
       border-bottom: 1px solid gray(190);
-      & h2 {
+      & h3 {
         width: 40%;
         display: inline-block;
         margin: 0;

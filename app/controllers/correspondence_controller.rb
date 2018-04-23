@@ -19,6 +19,7 @@ class CorrespondenceController < ApplicationController
       email_service = ::EmailService.new(request)
       @person.threads.each do |thread|
         email_service.fetch_thread_message_details(thread)
+        thread.save # trigger before_save callbacks
       end
       Redis.current.del("email-fetch-#{@person.uuid}")
       head :ok
