@@ -100,7 +100,7 @@ export default {
     padding-right: 5px;
     border: 1px solid gray(80%);
     border-radius: 10px 40px 40px 10px;
-    margin-left: 1em;
+    display: inline-block;
   }
 
   & .stats {
