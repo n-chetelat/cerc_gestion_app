@@ -49,6 +49,7 @@ export default {
   div.phase
     h2.heading
       span.title {{phase.title}}
+      br
       span.email-label(v-if="phase.email_label", v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
       span.description(v-tooltip="description")
     div.stats
