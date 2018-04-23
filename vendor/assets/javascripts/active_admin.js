@@ -26,7 +26,7 @@ $(document)
       'searchreplace wordcount visualblocks visualchars code insertdatetime nonbreaking',
       'save table directionality emoticons template paste textcolor'
     ],
-    toolbar: 'undo redo | styleselect | bold italic removeformat | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
+    toolbar: 'undo redo | styleselect | bold italic removeformat | alignleft aligncenter alignright | bullist numlist outdent indent | link | code',
     entity_encoding: "raw",
   });
 
