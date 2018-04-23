@@ -6,14 +6,14 @@ module Api
       before_action :set_resource
 
       def show
-        render partial: "api/persons/email"
       end
 
       def partial_path
+        "api/persons/email"
       end
 
       def resource_name
-        :email
+        :person
       end
 
       private

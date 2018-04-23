@@ -8,6 +8,8 @@ class Application < ApplicationRecord
   belongs_to :person, foreign_key: "person_id"
   belongs_to :position, foreign_key: "position_id"
 
+  has_many :comments, class_name: "Applications::Comment", foreign_key: "application_id", dependent: :destroy
+
   delegate :time_interval, to: :position
 
   validates :starting_date, presence: true

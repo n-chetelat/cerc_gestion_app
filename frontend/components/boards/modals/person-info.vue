@@ -6,6 +6,7 @@ import { SlideYUpTransition } from 'vue2-transitions'
 import Modal from "../../shared/modal.vue"
 import ApplicationInfoDisplay from "./person-info/application-info-display.vue"
 import ApplicationInfoEdit from "./person-info/application-info-edit.vue"
+import CommentsComponent from "./person-info/comments-component.vue"
 
 export default {
   name: "PersonInfo",
@@ -59,6 +60,7 @@ export default {
     SlideYUpTransition,
     ApplicationInfoDisplay,
     ApplicationInfoEdit,
+    CommentsComponent,
   }
 }
 </script>
@@ -72,12 +74,17 @@ export default {
         p There was an error while fetching this applicant's information.
 
       div.person-info(v-if="isLoaded")
-        div.action-menu
-          button.icon.pencil(type="button", @click="editing = !editing")
-        slide-y-up-transition
-          application-info-display(:application="application", :person="person", :application-form="applicationForm", v-if="!editing")
-        slide-y-up-transition
-          application-info-edit(:application="application", :person="person", :application-form="applicationForm" v-if="editing", @update="onUpdateApplication", @error="applicationError = true")
+
+        div.comments(v-if="true")
+          comments-component(:application="application")
+
+        div(v-else)
+          div.action-menu
+            button.icon.pencil(type="button", @click="editing = !editing")
+          slide-y-up-transition
+            application-info-display(:application="application", :person="person", :application-form="applicationForm", v-if="!editing")
+          slide-y-up-transition
+            application-info-edit(:application="application", :person="person", :application-form="applicationForm" v-if="editing", @update="onUpdateApplication", @error="applicationError = true")
 
 
 </template>

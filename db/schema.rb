@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180421001812) do
+ActiveRecord::Schema.define(version: 20180423195807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,10 @@ ActiveRecord::Schema.define(version: 20180421001812) do
     t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.string "name"
+    t.string "lastname"
+    t.index ["deleted_at"], name: "index_admin_users_on_deleted_at"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
@@ -42,6 +46,16 @@ ActiveRecord::Schema.define(version: 20180421001812) do
     t.date "starting_date"
     t.index ["person_id"], name: "index_applications_on_person_id"
     t.index ["position_id"], name: "index_applications_on_position_id"
+  end
+
+  create_table "applications_comments", force: :cascade do |t|
+    t.text "content", null: false
+    t.bigint "application_id"
+    t.integer "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_applications_comments_on_application_id"
+    t.index ["author_id"], name: "index_applications_comments_on_author_id"
   end
 
   create_table "attachments", force: :cascade do |t|
@@ -250,6 +264,7 @@ ActiveRecord::Schema.define(version: 20180421001812) do
 
   add_foreign_key "applications", "persons"
   add_foreign_key "applications", "positions"
+  add_foreign_key "applications_comments", "applications"
   add_foreign_key "boards_phases", "boards"
   add_foreign_key "boards_phases", "phases"
   add_foreign_key "email_addresses", "persons"

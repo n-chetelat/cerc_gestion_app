@@ -1,5 +1,4 @@
 import axios from "axios"
-import { keyBy } from "lodash-es"
 
 const PERSON_EMAIL_URL = `api/persons`
 const THREADS_URL = `api/email/threads`

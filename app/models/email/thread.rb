@@ -13,7 +13,7 @@ module Email
     has_many :persons, through: :persons_threads
 
     scope :new_to_old, -> { order(google_create_timestamp: :desc) }
-    scope :recently_updated, -> { order(google_update_timestamp: :desc) }
+    scope :from_more_recently_updated, -> { order(google_update_timestamp: :desc) }
 
     validates :google_thread_id, presence: true
 

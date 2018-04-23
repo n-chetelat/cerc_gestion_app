@@ -2,7 +2,7 @@ module Api
   module Phases
     class PersonsController < ApiController
       before_action :authorize_gmail, only: [:update]
-      before_action :set_resource
+      before_action :set_resource, only: [:update]
 
       def update
         PhaseService.place_person_in_phase(@resource,

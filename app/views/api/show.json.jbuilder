@@ -1,1 +1,1 @@
-json.partial! @resource, partial: controller.partial_path, as: controller.resource_name
+json.partial! controller.partial_path, "#{controller.resource_name}".to_sym => @resource

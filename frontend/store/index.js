@@ -8,6 +8,7 @@ import positions from './modules/positions'
 import application from './modules/application'
 import boards from './modules/boards'
 import email from './modules/email'
+import comments from './modules/comments'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     positions,
     application,
     boards,
-    email
+    email,
+    comments
   },
 })

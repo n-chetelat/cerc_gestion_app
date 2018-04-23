@@ -20,7 +20,11 @@ Rails.application.routes.draw do
         get :form, on: :member
       end
       resource :recruitment_info, only: [:show]
-      resources :applications, only: [:index, :show, :create, :update]
+      resources :applications, only: [:index, :show, :create, :update] do
+        scope module: "applications" do
+          resources :comments, only: [:index, :show, :create, :update, :destroy]
+        end
+      end
       resources :persons, only: [:index, :show, :update, :delete] do
         scope module: "persons" do
           resource :email, only: [:show]

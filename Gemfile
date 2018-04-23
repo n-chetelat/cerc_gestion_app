@@ -50,6 +50,7 @@ gem 'tinymce-rails'
 # ActiveRecord helpers
 gem 'simple_enum'
 gem 'acts_as_list'
+gem 'acts_as_paranoid', github: 'ActsAsParanoid/acts_as_paranoid'
 
 # Admin page
 gem 'activeadmin'

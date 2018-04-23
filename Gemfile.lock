@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/ActsAsParanoid/acts_as_paranoid.git
+  revision: d643738e1373850d4225d4678a129ef4e648e719
+  specs:
+    acts_as_paranoid (1.0.0.beta)
+      activerecord (>= 4.2, < 6.0)
+      activesupport (>= 4.2, < 6.0)
+
+GIT
   remote: https://github.com/globalize/globalize
   revision: d74687ff7b3123cc451ed99b6e87f8877e4b645b
   specs:
@@ -371,6 +379,7 @@ DEPENDENCIES
   activeadmin-orderable
   activemodel-serializers-xml
   acts_as_list
+  acts_as_paranoid!
   better_errors
   binding_of_caller
   byebug
