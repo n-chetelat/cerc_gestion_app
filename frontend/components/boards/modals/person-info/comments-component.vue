@@ -65,8 +65,9 @@ export default {
 <style>
 
   :root {
-    --textFamily: Helvetica, Arial, sans-serif;
+    --textFamily: 'Open Sans', Arial, sans-serif;
     --textColor: gray(20);
+    --themeColor: #00a668;
   }
 
   .comments-component {
@@ -93,11 +94,11 @@ export default {
     & .comment-author {
       font-size: .8em;
       font-weight: bold;
-      background-color: beige;
+      background-color: var(--themeColor);
       display: inline-block;
       padding: 5px;
       border-radius: 2px;
-      color: gray(153);
+      color: white;
       border: 1px solid gray(204);
     }
     & .comment-timestamp {

@@ -114,6 +114,7 @@ export default {
         }
         & .message {
           margin-top: 1em;
+          font-family: 'Open Sans', Arial, sans-serif;
         }
       }
     }

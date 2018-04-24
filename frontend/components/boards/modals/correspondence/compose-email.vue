@@ -211,6 +211,7 @@ export default {
         box-shadow: var(--fieldsBoxShadow);
         border: none;
         padding: 1em;
+        font-family: 'Open Sans', Arial, sans-serif;
       }
     }
   }
