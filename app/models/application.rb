@@ -1,5 +1,6 @@
 class Application < ApplicationRecord
   include StartingDates
+  include Taggable
 
   before_save :clean_up_unused_fields, unless: :new_record?
 

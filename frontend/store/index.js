@@ -9,6 +9,7 @@ import application from './modules/application'
 import boards from './modules/boards'
 import email from './modules/email'
 import comments from './modules/comments'
+import keywords from './modules/keywords'
 
 Vue.use(Vuex)
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     application,
     boards,
     email,
-    comments
+    comments,
+    keywords
   },
 })

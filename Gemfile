@@ -51,6 +51,7 @@ gem 'tinymce-rails'
 gem 'simple_enum'
 gem 'acts_as_list'
 gem 'acts_as_paranoid', github: 'ActsAsParanoid/acts_as_paranoid'
+gem 'acts-as-taggable-on', '~> 4.0'
 
 # Admin page
 gem 'activeadmin'

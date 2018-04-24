@@ -23,9 +23,10 @@ Rails.application.routes.draw do
       resources :applications, only: [:index, :show, :create, :update] do
         scope module: "applications" do
           resources :comments, only: [:index, :show, :create, :update, :destroy]
+          resource :keywords, only: [:show, :update, :destroy]
         end
       end
-      resources :persons, only: [:index, :show, :update, :delete] do
+      resources :persons, only: [:index, :show, :update, :destroy] do
         scope module: "persons" do
           resource :email, only: [:show]
         end

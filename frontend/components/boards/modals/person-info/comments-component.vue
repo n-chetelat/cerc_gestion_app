@@ -21,20 +21,28 @@ export default {
     if (!this.commentsByApplication[this.application.id]) {
       await this.fetchApplicationComments(this.application.id)
     }
+    if (!this.keywordsByApplication[this.application.id]) {
+      await this.fetchApplicationKeywords(this.application.id)
+    }
     this.comments = this.commentsByApplication[this.application.id]
+    this.keywords = this.keywordsByApplication[this.application.id]
   },
   data() {
     return {
       comments: [],
+      keywords: [],
       newCommentContent: "",
+      newKeyword: "",
       editingComments: {}
     }
   },
   computed: {
     ...mapGetters("comments", ["commentsByApplication"]),
+    ...mapGetters("keywords", ["keywordsByApplication"]),
   },
   methods: {
     ...mapActions("comments", ["fetchApplicationComments", "createComment", "updateComment"]),
+    ...mapActions("keywords", ["fetchApplicationKeywords", "updateKeywords", "removeKeywords"]),
     saveNewComment() {
       const payload = {applicationId: this.application.id,
         params: {content: this.newCommentContent}}
@@ -50,24 +58,26 @@ export default {
     },
     toggleEditable(comment) {
       if (!comment.author_is_current) return
-      if (this.editingComments[comment.id]) {
-        Vue.delete(this.editingComments, comment.id)
-      } else {
-        Vue.set(this.editingComments, comment.id, true)
-      }
+      Vue.set(this.editingComments, comment.id, true)
     },
     isEditingComment(comment) {
       return !!this.editingComments[comment.id]
     },
     async onEditContent(event, comment) {
-      if (event.target.innerText === comment.content) return
+      if (event.target.innerText === comment.content) {
+        Vue.delete(this.editingComments, comment.id)
+        return
+      }
       const payload = {applicationId: this.application.id,
         commentId: comment.id,
         params: {content: event.target.innerText}}
       await this.updateComment(payload).then(() => {
         this.comments = this.commentsByApplication[this.application.id]
       })
-      this.toggleEditable(comment)
+      Vue.delete(this.editingComments, comment.id)
+    },
+    removeKeyword(keyword) {
+
     }
   },
   components: {
@@ -86,6 +96,9 @@ export default {
           span.comment-timestamp on {{formattedDateTime(comment.created_at)}}
           button.comment-edit(v-if="comment.author_is_current", v-tooltip="'Edit comment'", @click="toggleEditable(comment)")
         div.comment-content(v-focus="isEditingComment(comment)", :contenteditable="isEditingComment(comment)", :class="{'--editing': isEditingComment(comment)}", @blur="onEditContent($event, comment)") {{comment.content}}
+    div.keyword-list
+      span.keyword-line(v-for="keyword in keywords") {{keyword}}
+        button.remove-btn(@click="removeKeyword(keyword)") x
     div.new-comment
       textarea(v-model="newCommentContent", placeholder="Enter new comment...")
       button.submit.save-btn(type="button", @click="saveNewComment") Save
@@ -107,7 +120,7 @@ export default {
     margin: auto;
 
     & .comment-list {
-      margin-bottom: 4em;
+      margin-bottom: 1em;
     }
 
     & .comment-line {
@@ -168,6 +181,30 @@ export default {
     padding: 0;
       &:hover {
         background: url("../../../../static/icons/pencil.svg") center bottom / 70% no-repeat;
+      }
+    }
+
+    & .keyword-list {
+      margin-bottom: 4em;
+      padding: .5em;
+      box-shadow: -1px 1px 6px rgba(0, 0, 0, .5);
+    }
+
+    & .keyword-line {
+      background-color: beige;
+      font-size: .8em;
+      font-weight: bold;
+      display: inline-block;
+      padding: 5px;
+      border-radius: 2px;
+      color: gray(60%);
+      border: 1px solid gray(80%);
+      & .remove-btn {
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+        margin-left: 10px;
+        color: inherit;
       }
     }
 

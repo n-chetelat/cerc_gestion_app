@@ -4,7 +4,7 @@ import { findIndex } from "lodash-es"
 const APPLICATIONS_URL = `api/applications`
 
 const state = {
-  allByApplication: {}
+  allByApplication: {},
 }
 
 // getters
