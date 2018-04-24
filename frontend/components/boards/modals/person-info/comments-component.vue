@@ -1,6 +1,8 @@
 <script>
 
 import { mapGetters, mapActions } from "vuex"
+import { focus } from "vue-focus"
+import Vue from "vue"
 
 import DatesMixin from "../../../../mixins/dates-mixin"
 
@@ -8,6 +10,7 @@ import { keyBy } from "lodash-es"
 
 export default {
   name: "CommentsComponent",
+  directives: { focus: focus },
   mixins: [DatesMixin],
   props: {
     application: {
@@ -23,7 +26,8 @@ export default {
   data() {
     return {
       comments: [],
-      newCommentContent: ""
+      newCommentContent: "",
+      editingComments: {}
     }
   },
   computed: {
@@ -34,9 +38,36 @@ export default {
     saveNewComment() {
       const payload = {applicationId: this.application.id,
         params: {content: this.newCommentContent}}
+      const that = this
       this.createComment(payload).then(() => {
         this.comments = this.commentsByApplication[this.application.id]
+        this.newCommentContent = ""
+        this.$emit("scroll")
       })
+    },
+    authorName(comment) {
+      return (comment.author_is_current) ? "You" : comment.author_name
+    },
+    toggleEditable(comment) {
+      if (!comment.author_is_current) return
+      if (this.editingComments[comment.id]) {
+        Vue.delete(this.editingComments, comment.id)
+      } else {
+        Vue.set(this.editingComments, comment.id, true)
+      }
+    },
+    isEditingComment(comment) {
+      return !!this.editingComments[comment.id]
+    },
+    async onEditContent(event, comment) {
+      if (event.target.innerText === comment.content) return
+      const payload = {applicationId: this.application.id,
+        commentId: comment.id,
+        params: {content: event.target.innerText}}
+      await this.updateComment(payload).then(() => {
+        this.comments = this.commentsByApplication[this.application.id]
+      })
+      this.toggleEditable(comment)
     }
   },
   components: {
@@ -51,9 +82,10 @@ export default {
       li.comment-line(v-for="comment in comments")
         div.comment-header
           span.comment-timestamp By &nbsp;
-          span.comment-author {{comment.author_name}}
+          span.comment-author(:class="{'author-current': comment.author_is_current}") {{authorName(comment)}}
           span.comment-timestamp on {{formattedDateTime(comment.created_at)}}
-        div.comment-content {{comment.content}}
+          button.comment-edit(v-if="comment.author_is_current", v-tooltip="'Edit comment'", @click="toggleEditable(comment)")
+        div.comment-content(v-focus="isEditingComment(comment)", :contenteditable="isEditingComment(comment)", :class="{'--editing': isEditingComment(comment)}", @blur="onEditContent($event, comment)") {{comment.content}}
     div.new-comment
       textarea(v-model="newCommentContent", placeholder="Enter new comment...")
       button.submit.save-btn(type="button", @click="saveNewComment") Save
@@ -100,6 +132,10 @@ export default {
       border-radius: 2px;
       color: white;
       border: 1px solid gray(204);
+
+      &.author-current {
+        background-color: #00a6ff;
+      }
     }
     & .comment-timestamp {
       display: inline-block;
@@ -119,6 +155,20 @@ export default {
       color: var(--textColor);
       font-size: .9em;
       line-height: 1.5em;
+      white-space: pre-wrap;
+      &.--editing {
+        background-color: gray(240);
+      }
+    }
+
+    & .comment-edit {
+    width: 25px;
+    height: 25px;
+    background: url("../../../../static/icons/pencil-charcoal.svg") center bottom / 60% no-repeat;
+    padding: 0;
+      &:hover {
+        background: url("../../../../static/icons/pencil.svg") center bottom / 70% no-repeat;
+      }
     }
 
     & .new-comment {

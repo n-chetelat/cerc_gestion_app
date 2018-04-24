@@ -5,4 +5,9 @@ module ApplicationHelper
       Time.at(epoch).to_datetime
     end
   end
+
+  def current_admin_user
+    
+  end
+
 end

@@ -13,11 +13,25 @@ module Api
       end
 
       def create
-        render :show
+        @resource = @application.comments.build(content: params[:content],
+          author: current_admin_user)
+        if @resource.save
+          render :show
+        else
+          render json: {
+            error: "There was an error when saving the comment", status: 500
+            }, status: 500
+        end
       end
 
       def update
-        render :show
+        if @resource.update(content: params[:content])
+          render :show
+        else
+          render json: {
+            error: "There was an error when saving the comment", status: 500
+            }, status: 500
+        end
       end
 
       def destroy
@@ -37,6 +51,7 @@ module Api
 
         def set_application
           @application ||= Application.find(params[:application_id])
+          @current_admin_user_id ||= current_admin_user.id
         end
 
         def set_resource

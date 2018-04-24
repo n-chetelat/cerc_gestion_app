@@ -53,6 +53,9 @@ export default {
     async onUpdateApplication(data) {
       await this.getApplication()
       this.editing = false
+    },
+    scrollTop() {
+      this.$el.querySelector(".person-info").scrollTo({top: -10000, behavior: "smooth"})
     }
   },
   components: {
@@ -76,7 +79,7 @@ export default {
       div.person-info(v-if="isLoaded")
 
         div.comments(v-if="true")
-          comments-component(:application="application")
+          comments-component(:application="application", @scroll="scrollTop")
 
         div(v-else)
           div.action-menu
