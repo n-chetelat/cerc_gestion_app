@@ -6,7 +6,7 @@ module Api
       before_action :set_resource, only: [:show, :update, :destroy]
 
       def index
-        @resources = @application.comments
+        @resources = @application.comments.order(created_at: :desc)
       end
 
       def show
