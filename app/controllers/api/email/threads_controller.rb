@@ -27,8 +27,9 @@ module Api
             bcc: params[:bcc],
             subject: @resource.subject
           })
+          text_content = Nokogiri::HTML.fragment(params[:body]).text
           text_part = Mail::Part.new({
-            body: params[:body]
+            body: text_content
           })
           html_part = Mail::Part.new({
             content_type: "text/html; charset=UTF-8",

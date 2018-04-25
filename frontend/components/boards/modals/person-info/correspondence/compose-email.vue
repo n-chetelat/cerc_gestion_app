@@ -1,6 +1,8 @@
 <script>
 import { mapActions } from "vuex"
 
+import { VueEditor } from 'vue2-editor'
+
 import LoadingScreen from "../../../../shared/loading-screen.vue"
 
 import DatesMixin from "../../../../../mixins/dates-mixin"
@@ -94,7 +96,8 @@ export default {
     }
   },
   components: {
-    LoadingScreen
+    LoadingScreen,
+    VueEditor
   }
 }
 </script>
@@ -125,7 +128,8 @@ export default {
       div.action-menu
         button.icon.scrap-btn(type="button", @click="scrapMessage", v-tooltip="'Scrap'")
         button.icon.send-btn(type="button", @click="sendMessage", v-tooltip="'Send'")
-      textarea(v-model="composedMessage")
+      vue-editor(v-model="composedMessage")
+      //- textarea(v-model="composedMessage")
 
 
 

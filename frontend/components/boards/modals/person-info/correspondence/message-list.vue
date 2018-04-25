@@ -113,6 +113,7 @@ export default {
           }
         }
         & .message {
+          white-space: pre-wrap;
           margin-top: 1em;
           font-family: 'Open Sans', Arial, sans-serif;
         }
