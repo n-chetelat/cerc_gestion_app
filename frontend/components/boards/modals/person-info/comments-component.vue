@@ -45,7 +45,7 @@ export default {
     comments-list-component(:application="application")
     div.new-comment
       textarea(v-model="newCommentContent", placeholder="Enter new comment...")
-        button.submit.save-btn(type="button", @click="saveNewComment") Save
+      button.submit.save-btn(type="button", @click="saveNewComment") Save
     hr
     keywords-component(:application="application")
 

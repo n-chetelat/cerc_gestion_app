@@ -21,6 +21,8 @@ export default {
       applicationForm: null,
       applicationError: false,
       editing: false,
+      currentTab: "info",
+      tabs: ["info", "comments"],
     }
   },
   async created() {
@@ -75,10 +77,10 @@ export default {
 
       div.person-info(v-if="isLoaded")
 
-        div.comments(v-if="true")
-          comments-component(:application="application")
+        ul.nav-tabs
+          li.nav-tab(v-for="tab in tabs", @click="currentTab = tab", :class="{'--selected': currentTab === tab}") {{tab}}
 
-        div(v-else)
+        div(v-show="currentTab === 'info'")
           div.action-menu
             button.icon.pencil(type="button", @click="editing = !editing")
           slide-y-up-transition
@@ -86,6 +88,9 @@ export default {
           slide-y-up-transition
             application-info-edit(:application="application", :person="person", :application-form="applicationForm" v-if="editing", @update="onUpdateApplication", @error="applicationError = true")
 
+        div.comments(v-show="currentTab === 'comments'")
+          slide-y-up-transition
+            comments-component(:application="application")
 
 </template>
 
@@ -94,6 +99,7 @@ export default {
   :root {
     --themeColor: #00a668;
     --windowHeight: 400;
+    --navColor: #80b9d6;
   }
 
   .person-info {
@@ -102,6 +108,23 @@ export default {
     overflow: auto;
     padding: 2em 2em;
     padding-top: 0;
+
+    & .nav-tab {
+      cursor: pointer;
+      display: inline-block;
+      padding: 5px;
+      margin: auto 2px;
+      background-color: color(var(--navColor) alpha(50%));
+      border-radius: 2px 2px 0 0;
+      border-bottom: 2px solid transparent;
+      font-weight: bold;
+      transition: background-color .5s ease;
+      &.--selected {
+        background-color: var(--navColor);
+        padding-top: 7px;
+        border-bottom: 2px solid black;
+      }
+    }
 
     & .action-menu {
       width: 100%;
