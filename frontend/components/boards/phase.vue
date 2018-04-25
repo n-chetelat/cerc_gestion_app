@@ -51,6 +51,7 @@ export default {
       span.title {{phase.title}}
       br
       span.email-label(v-if="phase.email_label", v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
+      span.email-label.no-label(v-else) No email label
       span.description(v-tooltip="description")
     div.stats
       p #[span.count {{phase.persons.length}}] {{phase.persons.length | pluralize('person', 'people')}} in this section
@@ -102,6 +103,10 @@ export default {
     border: 1px solid gray(80%);
     border-radius: 10px 40px 40px 10px;
     display: inline-block;
+    &.no-label {
+      background-color: rgb(191, 233, 217);
+      border-radius: 2px;
+    }
   }
 
   & .stats {

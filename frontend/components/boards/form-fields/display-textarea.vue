@@ -17,8 +17,15 @@ export default {
 
 <style>
 
+:root {
+  --textFamily: 'Open Sans', Arial, sans-serif;
+}
+
   .display-textarea {
     & span {
+      font-family: var(--textFamily);
+      font-size: .9em;
+      line-height: 1.3em;
       display: inline-block;
       width: 30em;
     }

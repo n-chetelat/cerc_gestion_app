@@ -33,7 +33,7 @@ export default {
     p.file-list(v-if="value")
       span.file-line
         span {{value.name}}
-        button.remove(type="button", @click="removeFile") x
+        button.remove(type="button", @click="removeFile")
 </template>
 
 <style>

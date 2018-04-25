@@ -53,7 +53,7 @@ export default {
     ul.file-list
       li.file-line(v-for="file in value")
         span {{file.name}}
-        button.remove(type="button", @click="removeFile(file)") x
+        button.remove(type="button", @click="removeFile(file)")
 </template>
 
 <style>

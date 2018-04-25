@@ -61,18 +61,25 @@ button {
     color: var(--navColor);
   }
   &.remove {
+    background-color: color(var(--navColor) alpha(90%));
     position: absolute;
     left: 0;
     top: 0;
-    width: 1.7em;
-    height: 1.7em;
+    width: 1.5em;
+    height: 1.5em;
     padding: 2px;
+    padding-left: 4px;
     margin-top: 5px;
-    border: 1px solid transparent;
-    line-height: 1em;
-  }
-  &.remove:hover {
-    border: 1px solid var(--navColor);
+    line-height: 1.2em;
+    transition: none;
+    border-radius: 50%;
+    &:after {
+      content: "x";
+      font-size: .9em;
+    }
+    &:hover {
+      color: black;
+    }
   }
   &.submit {
     margin: auto;
