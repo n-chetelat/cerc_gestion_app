@@ -75,6 +75,7 @@ export default {
 <style>
 
   :root {
+    --textFamily: 'Open Sans', Arial, sans-serif;
     --textColor: gray(20);
   }
 
@@ -95,7 +96,7 @@ export default {
       border-radius: 2px;
       color: gray(60%);
       border: 1px solid gray(80%);
-      margin: auto 2px;
+      margin: 2px;
       & .remove-btn {
         background-color: transparent;
         padding: 0;
@@ -111,6 +112,7 @@ export default {
     }
 
     & .keyword-form {
+      font-family: var(--textFamily);
       & button.submit {
         width: 10em;
         display: inline-block;
