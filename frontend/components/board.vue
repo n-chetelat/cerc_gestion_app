@@ -6,7 +6,6 @@ import { mapGetters, mapActions } from "vuex"
 
 import Phase from "./boards/phase.vue"
 import PersonInfoModal from "./boards/modals/person-info.vue"
-import CorrespondenceModal from "./boards/modals/correspondence.vue"
 
   export default {
     name: "Board",
@@ -52,16 +51,13 @@ import CorrespondenceModal from "./boards/modals/correspondence.vue"
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
           this.person = data.person
-        } else if (modalName === "correspondence") {
-          this.person = data.person
         }
         this.openModal(modalName)
       }
     },
     components: {
       Phase,
-      PersonInfoModal,
-      CorrespondenceModal
+      PersonInfoModal
     }
   }
   </script>
@@ -69,7 +65,6 @@ import CorrespondenceModal from "./boards/modals/correspondence.vue"
   <template lang="pug">
     div.boards(v-if="isLoaded")
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
-      correspondence-modal(@close="closeModal", v-if="modalVisible && modalName === 'correspondence'", :person="person")
 
       div.phases-wrapper
         div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px'}")

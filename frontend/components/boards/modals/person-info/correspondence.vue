@@ -4,9 +4,9 @@ import { mapGetters, mapActions } from "vuex"
 
 import { SlideXLeftTransition, CollapseTransition, SlideYUpTransition } from 'vue2-transitions'
 
-import DatesMixin from "../../../mixins/dates-mixin"
+import DatesMixin from "../../../../mixins/dates-mixin"
 
-import Modal from "../../shared/modal.vue"
+import Modal from "../../../shared/modal.vue"
 import ComposeEmail from "./correspondence/compose-email.vue"
 import MessageList from "./correspondence/message-list.vue"
 
@@ -89,40 +89,38 @@ export default {
 </script>
 
 <template lang="pug">
-  modal(@close="closeModal")
-    template(slot="header")
-      h1 Correspondence with {{person.full_name}}
-    template(slot="body")
-      div(v-if="correspondenceNotFound", style="text-align: center;")
-        p There was an error while fetching this applicant's correspondence.
-        p Please try again later.
 
-      div.correspondence(v-if="isLoaded")
-        slide-x-left-transition(group)
-          div.correspondence-wrapper.thread-list(v-if="!openThread", :key="'threadList'")
-            div(v-if="!correspondence.threads.length")
-              p You have no correspondence with this applicant so far.
-            div(v-else)
-              h2 All Threads
-              ul
-                li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
-                  h3 {{getThreadSubject(thread) | truncate(25)}}
-                    span.message-count ({{thread.messages.length}})
-                  span.snippet {{getThreadSnippet(thread) | truncate(25)}}
-                  span.timestamp {{formattedDate(thread.timestamp)}}
+  div
+    div(v-if="correspondenceNotFound", style="text-align: center;")
+      p There was an error while fetching this applicant's correspondence.
+      p Please try again later.
 
-          div.correspondence-wrapper.thread(v-else, :key="'threadShow'")
-            slide-y-up-transition
-              div.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") The message has been sent.
-            slide-y-up-transition
-              div.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") There was an error when sending the message.
-            div
-              button.icon.back-btn(@click="goToThreadList") Back
-              h2 Messages from thread "{{getThreadSubject(openThread)}}"
-              button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
-            collapse-transition
-              compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
-            message-list(:thread="openThread")
+    div.correspondence(v-if="isLoaded")
+      slide-x-left-transition(group)
+        div.correspondence-wrapper.thread-list(v-if="!openThread", :key="'threadList'")
+          div(v-if="!correspondence.threads.length")
+            p You have no correspondence with this applicant so far.
+          div(v-else)
+            h2 All Threads
+            ul
+              li.thread-line(v-for="thread in correspondence.threads", @click="openThread = thread")
+                h3 {{getThreadSubject(thread) | truncate(25)}}
+                  span.message-count ({{thread.messages.length}})
+                span.snippet {{getThreadSnippet(thread) | truncate(25)}}
+                span.timestamp {{formattedDate(thread.timestamp)}}
+
+        div.correspondence-wrapper.thread(v-else, :key="'threadShow'")
+          slide-y-up-transition
+            div.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") The message has been sent.
+          slide-y-up-transition
+            div.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") There was an error when sending the message.
+          div
+            button.icon.back-btn(@click="goToThreadList") Back
+            h2 Messages from thread "{{getThreadSubject(openThread)}}"
+            button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
+          collapse-transition
+            compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
+          message-list(:thread="openThread")
 
 
 
@@ -137,7 +135,6 @@ export default {
   .correspondence {
     & .correspondence-wrapper {
       max-height: var(--windowHeight)px;
-      overflow: auto;
       padding: 2em 2em;
     }
     & .thread-line {
@@ -181,17 +178,17 @@ export default {
     & .back-btn {
       border: none;
       display: block;
-      background: url("../../../static/icons/arrow-left-charcoal.svg") left center / 60% no-repeat;
+      background: url("../../../../static/icons/arrow-left-charcoal.svg") left center / 60% no-repeat;
       padding-left: 40px;
       color: black;
       &:hover {
-        background: url("../../../static/icons/arrow-left.svg") left center / 70% no-repeat;
+        background: url("../../../../static/icons/arrow-left.svg") left center / 70% no-repeat;
       }
     }
     & .edit-btn {
-      background: url("../../../static/icons/pencil-charcoal.svg") left center / 60% no-repeat;
+      background: url("../../../../static/icons/pencil-charcoal.svg") left center / 60% no-repeat;
       &:hover {
-        background: url("../../../static/icons/pencil.svg") left center / 70% no-repeat;
+        background: url("../../../../static/icons/pencil.svg") left center / 70% no-repeat;
       }
     }
     & .flash {

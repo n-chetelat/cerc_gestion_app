@@ -1,9 +1,9 @@
 <script>
 import { mapActions } from "vuex"
 
-import LoadingScreen from "../../../shared/loading-screen.vue"
+import LoadingScreen from "../../../../shared/loading-screen.vue"
 
-import DatesMixin from "../../../../mixins/dates-mixin"
+import DatesMixin from "../../../../../mixins/dates-mixin"
 
 export default {
   name: "ComposeEmail",
@@ -144,7 +144,7 @@ export default {
     & .loading {
       position: absolute;
       box-shadow: inset 1px 1px 50px rgba(0, 0, 0, .2);
-      background: url("../../../../static/images/spinner-solid.gif") center center / 10% no-repeat rgba(0,0,0,.3);
+      background: url("../../../../../static/images/spinner-solid.gif") center center / 10% no-repeat rgba(0,0,0,.3);
     }
 
     & .address-list-row {
@@ -185,15 +185,15 @@ export default {
       }
     }
     & .scrap-btn {
-      background: url("../../../../static/icons/bin-charcoal.svg") left center / 60% no-repeat;
+      background: url("../../../../../static/icons/bin-charcoal.svg") left center / 60% no-repeat;
       &:hover {
-        background: url("../../../../static/icons/bin.svg") left center / 70% no-repeat;
+        background: url("../../../../../static/icons/bin.svg") left center / 70% no-repeat;
       }
     }
     & .send-btn {
-      background: url("../../../../static/icons/paper-plane-charcoal.svg") left center / 60% no-repeat;
+      background: url("../../../../../static/icons/paper-plane-charcoal.svg") left center / 60% no-repeat;
       &:hover {
-        background: url("../../../../static/icons/paper-plane.svg") left center / 70% no-repeat;
+        background: url("../../../../../static/icons/paper-plane.svg") left center / 70% no-repeat;
       }
     }
 

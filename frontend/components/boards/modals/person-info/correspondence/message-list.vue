@@ -1,7 +1,7 @@
 <script>
 
 import Vue from "vue"
-import DatesMixin from "../../../../mixins/dates-mixin"
+import DatesMixin from "../../../../../mixins/dates-mixin"
 
 import { CollapseTransition } from 'vue2-transitions'
 

@@ -7,6 +7,7 @@ import Modal from "../../shared/modal.vue"
 import ApplicationInfoDisplay from "./person-info/application-info-display.vue"
 import ApplicationInfoEdit from "./person-info/application-info-edit.vue"
 import CommentsComponent from "./person-info/comments-component.vue"
+import Correspondence from "./person-info/correspondence.vue"
 
 export default {
   name: "PersonInfo",
@@ -21,8 +22,8 @@ export default {
       applicationForm: null,
       applicationError: false,
       editing: false,
-      currentTab: "info",
-      tabs: ["info", "comments"],
+      currentTab: "information",
+      tabs: ["information", "comments", "email"],
     }
   },
   async created() {
@@ -63,6 +64,7 @@ export default {
     ApplicationInfoDisplay,
     ApplicationInfoEdit,
     CommentsComponent,
+    Correspondence,
   }
 }
 </script>
@@ -70,7 +72,7 @@ export default {
 <template lang="pug">
   modal(@close="closeModal")
     template(slot="header")
-      h1 Information on {{person.full_name}}
+      h1 {{person.full_name}}
     template(slot="body")
       div(v-if="applicationError", style="text-align: center;")
         p There was an error while fetching this applicant's information.
@@ -78,9 +80,9 @@ export default {
       div.person-info(v-if="isLoaded")
 
         ul.nav-tabs
-          li.nav-tab(v-for="tab in tabs", @click="currentTab = tab", :class="{'--selected': currentTab === tab}") {{tab}}
+          li.nav-tab(v-for="tab in tabs", @click="currentTab = tab", :class="{'--selected': currentTab === tab}") {{tab | capitalize}}
 
-        div(v-show="currentTab === 'info'")
+        div(v-show="currentTab === 'information'")
           div.action-menu
             button.icon.pencil(type="button", @click="editing = !editing")
           slide-y-up-transition
@@ -92,6 +94,10 @@ export default {
           slide-y-up-transition
             comments-component(:application="application")
 
+        div.correspondence(v-show="currentTab === 'email'")
+          slide-y-up-transition
+            correspondence(:person="person")
+
 </template>
 
 <style>
@@ -99,7 +105,7 @@ export default {
   :root {
     --themeColor: #00a668;
     --windowHeight: 400;
-    --navColor: #80b9d6;
+    --navColor: #4490ce;
   }
 
   .person-info {

@@ -42,7 +42,6 @@ export default {
     :class="{'--hidden': beingDragged}")
     div.card-content
       h3.heading.link(@click="openPersonInfoModal", v-tooltip="`See person's information`") {{person.full_name}}
-      p.icon-bg.email.link(@click="openCorrespondenceModal", v-tooltip="'See correspondence'") {{person.email}}
       p.icon-bg.position {{person.position}}
       p.icon-bg.semester {{person.starting_date}}
       p.received Received on: {{person.applied_at}}
