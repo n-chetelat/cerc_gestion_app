@@ -54,9 +54,6 @@ export default {
       await this.getApplication()
       this.editing = false
     },
-    scrollTop() {
-      this.$el.querySelector(".person-info").scrollTo({top: -10000, behavior: "smooth"})
-    }
   },
   components: {
     Modal,
@@ -79,7 +76,7 @@ export default {
       div.person-info(v-if="isLoaded")
 
         div.comments(v-if="true")
-          comments-component(:application="application", @scroll="scrollTop")
+          comments-component(:application="application")
 
         div(v-else)
           div.action-menu

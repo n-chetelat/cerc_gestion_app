@@ -40,6 +40,8 @@ Rails.application.routes.draw do
       namespace :email do
         resources :threads, only: [:update]
       end
+
+      get "/keywords", to: "applications/keywords#autocomplete"
     end
 
   end

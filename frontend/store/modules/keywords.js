@@ -1,7 +1,7 @@
 import axios from "axios"
-import { pull } from "lodash-es"
 
 const APPLICATIONS_URL = `api/applications`
+const AUTOCOMPLETE_URL = `api/keywords`
 
 const state = {
   allByApplication: {},
@@ -10,6 +10,7 @@ const state = {
 // getters
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${APPLICATIONS_URL}`,
+  autocompleteEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${AUTOCOMPLETE_URL}?q=`,
   keywordsByApplication: state => state.allByApplication,
 }
 
@@ -21,15 +22,15 @@ const actions = {
     })
   },
   updateKeywords({ commit, getters }, payload) {
-    const { applicationId, commentId, params } = payload
+    const { applicationId, params } = payload
     return axios.put(`${getters.endpoint}/${applicationId}/keywords`, params).then(({data}) => {
-      commit("addKeyword", { applicationId, keywords: data })
+      commit("updateKeywords", { applicationId, keywords: data })
     })
   },
   removeKeywords({ commit, getters }, payload) {
-    const { applicationId, commentId, params } = payload
-    return axios.delete(`${getters.endpoint}/${applicationId}/keywords`, params).then(({data}) => {
-      commit("removeKeyword", { applicationId, keywords: data })
+    const { applicationId, params } = payload
+    return axios.delete(`${getters.endpoint}/${applicationId}/keywords`, { params }).then(({data}) => {
+      commit("updateKeywords", { applicationId, keywords: data })
     })
   }
 }
@@ -40,15 +41,10 @@ const mutations = {
     const { applicationId, keywords } = payload
     state.allByApplication[applicationId] = keywords
   },
-  removeKeyword(state, payload) {
+  updateKeywords(state, payload) {
     const { applicationId, keywords } = payload
-    state.allByApplication[applicationId] = state.allByApplication[applicationId].push(keyword)
+    state.allByApplication[applicationId] = keywords
   },
-  addKeywords(state, payload) {
-    const { applicationId, keywords } = payload
-    const minusRemoved = pull(state.allByApplication[applicationId], keywords)
-    state.allByApplication[applicationId] = minusRemoved
-  }
 }
 
 export default {

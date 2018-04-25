@@ -6,6 +6,8 @@ import Vue from "vue"
 
 import DatesMixin from "../../../../mixins/dates-mixin"
 
+import KeywordsComponent from "./keywords-component.vue"
+
 import { keyBy } from "lodash-es"
 
 export default {
@@ -21,28 +23,20 @@ export default {
     if (!this.commentsByApplication[this.application.id]) {
       await this.fetchApplicationComments(this.application.id)
     }
-    if (!this.keywordsByApplication[this.application.id]) {
-      await this.fetchApplicationKeywords(this.application.id)
-    }
     this.comments = this.commentsByApplication[this.application.id]
-    this.keywords = this.keywordsByApplication[this.application.id]
   },
   data() {
     return {
       comments: [],
-      keywords: [],
       newCommentContent: "",
-      newKeyword: "",
       editingComments: {}
     }
   },
   computed: {
     ...mapGetters("comments", ["commentsByApplication"]),
-    ...mapGetters("keywords", ["keywordsByApplication"]),
   },
   methods: {
     ...mapActions("comments", ["fetchApplicationComments", "createComment", "updateComment"]),
-    ...mapActions("keywords", ["fetchApplicationKeywords", "updateKeywords", "removeKeywords"]),
     saveNewComment() {
       const payload = {applicationId: this.application.id,
         params: {content: this.newCommentContent}}
@@ -50,7 +44,6 @@ export default {
       this.createComment(payload).then(() => {
         this.comments = this.commentsByApplication[this.application.id]
         this.newCommentContent = ""
-        this.$emit("scroll")
       })
     },
     authorName(comment) {
@@ -76,11 +69,9 @@ export default {
       })
       Vue.delete(this.editingComments, comment.id)
     },
-    removeKeyword(keyword) {
-
-    }
   },
   components: {
+    KeywordsComponent
   }
 }
 </script>
@@ -96,9 +87,7 @@ export default {
           span.comment-timestamp on {{formattedDateTime(comment.created_at)}}
           button.comment-edit(v-if="comment.author_is_current", v-tooltip="'Edit comment'", @click="toggleEditable(comment)")
         div.comment-content(v-focus="isEditingComment(comment)", :contenteditable="isEditingComment(comment)", :class="{'--editing': isEditingComment(comment)}", @blur="onEditContent($event, comment)") {{comment.content}}
-    div.keyword-list
-      span.keyword-line(v-for="keyword in keywords") {{keyword}}
-        button.remove-btn(@click="removeKeyword(keyword)") x
+    keywords-component.large-margin-bottom(:application="application")
     div.new-comment
       textarea(v-model="newCommentContent", placeholder="Enter new comment...")
       button.submit.save-btn(type="button", @click="saveNewComment") Save
@@ -184,30 +173,6 @@ export default {
       }
     }
 
-    & .keyword-list {
-      margin-bottom: 4em;
-      padding: .5em;
-      box-shadow: -1px 1px 6px rgba(0, 0, 0, .5);
-    }
-
-    & .keyword-line {
-      background-color: beige;
-      font-size: .8em;
-      font-weight: bold;
-      display: inline-block;
-      padding: 5px;
-      border-radius: 2px;
-      color: gray(60%);
-      border: 1px solid gray(80%);
-      & .remove-btn {
-        background-color: transparent;
-        padding: 0;
-        margin: 0;
-        margin-left: 10px;
-        color: inherit;
-      }
-    }
-
     & .new-comment {
       & textarea {
         display: block;
@@ -223,6 +188,10 @@ export default {
         margin: auto;
         margin-top: 10px;
       }
+    }
+
+    & .large-margin-bottom {
+      margin-bottom: 4em;
     }
   }
 

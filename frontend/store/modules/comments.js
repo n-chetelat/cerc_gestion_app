@@ -42,7 +42,7 @@ const mutations = {
   },
   addNewComment(state, payload) {
     const { applicationId, comment } = payload
-    state.allByApplication[applicationId] = [comment].concat(state.allByApplication[applicationId])
+    state.allByApplication[applicationId].push(comment)
   },
   updateExistingComment(state, payload) {
     const { applicationId, comment } = payload
