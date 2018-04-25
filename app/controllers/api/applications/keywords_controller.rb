@@ -3,6 +3,7 @@ module Api
     class KeywordsController < ApiController
       before_action :authenticate_admin_user!
       before_action :set_application, except: [:autocomplete]
+      before_action :remove_unused, only: [:autocomplete]
 
       def autocomplete
         filter = "%#{params[:q].parameterize(separator: '%')}%"
@@ -42,6 +43,13 @@ module Api
 
         def set_application
           @application ||= Application.find(params[:application_id])
+        end
+
+        def remove_unused
+          ActsAsTaggableOn::Tag.transaction do
+            unused = ActsAsTaggableOn::Tag.where(taggings_count: 0).lock(true)
+            unused.destroy_all if unused.any?
+          end
         end
 
     end
