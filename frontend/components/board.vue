@@ -24,6 +24,7 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
         scrollInterval: 300,
         maxScrollX: 0,
         person: null,
+        tab: null,
       }
     },
     computed: {
@@ -51,6 +52,7 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
           this.person = data.person
+          this.tab = data.tab
         }
         this.openModal(modalName)
       }
@@ -64,7 +66,7 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
 
   <template lang="pug">
     div.boards(v-if="isLoaded")
-      person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person")
+      person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person", :tab="tab")
 
       div.phases-wrapper
         div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px'}")

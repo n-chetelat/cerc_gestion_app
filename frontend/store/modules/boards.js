@@ -5,14 +5,16 @@ const BOARD_URL = "api/boards"
 const PHASE_URL = "api/phases"
 
 const state = {
-  current: null
+  current: null,
+  emailTemplatesByPhase: {}
 }
 
 // getters
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BOARD_URL}`,
   phaseEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PHASE_URL}`,
-  currentBoard: state => state.current
+  currentBoard: state => state.current,
+  emailTemplatesByPhase: state => state.emailTemplatesByPhase,
 }
 
 // actions
@@ -28,6 +30,12 @@ const actions = {
       commit("removePersonFromPhase", { oldPhaseId, person: data })
       commit("addPersonToPhase", { phaseId, person: data })
     })
+  },
+  fetchPhaseEmailTemplate({ commit, getters }, payload) {
+    const { phaseId, personId } = payload
+    return axios.get(`${getters.phaseEndpoint}/${phaseId}/email_template`, {params: {person_id: personId}}).then(({ data }) => {
+      commit("setEmailTemplate", { phaseId, emailTemplate: data })
+    })
   }
 }
 
@@ -38,16 +46,18 @@ const mutations = {
   },
   addPersonToPhase(state, payload) {
     const { phaseId, person } = payload
-
     find(state.current.phases, (phase) => phase.uuid === phaseId)
       .persons.push(person)
   },
   removePersonFromPhase(state, payload) {
     const { oldPhaseId, person } = payload
-
     const persons = find(state.current.phases, (phase) => phase.uuid === oldPhaseId).persons
     const personIndex = findIndex(persons, (p) => p.uuid === person.uuid)
     persons.splice(personIndex, 1)
+  },
+  setEmailTemplate(state, payload) {
+    const { phaseId,  emailTemplate } = payload
+    state.emailTemplatesByPhase[phaseId] = emailTemplate
   }
 }
 

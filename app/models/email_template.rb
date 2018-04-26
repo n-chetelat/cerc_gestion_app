@@ -22,9 +22,11 @@ class EmailTemplate < ApplicationRecord
 
   def compile_with_vars(recipient)
     compiled_attrs = {}
+    recipient_locale = recipient.application.try(:locale) || I18n.locale
     ["subject", "body"].each do |attr|
-      compiled = self.send(attr)
-      if (matches = self.send(attr).scan(/(\{\{\w+\}\})/))
+      attr_with_locale = "#{attr}_#{recipient_locale}"
+      compiled = self.send(attr_with_locale)
+      if (matches = self.send(attr_with_locale).scan(/(\{\{\w+\}\})/))
         matches.flatten.uniq.each do |match|
           method = match.gsub(/[\{|\}]/, "").strip
           replacement = recipient.respond_to?(method) ? recipient.send(method).try(:to_s) : ""

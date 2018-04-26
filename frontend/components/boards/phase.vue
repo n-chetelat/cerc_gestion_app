@@ -1,5 +1,7 @@
 <script>
-import { mapActions } from "vuex"
+import { mapGetters, mapActions } from "vuex"
+
+import { find } from "lodash-es"
 
 import PersonCard from "./person-card.vue"
 
@@ -16,12 +18,13 @@ export default {
     }
   },
   computed: {
+    ...mapGetters("boards", ["currentBoard", "emailTemplatesByPhase"]),
     description() {
       return this.phase.description  || "No description"
     },
   },
   methods: {
-    ...mapActions("boards", ["changePersonPhase"]),
+    ...mapActions("boards", ["changePersonPhase", "fetchPhaseEmailTemplate"]),
     openModal(modalName, data) {
       this.$emit('modal', modalName, data)
     },
@@ -36,8 +39,21 @@ export default {
         .split(",")
       if (oldPhaseId === this.phase.uuid) return false
       const payload = {phaseId: this.phase.uuid, personId, oldPhaseId}
-      this.changePersonPhase(payload)
+      this.changePersonPhase(payload).then(() => {
+        this.showEmailModal(personId)
+      })
     },
+    async showEmailModal(personId) {
+      const payload = {phaseId: this.phase.uuid, personId}
+      let emailTemplate
+      await this.fetchPhaseEmailTemplate(payload).then(() => {
+        emailTemplate = this.emailTemplatesByPhase[this.phase.uuid]
+      })
+      if (emailTemplate) {
+        const person = find(this.phase.persons, (p) => p.uuid === personId)
+        this.openModal("person-info", { person, tab: "email" })
+      }
+    }
   },
   components: {
     PersonCard

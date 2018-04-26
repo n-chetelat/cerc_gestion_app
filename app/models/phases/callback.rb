@@ -8,8 +8,6 @@ module Phases
     has_one :callbacks_email_template, class_name: "Phases::CallbackEmailTemplate", foreign_key: "phases_callback_id", dependent: :destroy, inverse_of: :phases_callback
     has_one :email_template, through: :callbacks_email_template
 
-    acts_as_list scope: :phase
-
     def to_s
       self.title
     end

@@ -14,11 +14,12 @@ class Phase < ApplicationRecord
   has_many :boards_phases, class_name: "BoardPhase", dependent: :destroy
   has_many :boards, through: :boards_phases
 
-  has_many :phases_callbacks, class_name: "Phases::Callback", dependent: :destroy
+  has_one :phases_callback, class_name: "Phases::Callback", dependent: :destroy
+  has_one :email_template, through: :phases_callback
 
   has_one :email_label, class_name: "Email::Label", foreign_key: "phase_id", dependent: :destroy, inverse_of: :phase
 
-  accepts_nested_attributes_for :phases_callbacks, allow_destroy: true
+  accepts_nested_attributes_for :phases_callback, allow_destroy: true
 
   def to_s
     self.title

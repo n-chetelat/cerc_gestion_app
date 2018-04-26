@@ -9,6 +9,7 @@ import DatesMixin from "../../../../mixins/dates-mixin"
 import Modal from "../../../shared/modal.vue"
 import ComposeEmail from "./correspondence/compose-email.vue"
 import MessageList from "./correspondence/message-list.vue"
+import FlashMessages from "./correspondence/flash-messages.vue"
 
 export default {
   name: "Correspondence",
@@ -25,6 +26,11 @@ export default {
       openThread: null,
       composing: false,
       flashMessage: null,
+      newThread: false,
+      newMessageThread: {
+        id: null,
+        participants: [this.person.email]
+      }
     }
   },
   created() {
@@ -58,6 +64,7 @@ export default {
       return "(no content)"
     },
     goToThreadList() {
+      this.newThread = false
       this.composing = false
       this.openThread = null
     },
@@ -83,7 +90,7 @@ export default {
     MessageList,
     SlideXLeftTransition,
     CollapseTransition,
-    SlideYUpTransition
+    FlashMessages
   }
 }
 </script>
@@ -96,8 +103,9 @@ export default {
       p Please try again later.
 
     div.correspondence(v-if="isLoaded")
-      slide-x-left-transition(group)
-        div.correspondence-wrapper.thread-list(v-if="!openThread", :key="'threadList'")
+
+        div.correspondence-wrapper.thread-list(v-if="!openThread && !newThread", :key="'threadList'")
+          button(type="button", @click="newThread = true") New Thread
           div(v-if="!correspondence.threads.length")
             p You have no correspondence with this applicant so far.
           div(v-else)
@@ -109,11 +117,8 @@ export default {
                 span.snippet {{getThreadSnippet(thread) | truncate(25)}}
                 span.timestamp {{formattedDate(thread.timestamp)}}
 
-        div.correspondence-wrapper.thread(v-else, :key="'threadShow'")
-          slide-y-up-transition
-            div.flash.success(v-if="flashMessage === 'success'", @click="flashMessage = null") The message has been sent.
-          slide-y-up-transition
-            div.flash.error(v-if="flashMessage === 'error'", @click="flashMessage = null") There was an error when sending the message.
+        div.correspondence-wrapper.thread(v-if="openThread", :key="'threadShow'")
+          flash-messages(:flash-message="flashMessage", @close="flashMessage = null")
           div
             button.icon.back-btn(@click="goToThreadList") Back
             h2 Messages from thread "{{getThreadSubject(openThread)}}"
@@ -121,6 +126,11 @@ export default {
           collapse-transition
             compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
           message-list(:thread="openThread")
+
+        div.correspondence-wrapper.new-thread(v-if="newThread", :key="'threadNew'")
+          flash-messages(:flash-message="flashMessage", @close="flashMessage = null")
+          button.icon.back-btn(@click="goToThreadList") Back
+          compose-email(:thread="newMessageThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
 
 
 

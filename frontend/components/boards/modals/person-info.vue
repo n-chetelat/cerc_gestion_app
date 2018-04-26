@@ -14,7 +14,8 @@ export default {
   props: {
     person: {
       required: true
-    }
+    },
+    tab: {}
   },
   data() {
     return {
@@ -22,7 +23,7 @@ export default {
       applicationForm: null,
       applicationError: false,
       editing: false,
-      currentTab: "information",
+      currentTab: this.tab || "information",
       tabs: ["information", "comments", "email"],
     }
   },

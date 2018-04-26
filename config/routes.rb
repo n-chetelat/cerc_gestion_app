@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       resources :phases, only: [:index, :show] do
         scope module: "phases" do
           resources :persons, only: [:update]
+          resource :email_template, only: [:show]
         end
       end
       namespace :email do

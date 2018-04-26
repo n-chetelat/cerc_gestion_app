@@ -11,7 +11,6 @@ class PhaseService
     person_phase.save!
 
     self.update_email_labels_for(person, [new_phase_label_id], [old_phase_label_id], request)
-    self.apply_callbacks_for(person, phase, request)
   end
 
   def self.update_email_labels(phase, add_label_ids, remove_label_ids, request)
@@ -29,30 +28,29 @@ class PhaseService
     end
   end
 
-  def self.apply_callbacks_for(person, phase, request)
-    phase.phases_callbacks.each do |callback|
-      if template = callback.email_template
-        compiled_email = template.compile_with_vars(person)
+  def self.apply_automatic_callbacks_for(person, phase, request)
+    return unless callback = phase.phases_callback
+    if template = callback.email_template
+      compiled_email = template.compile_with_vars(person)
 
-        mail = Mail.new do
-          to person.email
-          subject compiled_email.subject
-        end
-        text_part = Mail::Part.new do
-          body compiled_email.plain
-        end
-        html_part = Mail::Part.new do
-          content_type "text/html; charset=UTF-8"
-          body compiled_email.body
-        end
-        mail.text_part = text_part
-        mail.html_part = html_part
-
-        mail_options = {
-          thread_id: person.threads.order(created_at: :desc).try(:first).try(:google_thread_id)
-        }
-        ::EmailService.new(request).send_email_to(mail, mail_options)
+      mail = Mail.new do
+        to person.email
+        subject compiled_email.subject
       end
+      text_part = Mail::Part.new do
+        body compiled_email.plain
+      end
+      html_part = Mail::Part.new do
+        content_type "text/html; charset=UTF-8"
+        body compiled_email.body
+      end
+      mail.text_part = text_part
+      mail.html_part = html_part
+
+      mail_options = {
+        thread_id: person.threads.order(created_at: :desc).try(:first).try(:google_thread_id)
+      }
+      ::EmailService.new(request).send_email_to(mail, mail_options)
     end
   end
 

@@ -13,7 +13,8 @@ export default {
   props: {
     thread: {
       required: true,
-    }
+    },
+    message: {}
   },
   created() {
     this.messageRecipients = this.thread.participants.slice(0)
@@ -129,7 +130,6 @@ export default {
         button.icon.scrap-btn(type="button", @click="scrapMessage", v-tooltip="'Scrap'")
         button.icon.send-btn(type="button", @click="sendMessage", v-tooltip="'Send'")
       vue-editor(v-model="composedMessage")
-      //- textarea(v-model="composedMessage")
 
 
 
