@@ -12,7 +12,7 @@ export default {
   mixins: [DatesMixin],
   props: {
     thread: {
-      required: true,
+      required: true
     },
     message: {}
   },
@@ -25,14 +25,14 @@ export default {
       messageRecipients: [],
       messageCc: [],
       messageBCc: [],
-      composedMessage: "",
+      composedSubject: (this.message) ? this.message.subject : this.thread.subject,
+      composedMessage: (this.message) ? this.message.body : "",
       newAddress: null,
       newCcAddress: null,
       newBCcAddress: null,
     }
   },
   computed: {
-
   },
   methods: {
     ...mapActions("email", ["sendEmail"]),
@@ -84,6 +84,7 @@ export default {
           recipients: this.messageRecipients,
           cc: this.messageCc,
           bcc: this.messageBCc,
+          subject: this.composedSubject,
           body: this.composedMessage
         }
       }
@@ -129,6 +130,9 @@ export default {
       div.action-menu
         button.icon.scrap-btn(type="button", @click="scrapMessage", v-tooltip="'Scrap'")
         button.icon.send-btn(type="button", @click="sendMessage", v-tooltip="'Send'")
+      div.subject-line-row
+        label Subject
+        input.subject-line(v-model="composedSubject")
       vue-editor(v-model="composedMessage")
 
 
@@ -151,13 +155,13 @@ export default {
       background: url("../../../../../static/images/spinner-solid.gif") center center / 10% no-repeat rgba(0,0,0,.3);
     }
 
-    & .address-list-row {
+    & .address-list-row, & .subject-line-row {
       display: flex;
       padding: .5em;
       & label {
         width: 10%;
       }
-      & .respond-to-address-list {
+      & .respond-to-address-list, & .subject-line {
         width: 90%;
         max-width: 90%;
       }
@@ -169,7 +173,7 @@ export default {
       border-radius: 5px;
       background-color: gray(200);
     }
-    & .respond-to-address-input {
+    & .respond-to-address-input, & .subject-line {
       border: none;
       box-shadow: var(--fieldsBoxShadow);
       display: block;
@@ -199,6 +203,12 @@ export default {
       &:hover {
         background: url("../../../../../static/icons/paper-plane.svg") left center / 70% no-repeat;
       }
+    }
+
+    & .subject-line {
+      margin-bottom: 1em;
+      margin-left: 1em;
+      width: 80%;
     }
 
     & .composing-window {

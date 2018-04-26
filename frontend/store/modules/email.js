@@ -23,7 +23,11 @@ const actions = {
   },
   sendEmail({ commit, getters }, payload) {
     const { threadId, params } = payload
-    return axios.put(`${getters.threadsEndpoint}/${threadId}`, params)
+    if (threadId) {
+      return axios.put(`${getters.threadsEndpoint}/${threadId}`, params)
+    } else {
+       return axios.post(`${getters.threadsEndpoint}`, params)
+    }
   }
 }
 

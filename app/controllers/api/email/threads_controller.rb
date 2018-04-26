@@ -3,7 +3,13 @@ module Api
     class ThreadsController < ApiController
       before_action :authenticate_admin_user!
       before_action :authorize_gmail
-      before_action :set_resource
+      before_action :set_resource, only: [:update]
+
+      def create
+        mail = format_message
+        response = ::EmailService.new(request).send_email_to(mail, {})
+        head :ok
+      end
 
       def update
         mail = format_message
@@ -25,7 +31,7 @@ module Api
             to: params[:recipients],
             cc: params[:cc],
             bcc: params[:bcc],
-            subject: @resource.subject
+            subject: params[:subject]
           })
           text_content = Nokogiri::HTML.fragment(params[:body]).text
           text_part = Mail::Part.new({

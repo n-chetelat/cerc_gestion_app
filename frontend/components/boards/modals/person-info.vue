@@ -15,7 +15,7 @@ export default {
     person: {
       required: true
     },
-    tab: {}
+    tab: {},
   },
   data() {
     return {
@@ -25,6 +25,7 @@ export default {
       editing: false,
       currentTab: this.tab || "information",
       tabs: ["information", "comments", "email"],
+      emailSection: (this.tab === "email") ? "new" : null,
     }
   },
   async created() {
@@ -97,7 +98,7 @@ export default {
 
         div.correspondence(v-show="currentTab === 'email'")
           slide-y-up-transition
-            correspondence(:person="person")
+            correspondence(:person="person", :section="emailSection")
 
 </template>
 

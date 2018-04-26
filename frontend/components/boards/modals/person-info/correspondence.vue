@@ -17,7 +17,8 @@ export default {
   props: {
     person: {
       required: true
-    }
+    },
+    section: {},
   },
   data() {
     return {
@@ -26,24 +27,40 @@ export default {
       openThread: null,
       composing: false,
       flashMessage: null,
-      newThread: false,
+      newThread: this.section === "new",
       newMessageThread: {
         id: null,
-        participants: [this.person.email]
-      }
+        participants: [this.person.email],
+        subject: ""
+      },
+      newMessageTemplate: null,
     }
   },
-  created() {
-    this.loadPersonCorrespondence()
+  async created() {
+    await this.loadPersonCorrespondence()
+    if (this.section === "new") {
+      const payload = {phaseId: this.person.phase_id, personId: this.person.uuid}
+      await this.fetchPhaseEmailTemplate(payload).then(() => {
+        this.newMessageTemplate = this.emailTemplatesByPhase[this.person.phase_id]
+      })
+    }
   },
   computed: {
     ...mapGetters("email", ["emailByPerson"]),
+    ...mapGetters("boards", ["emailTemplatesByPhase"]),
     isLoaded() {
       return this.person && this.correspondence
     },
+    newMessageIsLoaded() {
+      if (this.section === "new") {
+        return !!this.newMessageTemplate
+      }
+      return true
+    }
   },
   methods: {
     ...mapActions("email", ["fetchPersonEmail"]),
+    ...mapActions("boards", ["fetchPhaseEmailTemplate"]),
     loadPersonCorrespondence() {
       this.fetchPersonEmail(this.person.uuid).then(() => {
         this.correspondence = this.emailByPerson[this.person.uuid]
@@ -127,10 +144,10 @@ export default {
             compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
           message-list(:thread="openThread")
 
-        div.correspondence-wrapper.new-thread(v-if="newThread", :key="'threadNew'")
+        div.correspondence-wrapper.new-thread(v-if="newThread && newMessageIsLoaded", :key="'threadNew'")
           flash-messages(:flash-message="flashMessage", @close="flashMessage = null")
           button.icon.back-btn(@click="goToThreadList") Back
-          compose-email(:thread="newMessageThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
+          compose-email(:thread="newMessageThread", :message="newMessageTemplate", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
 
 
 

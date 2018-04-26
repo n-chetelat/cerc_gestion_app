@@ -18,7 +18,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("boards", ["currentBoard", "emailTemplatesByPhase"]),
+    ...mapGetters("boards", ["currentBoard"]),
     description() {
       return this.phase.description  || "No description"
     },
@@ -40,19 +40,14 @@ export default {
       if (oldPhaseId === this.phase.uuid) return false
       const payload = {phaseId: this.phase.uuid, personId, oldPhaseId}
       this.changePersonPhase(payload).then(() => {
-        this.showEmailModal(personId)
+        if (this.phase.has_callback) {
+          this.showEmailModal(personId)
+        }
       })
     },
-    async showEmailModal(personId) {
-      const payload = {phaseId: this.phase.uuid, personId}
-      let emailTemplate
-      await this.fetchPhaseEmailTemplate(payload).then(() => {
-        emailTemplate = this.emailTemplatesByPhase[this.phase.uuid]
-      })
-      if (emailTemplate) {
-        const person = find(this.phase.persons, (p) => p.uuid === personId)
-        this.openModal("person-info", { person, tab: "email" })
-      }
+    showEmailModal(personId) {
+      const person = find(this.phase.persons, (p) => p.uuid === personId)
+      this.openModal("person-info", { person, tab: "email"})
     }
   },
   components: {
