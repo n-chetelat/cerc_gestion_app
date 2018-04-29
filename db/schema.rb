@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180424203913) do
+ActiveRecord::Schema.define(version: 20180429203205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -170,6 +170,8 @@ ActiveRecord::Schema.define(version: 20180424203913) do
     t.datetime "updated_at", null: false
     t.boolean "initial", default: false
     t.uuid "uuid"
+    t.boolean "final"
+    t.string "color"
   end
 
   create_table "phases_callbacks", force: :cascade do |t|

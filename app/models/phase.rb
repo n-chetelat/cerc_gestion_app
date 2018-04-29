@@ -21,6 +21,9 @@ class Phase < ApplicationRecord
 
   accepts_nested_attributes_for :phases_callback, allow_destroy: true
 
+  scope :finals, -> { where(final: true) }
+  scope :non_finals, -> { where(final: false) }
+
   def to_s
     self.title
   end
@@ -30,6 +33,16 @@ class Phase < ApplicationRecord
   end
 
   def email_label_name=(email_label)
+  end
+
+  def no_color=(no_color)
+    if no_color == "1"
+      self.color = nil
+    end
+  end
+
+  def no_color
+    self.color.blank?
   end
 
   def self.current_initial

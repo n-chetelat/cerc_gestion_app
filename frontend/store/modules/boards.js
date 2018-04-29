@@ -1,5 +1,5 @@
 import axios from "axios"
-import { keyBy, findIndex, find  } from "lodash-es"
+import { keyBy, findIndex, find, filter  } from "lodash-es"
 
 const BOARD_URL = "api/boards"
 const PHASE_URL = "api/phases"
@@ -14,6 +14,16 @@ const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BOARD_URL}`,
   phaseEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PHASE_URL}`,
   currentBoard: state => state.current,
+  finalPhases: state => {
+    if (state.current) {
+      return filter(state.current.phases, (ph) => ph.final)
+    } else return []
+  },
+  nonFinalPhases: state => {
+    if (state.current) {
+      return filter(state.current.phases, (ph) => !ph.final)
+    } else return []
+  },
   emailTemplatesByPhase: state => state.emailTemplatesByPhase,
 }
 
@@ -46,8 +56,8 @@ const mutations = {
   },
   addPersonToPhase(state, payload) {
     const { phaseId, person } = payload
-    find(state.current.phases, (phase) => phase.uuid === phaseId)
-      .persons.push(person)
+    const phase = find(state.current.phases, (phase) => phase.uuid === phaseId)
+    phase.persons.push(person)
   },
   removePersonFromPhase(state, payload) {
     const { oldPhaseId, person } = payload

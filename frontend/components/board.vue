@@ -6,6 +6,7 @@ import { mapGetters, mapActions } from "vuex"
 
 import Phase from "./boards/phase.vue"
 import PersonInfoModal from "./boards/modals/person-info.vue"
+import BoardSidebar from "./boards/board-sidebar.vue"
 
   export default {
     name: "Board",
@@ -28,7 +29,7 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
       }
     },
     computed: {
-      ...mapGetters("boards", ["currentBoard"]),
+      ...mapGetters("boards", ["currentBoard", "nonFinalPhases"]),
       isLoaded() {
         return !!(this.loaded && this.currentBoard)
       },
@@ -39,16 +40,6 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     },
     methods: {
       ...mapActions("boards", ["fetchBoard"]),
-      scrollRight() {
-        if (this.phasesScrollX - this.scrollInterval >= this.minScrollX) {
-          this.phasesScrollX -= this.scrollInterval
-        }
-      },
-      scrollLeft() {
-        if (this.phasesScrollX + this.scrollInterval <= this.maxScrollX) {
-          this.phasesScrollX += this.scrollInterval
-        }
-      },
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
           this.person = data.person
@@ -59,7 +50,8 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     },
     components: {
       Phase,
-      PersonInfoModal
+      PersonInfoModal,
+      BoardSidebar
     }
   }
   </script>
@@ -69,14 +61,17 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person", :tab="tab")
 
       div.phases-wrapper
-        div.phases(:style="{width: (currentBoard.phases.length * 320) + 'px'}")
-          phase(v-for="phase in currentBoard.phases", :phase="phase", @modal="openModalByName")
+        div.phases(:style="{width: (nonFinalPhases.length * 320) + 'px'}")
+          phase(v-for="phase in nonFinalPhases", :phase="phase", @modal="openModalByName")
+      board-sidebar.sidebar(@modal="openModalByName")
+
 
   </template>
 
   <style scoped>
 
   .boards {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -93,6 +88,10 @@ import PersonInfoModal from "./boards/modals/person-info.vue"
     display: flex;
     flex-wrap: nowrap;
     transition: transform 1s;
+  }
+
+  .sidebar {
+    width: 30%;
   }
 
   </style>

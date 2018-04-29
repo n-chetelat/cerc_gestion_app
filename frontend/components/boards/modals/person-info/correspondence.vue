@@ -2,7 +2,7 @@
 
 import { mapGetters, mapActions } from "vuex"
 
-import { SlideXLeftTransition, CollapseTransition, SlideYUpTransition } from 'vue2-transitions'
+import { SlideXLeftTransition, CollapseTransition } from 'vue2-transitions'
 
 import DatesMixin from "../../../../mixins/dates-mixin"
 
@@ -121,8 +121,9 @@ export default {
 
     div.correspondence(v-if="isLoaded")
 
+      slide-x-left-transition(group)
         div.correspondence-wrapper.thread-list(v-if="!openThread && !newThread", :key="'threadList'")
-          button(type="button", @click="newThread = true") New Thread
+          button.submit.new-thread-btn(type="button", @click="newThread = true") New Thread
           div(v-if="!correspondence.threads.length")
             p You have no correspondence with this applicant so far.
           div(v-else)
@@ -236,6 +237,12 @@ export default {
       & h2 {
         display: inline-block;
       }
+    }
+
+    & .new-thread-btn {
+      padding: 5px;
+      width: auto;
+      margin: unset;
     }
   }
 

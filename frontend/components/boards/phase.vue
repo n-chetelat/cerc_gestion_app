@@ -22,9 +22,13 @@ export default {
     description() {
       return this.phase.description  || "No description"
     },
+    emailLabelStyle() {
+      if (!this.phase.color) return ""
+      return {"background-color": "#ffffff", "color": this.phase.color, "border-color": this.phase.color}
+    }
   },
   methods: {
-    ...mapActions("boards", ["changePersonPhase", "fetchPhaseEmailTemplate"]),
+    ...mapActions("boards", ["changePersonPhase"]),
     openModal(modalName, data) {
       this.$emit('modal', modalName, data)
     },
@@ -61,8 +65,8 @@ export default {
     h2.heading
       span.title {{phase.title}}
       br
-      span.email-label(v-if="phase.email_label", v-tooltip="'Gmail tag label'") {{phase.email_label}}  &#8728;
-      span.email-label.no-label(v-else) No email label
+      span.email-label(v-if="phase.email_label", v-tooltip="'Gmail tag label'", :style="emailLabelStyle") {{phase.email_label}}  &#8728;
+      span.email-label.no-label(v-else, :style="emailLabelStyle") No email label
       span.description(v-tooltip="description")
     div.stats
       p #[span.count {{phase.persons.length}}] {{phase.persons.length | pluralize('person', 'people')}} in this section

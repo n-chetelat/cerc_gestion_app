@@ -34,7 +34,9 @@ Rails.application.routes.draw do
       resources :boards, only: [:show]
       resources :phases, only: [:index, :show] do
         scope module: "phases" do
-          resources :persons, only: [:update]
+          resources :persons, only: [:update] do
+            put :archive, on: :member
+          end
           resource :email_template, only: [:show]
         end
       end

@@ -17,8 +17,8 @@ class EmailService
     )
     gmail_service.send_user_message(USER_ID, message) do |result, error|
       raise error if error
-      thread = ::Email::Thread.find_by(google_thread_id: result.thread_id)
-      self.fetch_thread_message_details(thread) if thread
+      thread = ::Email::Thread.find_or_create_by(google_thread_id: result.thread_id)
+      self.fetch_thread_message_details(thread)
     end
   end
 
@@ -114,6 +114,7 @@ class EmailService
     gmail_service.get_user_thread(USER_ID, thread.google_thread_id) do |result, error|
       raise error if error
       extract_thread_message_details(thread, result)
+      thread.save!
     end
   end
 

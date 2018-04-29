@@ -46,6 +46,7 @@ gem 'dragonfly-s3_data_store'
 gem 'jquery-rails'
 gem 'select2-rails'
 gem 'tinymce-rails'
+gem 'jquery-minicolors-rails'
 
 # ActiveRecord helpers
 gem 'simple_enum'

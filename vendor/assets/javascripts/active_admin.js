@@ -4,6 +4,7 @@
 //= require activeadmin-orderable
 //= require tinymce
 //= require position
+//= require jquery.minicolors
 
 $(document)
 .ready(function() {
@@ -30,9 +31,9 @@ $(document)
     entity_encoding: "raw",
   });
 
-  // $(".colorpicker").each(function() {
-  //   $(this).minicolors()
-  // });
+  $(".colorpicker").each(function() {
+    $(this).minicolors()
+  });
 
 })
 
