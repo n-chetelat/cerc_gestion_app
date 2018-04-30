@@ -7,7 +7,7 @@ module Api
 
       def create
         mail = format_message
-        response = ::EmailService.new(request).send_email_to(mail, {})
+        thread = ::EmailService.new(request).send_email_to(mail, {})
         head :ok
       end
 
@@ -16,7 +16,8 @@ module Api
         mail_options = {
           thread_id: @resource.google_thread_id
         }
-        response = ::EmailService.new(request).send_email_to(mail, mail_options)
+        email_service = EmailService.new(request)
+        email_service.send_email_to(mail, mail_options)
         head :ok
       end
 

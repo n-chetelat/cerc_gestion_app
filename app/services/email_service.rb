@@ -20,6 +20,7 @@ class EmailService
       thread = ::Email::Thread.find_or_create_by(google_thread_id: result.thread_id)
       self.fetch_thread_message_details(thread)
       self.associate_thread_with_persons!(thread, result.thread_id)
+      return thread
     end
   end
 
@@ -102,6 +103,8 @@ class EmailService
       persons.each do |person|
         association = thread.persons_threads.find_or_initialize_by(person_id: person.id)
         if association.save
+          # change thread labels
+          overwrite_thread_labels(thread, thread.email_labels)
           # preload correspondence with person
           token = SecureRandom.base58(24)
           Redis.current.set("email-fetch-#{person.uuid}", token)
@@ -116,6 +119,14 @@ class EmailService
       raise error if error
       extract_thread_message_details(thread, result)
       thread.save!
+    end
+  end
+
+  def overwrite_thread_labels(thread, add_label_ids)
+    gmail_service.get_user_thread(USER_ID, thread.google_thread_id) do |result, error|
+      remove_label_ids = result.messages.map {|msg| msg.label_ids }.flatten
+        .select {|label| /^Label_\d+$/.match(label) }.uniq - add_label_ids
+      update_thread_labels(thread, add_label_ids, remove_label_ids)
     end
   end
 

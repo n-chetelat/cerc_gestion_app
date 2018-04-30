@@ -2,15 +2,16 @@ class PhaseService
 
   def self.place_person_in_phase(person, phase, request)
     return if phase.nil? || person.nil?
-
-    old_phase_label_id = person.current_phase.try(:email_label).try(:google_label_id)
-    new_phase_label_id = phase.email_label.try(:google_label_id)
-
+    
     person_phase = PersonPhase.find_or_initialize_by(person: person)
     person_phase.phase = phase
     person_phase.save!
+  end
 
-    self.update_email_labels_for(person, [new_phase_label_id], [old_phase_label_id], request)
+  def self.prepare_email_label_lists(person, phase)
+    old_phase_label_id = person.current_phase.try(:email_label).try(:google_label_id)
+    new_phase_label_id = phase.email_label.try(:google_label_id)
+    { add_label_ids: [new_phase_label_id], remove_label_ids: [old_phase_label_id] }
   end
 
   def self.update_email_labels(phase, add_label_ids, remove_label_ids, request)
