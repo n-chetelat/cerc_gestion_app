@@ -29,7 +29,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       }
     },
     computed: {
-      ...mapGetters("boards", ["currentBoard", "nonFinalPhases"]),
+      ...mapGetters("boards", ["currentBoard", "nonFinalPhases", "finalPhases"]),
       isLoaded() {
         return !!(this.loaded && this.currentBoard)
       },
@@ -63,7 +63,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       div.phases-wrapper
         div.phases(:style="{width: (nonFinalPhases.length * 320) + 'px'}")
           phase(v-for="phase in nonFinalPhases", :phase="phase", @modal="openModalByName")
-      board-sidebar.sidebar(@modal="openModalByName")
+      board-sidebar.sidebar(v-if="finalPhases.length", @modal="openModalByName")
 
 
   </template>
@@ -72,26 +72,35 @@ import BoardSidebar from "./boards/board-sidebar.vue"
 
   .boards {
     display: flex;
+    justify-content: flex-end;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    height: 100%;
   }
 
   .phases-wrapper {
     overflow-x: auto;
     overflow-y: auto;
     padding: 1em;
+    height: 100%;
   }
 
   .phases {
     display: flex;
     flex-wrap: nowrap;
     transition: transform 1s;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .phase {
+    height: 95%;
   }
 
   .sidebar {
-    width: 30%;
+    width: 250px;
   }
 
   </style>

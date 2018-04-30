@@ -63,16 +63,17 @@ export default {
 }
 
 .drop-box {
-  opacity: .3;
   border: 3px dashed;
   display: flex;
+  background-color: white;
+  transition: .5s ease;
   & p {
     font-weight: bold;
     margin: auto;
     opacity: 1;
   }
   &.--expanded {
-    opacity: .8;
+    background-color: gray(80%);
   }
 }
 

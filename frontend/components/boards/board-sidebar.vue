@@ -39,7 +39,7 @@ export default {
 }
 
 .board-sidebar {
-  background-color: color(var(--themeColor) alpha(20%));
+  background-color: var(--themeColor);
   display: flex;
   justify-content: space-evenly;
   overflow-y: auto;
@@ -48,8 +48,9 @@ export default {
   z-index: 4;
   & .box {
     width: 90%;
-    margin: 1em auto 0 auto;
-    height: 100px;
+    margin: auto;
+    height: 20%;
+    max-height: 100px;
   }
 }
 
