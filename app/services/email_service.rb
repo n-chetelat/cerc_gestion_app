@@ -19,6 +19,7 @@ class EmailService
       raise error if error
       thread = ::Email::Thread.find_or_create_by(google_thread_id: result.thread_id)
       self.fetch_thread_message_details(thread)
+      self.associate_thread_with_persons!(thread, result.thread_id)
     end
   end
 
