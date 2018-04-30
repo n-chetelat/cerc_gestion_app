@@ -21,9 +21,6 @@ import BoardSidebar from "./boards/board-sidebar.vue"
     },
     data() {
       return {
-        phasesScrollX: 0,
-        scrollInterval: 300,
-        maxScrollX: 0,
         person: null,
         tab: null,
       }
@@ -68,7 +65,11 @@ import BoardSidebar from "./boards/board-sidebar.vue"
 
   </template>
 
-  <style scoped>
+  <style>
+
+  body {
+    overflow-x: hidden;
+  }
 
   .boards {
     display: flex;
