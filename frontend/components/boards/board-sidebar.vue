@@ -7,14 +7,12 @@ import DropBox from "./board-sidebar/drop-box.vue"
 export default {
   name: "BoardSidebar",
   props: {
+    user: {
+      required: true
+    }
   },
   data() {
     return {
-      user: {
-        name: "Alli",
-        lastname: "Hetzhog",
-        email: "yourusername@adminexample.com"
-      }
     }
   },
   computed: {
@@ -84,7 +82,7 @@ export default {
       margin-left: 5px;
       background: url("../../static/icons/key.svg") center center / 50% no-repeat white;
       &:hover {
-        background: url("../../static/icons/key.svg") center center / 50% no-repeat gray(90%);
+        background-color: gray(90%);
       }
     }
   }

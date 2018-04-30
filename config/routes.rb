@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
     namespace "api", defaults: {format: "json"} do
 
+      resource :users, only: [:show]
+
       resources :positions, only: [:index] do
         get :form, on: :member
       end
@@ -32,7 +34,7 @@ Rails.application.routes.draw do
         end
       end
       resources :boards, only: [:show]
-      resources :phases, only: [:index, :show] do
+      resources :phases, only: [] do
         scope module: "phases" do
           resources :persons, only: [:update] do
             put :archive, on: :member

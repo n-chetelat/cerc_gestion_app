@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import locales from './modules/locales'
 
 import recruitmentInfo from './modules/recruitment-info'
+import users from './modules/users'
 import positions from './modules/positions'
 import application from './modules/application'
 import boards from './modules/boards'
@@ -21,6 +22,7 @@ export default new Vuex.Store({
   modules: {
     locales,
     recruitmentInfo,
+    users,
     positions,
     application,
     boards,

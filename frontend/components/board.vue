@@ -18,6 +18,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
     },
     async created() {
       await this.fetchBoard(this.boardSlug)
+      await this.fetchUserInfo()
     },
     data() {
       return {
@@ -26,7 +27,8 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       }
     },
     computed: {
-      ...mapGetters("boards", ["currentBoard", "nonFinalPhases", "finalPhases"]),
+      ...mapGetters("users", ["currentUser"]),
+      ...mapGetters("boards", ["currentBoard", "nonFinalPhases"]),
       isLoaded() {
         return !!(this.loaded && this.currentBoard)
       },
@@ -36,6 +38,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       },
     },
     methods: {
+      ...mapActions("users", ["fetchUserInfo"]),
       ...mapActions("boards", ["fetchBoard"]),
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
@@ -60,7 +63,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       div.phases-wrapper
         div.phases(:style="{width: (nonFinalPhases.length * 320) + 'px'}")
           phase(v-for="phase in nonFinalPhases", :phase="phase", @modal="openModalByName")
-      board-sidebar.sidebar(v-if="finalPhases.length", @modal="openModalByName")
+      board-sidebar.sidebar(v-if="currentUser", @modal="openModalByName", :user="currentUser")
 
 
   </template>
