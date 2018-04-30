@@ -4,6 +4,9 @@ import ModalMixin from "mixins/modal-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
 
+import { sendUserInfo, setCallback } from "cable/board"
+
+
 import Phase from "./boards/phase.vue"
 import PersonInfoModal from "./boards/modals/person-info.vue"
 import BoardSidebar from "./boards/board-sidebar.vue"
@@ -19,11 +22,14 @@ import BoardSidebar from "./boards/board-sidebar.vue"
     async created() {
       await this.fetchBoard(this.boardSlug)
       await this.fetchUserInfo()
+
+      this.announcePresence()
     },
     data() {
       return {
         person: null,
         tab: null,
+        loggedIn: []
       }
     },
     computed: {
@@ -31,10 +37,6 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       ...mapGetters("boards", ["currentBoard", "nonFinalPhases"]),
       isLoaded() {
         return !!(this.loaded && this.currentBoard)
-      },
-      minScrollX() {
-        const phases = document.querySelector(".phases-wrapper")
-        return -(phases.offsetWidth)
       },
     },
     methods: {
@@ -46,6 +48,14 @@ import BoardSidebar from "./boards/board-sidebar.vue"
           this.tab = data.tab
         }
         this.openModal(modalName)
+      },
+      announcePresence() {
+        setCallback((user) => {
+          if (user.email !== this.currentUser.email) {
+            this.loggedIn.push(user)
+          }
+        })
+        sendUserInfo()
       }
     },
     components: {
