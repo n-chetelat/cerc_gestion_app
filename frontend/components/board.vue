@@ -3,6 +3,7 @@ import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
+import { find } from "lodash-es"
 
 import { sendUserInfo, setCallback } from "cable/board"
 
@@ -51,7 +52,9 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       },
       announcePresence() {
         setCallback((user) => {
-          if (user.email !== this.currentUser.email) {
+          if (user.email !== this.currentUser.email) return
+          const exists = find(this.loggedIn, (u) => u.email === user.email)
+          if (!exists) {
             this.loggedIn.push(user)
           }
         })

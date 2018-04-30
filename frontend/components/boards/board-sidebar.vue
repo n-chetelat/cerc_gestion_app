@@ -37,9 +37,9 @@ export default {
 
 <template lang="pug">
   div.board-sidebar
-    div.username
+    div.heading
       span.circle.user-initials(v-tooltip="userTooltip") {{userInitials}}
-      a.circle.admin-link(href="/admin", v-tooltip="'To dashboard'", target="_blank") ""
+      a.circle.admin-link(href="/admin", v-tooltip="'To admin dashboard'", target="_blank") ""
     div.drop-boxes
       drop-box.box(v-for="phase in finalPhases", :phase="phase", @modal="openModal")
 
@@ -58,12 +58,16 @@ export default {
   flex-direction: column;
   box-shadow: -2px 0px 6px;
   z-index: 4;
-  & .username {
+  & .heading {
     text-align: left;
     padding: 10px;
+    display: flex;
+    justify-content: flex-start;
+    & * {
+      margin: auto 3px;
+    }
     & .circle {
       font-weight: bold;
-      color: white;
       display: inline-block;
       background-color: white;
       color: var(--themeColor);
@@ -79,7 +83,6 @@ export default {
     }
     & .admin-link {
       color: transparent;
-      margin-left: 5px;
       background: url("../../static/icons/key.svg") center center / 50% no-repeat white;
       &:hover {
         background-color: gray(90%);
