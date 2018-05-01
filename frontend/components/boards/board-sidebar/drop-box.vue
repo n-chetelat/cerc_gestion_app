@@ -46,7 +46,7 @@ export default {
 <template lang="pug">
   div.drop-box(
     :style="{'border-color': phase.color, 'color': phase.color}",
-    v-tooltip="`Drop person here to add to close application`",
+    v-tooltip="`Drop person here to close application`",
     @dragover.prevent="onDragOver",
     @dragend.prevent="beingDraggedOver = false",
     @dragleave.prevent="beingDraggedOver = false",
