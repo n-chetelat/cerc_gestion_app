@@ -86,7 +86,7 @@ export default {
 
         div(v-show="currentTab === 'information'")
           div.action-menu
-            button.icon.pencil(type="button", @click="editing = !editing")
+            button.icon.pencil(type="button", @click="editing = !editing", v-tooltip="'Edit application information'")
           slide-y-up-transition
             application-info-display(:application="application", :person="person", :application-form="applicationForm", v-if="!editing")
           slide-y-up-transition

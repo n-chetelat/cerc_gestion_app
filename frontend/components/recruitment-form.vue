@@ -161,6 +161,9 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
 
 .recruitment-form {
 
+  max-width: 960px;
+  margin: auto;
+
   & nav {
     z-index: 2;
     position: fixed;
