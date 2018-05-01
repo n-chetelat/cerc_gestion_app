@@ -9,6 +9,9 @@ export default {
   props: {
     user: {
       required: true
+    },
+    loggedIn: {
+      default: () => { return [] }
     }
   },
   data() {
@@ -17,17 +20,17 @@ export default {
   },
   computed: {
     ...mapGetters("boards", ["finalPhases"]),
-    userInitials() {
-      return this.user.name[0] + this.user.lastname[0]
-    },
-    userTooltip() {
-      return `${this.user.name} ${this.user.lastname} (${this.user.email})`
-    }
   },
   methods: {
     openModal(modalName, data) {
       this.$emit('modal', modalName, data)
     },
+    userInitials(user) {
+      return user.name[0] + user.lastname[0]
+    },
+    userTooltip(user) {
+      return `${user.name} ${user.lastname} (${user.email})`
+    }
   },
   components: {
     DropBox
@@ -38,8 +41,12 @@ export default {
 <template lang="pug">
   div.board-sidebar
     div.heading
-      span.circle.user-initials(v-tooltip="userTooltip") {{userInitials}}
+      span.circle.user-initials(v-tooltip="userTooltip(user)") {{userInitials(user)}}
       a.circle.admin-link(href="/admin", v-tooltip="'To admin dashboard'", target="_blank") ""
+    div.logged-in(v-if="loggedIn.length")
+      p.logged-in-label Now logged in:
+      div
+        span.circle.user_initials(v-for="loggedUser in loggedIn", v-tooltip="userTooltip(loggedUser)") {{userInitials(loggedUser)}}
     div.drop-boxes
       drop-box.box(v-for="phase in finalPhases", :phase="phase", @modal="openModal")
 
@@ -66,21 +73,7 @@ export default {
     & * {
       margin: auto 3px;
     }
-    & .circle {
-      font-weight: bold;
-      display: inline-block;
-      background-color: white;
-      color: var(--themeColor);
-      padding: 10px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      line-height: 2em;
-      text-align: center;
-    }
-    & .user-initials {
-      text-transform: uppercase;
-    }
+
     & .admin-link {
       color: transparent;
       background: url("../../static/icons/key.svg") center center / 50% no-repeat white;
@@ -90,8 +83,47 @@ export default {
     }
   }
 
+  & .logged-in {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 0 5px;
+    & .logged-in-label {
+      width: 100%;
+      color: white;
+      font-size: .8em;
+      margin-right: 3px;
+    }
+    & .circle {
+      margin: auto 3px;
+      width: 40px;
+      height: 40px;
+      padding: 3px;
+      background-color: #3e94e2;
+      color: white;
+      border: 3px solid white;
+    }
+  }
+
+  & .circle {
+    font-weight: bold;
+    display: inline-block;
+    background-color: white;
+    color: var(--themeColor);
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    line-height: 2em;
+    text-align: center;
+  }
+
+  & .user-initials {
+    text-transform: uppercase;
+  }
+
   & .drop-boxes {
-    height: 90%;
+    height: 80%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

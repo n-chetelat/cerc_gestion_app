@@ -3,17 +3,21 @@ import createChannel from "cable/cable"
 let callback
 
 const board = createChannel("BoardChannel",  {
-  received({ user }) {
-    if (callback) callback.call(null, user)
+  received(data) {
+    if (callback) callback.call(null, data)
   }
 })
 
-function sendUserInfo() {
-  board.perform("send_user_info")
+function getParticipantInfo() {
+  board.perform("send_participant_info")
+}
+
+function sendMessage(message) {
+  board.perforn("send_status_message", { message })
 }
 
 function setCallback(fn) {
   callback = fn
 }
 
-export { sendUserInfo, setCallback }
+export { sendMessage, getParticipantInfo, setCallback }

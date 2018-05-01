@@ -3,9 +3,9 @@ import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
-import { find } from "lodash-es"
+import { find, filter } from "lodash-es"
 
-import { sendUserInfo, setCallback } from "cable/board"
+import { getParticipantInfo, setCallback } from "cable/board"
 
 
 import Phase from "./boards/phase.vue"
@@ -20,11 +20,19 @@ import BoardSidebar from "./boards/board-sidebar.vue"
         required: true
       }
     },
+    beforeCreate() {
+      setCallback((data) => {
+        if (!this.currentUser) return
+        const loggedIn = filter(data.users, (user) => {
+          return user.email !== this.currentUser.email
+        })
+        this.loggedIn = loggedIn
+      })
+    },
     async created() {
       await this.fetchBoard(this.boardSlug)
       await this.fetchUserInfo()
-
-      this.announcePresence()
+      getParticipantInfo()
     },
     data() {
       return {
@@ -50,16 +58,6 @@ import BoardSidebar from "./boards/board-sidebar.vue"
         }
         this.openModal(modalName)
       },
-      announcePresence() {
-        setCallback((user) => {
-          if (user.email !== this.currentUser.email) return
-          const exists = find(this.loggedIn, (u) => u.email === user.email)
-          if (!exists) {
-            this.loggedIn.push(user)
-          }
-        })
-        sendUserInfo()
-      }
     },
     components: {
       Phase,
@@ -76,7 +74,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       div.phases-wrapper
         div.phases(:style="{width: (nonFinalPhases.length * 320) + 'px'}")
           phase(v-for="phase in nonFinalPhases", :phase="phase", @modal="openModalByName")
-      board-sidebar.sidebar(v-if="currentUser", @modal="openModalByName", :user="currentUser")
+      board-sidebar.sidebar(v-if="currentUser", @modal="openModalByName", :user="currentUser", :logged-in="loggedIn")
 
 
   </template>
