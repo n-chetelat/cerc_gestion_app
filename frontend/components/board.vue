@@ -89,7 +89,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
 
   .boards {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-evenly;
     position: fixed;
     top: 0;
     left: 0;
