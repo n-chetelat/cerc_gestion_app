@@ -56,7 +56,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
           this.person = data.person
           this.tab = data.tab
         }
-        this.openModal(modalName)
+        this.openModal(modalName)                             
       },
     },
     components: {

@@ -30,7 +30,8 @@ export default {
 
 <template lang="pug">
   div.logged-in-users
-    p.logged-in-label Now logged in:
+    p.logged-in-label Who else is logged in:
+      span(v-if="!loggedInUsers.length") &nbsp; nobody
     div.logged-in-circles
       span.circle.user_initials(v-for="loggedUser in loggedInUsers", v-tooltip="userTooltip(loggedUser)") {{userInitials(loggedUser)}}
     div.logged-in-actions
@@ -38,7 +39,7 @@ export default {
         p.logged-in-message(v-for="message in loggedInMessages") {{message.content}}
           span.date {{formattedDateTime(message.timestamp)}}
       div.no-actions(v-else)
-        p There is no recent activity.
+        p There is no recent activity from other administrators.
 
 </template>
 
@@ -78,6 +79,7 @@ export default {
   & .logged-in-actions {
     width: 100%;
     min-height: 50%;
+    max-height: 50%;
     margin: 1em auto;
     border-radius: 3px;
     padding: 5px;
@@ -97,12 +99,15 @@ export default {
     margin: 0;
     margin-bottom: 4px;
     padding: 3px;
-    border-left: 2px solid gray;
+    border-left: 5px solid gray;
     & .date {
       margin-left: 4px;
       color: gray(65%);
       font-size: .9em;
     }
+  }
+  & .logged-in-message:first-of-type {
+    border-left: 5px solid #34e0a0;
   }
 }
 
