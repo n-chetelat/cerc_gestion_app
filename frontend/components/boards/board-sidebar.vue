@@ -17,7 +17,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("users", ["loggedInUsers"]),
     ...mapGetters("boards", ["finalPhases"]),
     userInitials() {
       return this.user.name[0] + this.user.lastname[0]
@@ -43,7 +42,7 @@ export default {
     div.heading
       span.circle.user-initials(v-tooltip="userTooltip") {{userInitials}}
       a.circle.admin-link(href="/admin", v-tooltip="'To admin dashboard'", target="_blank") ""
-    logged-in-users.logged-in(v-if="loggedInUsers.length")
+    logged-in-users.logged-in
 
     div.drop-boxes
       drop-box.box(v-for="phase in finalPhases", :phase="phase", @modal="openModal")

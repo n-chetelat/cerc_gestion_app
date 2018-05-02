@@ -34,12 +34,11 @@ export default {
     div.logged-in-circles
       span.circle.user_initials(v-for="loggedUser in loggedInUsers", v-tooltip="userTooltip(loggedUser)") {{userInitials(loggedUser)}}
     div.logged-in-actions
-      p.logged-in-message(v-for="message in loggedInMessages") {{message.content}}
-        span.date {{formattedDateTime(message.timestamp)}}
-      p.logged-in-message This user has done this thing just now.
-        span.date Jan 43, 2039
-      p.logged-in-message This user has done this thing just now.
-        span.date Jan 43, 2039
+      div(v-if="loggedInMessages.length")
+        p.logged-in-message(v-for="message in loggedInMessages") {{message.content}}
+          span.date {{formattedDateTime(message.timestamp)}}
+      div.no-actions(v-else)
+        p There is no recent activity.
 
 </template>
 
@@ -77,6 +76,7 @@ export default {
     border: 3px solid white;
   }
   & .logged-in-actions {
+    width: 100%;
     min-height: 50%;
     margin: 1em auto;
     border-radius: 3px;
@@ -85,12 +85,15 @@ export default {
     display: flex;
     flex-direction: column;
     overflow: auto;
+    font-family: var(--textFamily);
+    color: var(--textColor);
+  }
+  & .no-actions {
+    text-align: center;
   }
   & .logged-in-message {
     background-color: white;
     font-size: .8em;
-    font-family: var(--textFamily);
-    color: var(--textColor);
     margin: 0;
     margin-bottom: 4px;
     padding: 3px;

@@ -1,6 +1,6 @@
 <script>
 
-import { mapActions } from "vuex"
+import { mapGetters, mapActions } from "vuex"
 
 import CommentsListComponent from "./comment-list-component.vue"
 import KeywordsComponent from "./keywords-component.vue"
@@ -20,6 +20,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters("comments", ["commentsByApplication"]),
   },
   methods: {
     ...mapActions("comments", ["createComment"]),
@@ -30,6 +31,7 @@ export default {
       this.createComment(payload).then(() => {
         this.comments = this.commentsByApplication[this.application.id]
         this.newCommentContent = ""
+        this.$emit("comment")
       })
     },
   },

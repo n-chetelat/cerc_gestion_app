@@ -2,6 +2,8 @@
 
 import { mapGetters, mapActions } from "vuex"
 
+import { sendStatusMessage } from "cable/board"
+
 import { SlideYUpTransition } from 'vue2-transitions'
 import Modal from "../../shared/modal.vue"
 import ApplicationInfoDisplay from "./person-info/application-info-display.vue"
@@ -36,6 +38,7 @@ export default {
   },
   computed: {
     ...mapGetters("positions", ["allPositions", "positionFormsById"]),
+    ...mapGetters("boards", ["phasesById"]),
     isLoaded() {
       return !!(this.person && this.application && this.applicationForm)
     }
@@ -59,6 +62,10 @@ export default {
       await this.getApplication()
       this.editing = false
     },
+    broadcastNewComment() {
+      const params = {applicant: this.person.full_name, phase: this.phasesById[this.person.phase_id].title}
+      sendStatusMessage("comment", params)
+    }
   },
   components: {
     Modal,
@@ -94,7 +101,7 @@ export default {
 
         div.comments(v-show="currentTab === 'comments'")
           slide-y-up-transition
-            comments-component(:application="application")
+            comments-component(:application="application", @comment="broadcastNewComment")
 
         div.correspondence(v-show="currentTab === 'email'")
           slide-y-up-transition

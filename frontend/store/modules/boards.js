@@ -14,6 +14,10 @@ const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BOARD_URL}`,
   phaseEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PHASE_URL}`,
   currentBoard: state => state.current,
+  phasesById: state => {
+    if (!state.current) return {}
+    return keyBy(state.current.phases, "uuid")
+  },
   finalPhases: state => {
     if (state.current) {
       return filter(state.current.phases, (ph) => ph.final)

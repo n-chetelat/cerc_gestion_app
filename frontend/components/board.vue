@@ -5,7 +5,7 @@ import ModalMixin from "mixins/modal-mixin.js"
 import { mapGetters, mapActions } from "vuex"
 import { find, filter } from "lodash-es"
 
-import { sendStatusMessage, getParticipantInfo, setCallback } from "cable/board"
+import { getParticipantInfo, setCallback } from "cable/board"
 
 
 import Phase from "./boards/phase.vue"
@@ -58,9 +58,6 @@ import BoardSidebar from "./boards/board-sidebar.vue"
         }
         this.openModal(modalName)
       },
-      broadcastStatusMessage(type) {
-        sendStatusMessage(type)
-      }
     },
     components: {
       Phase,

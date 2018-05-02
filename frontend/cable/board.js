@@ -12,8 +12,8 @@ function getParticipantInfo() {
   board.perform("send_participant_info")
 }
 
-function sendStatusMessage(type) {
-  board.perforn("send_status_message", { type })
+function sendStatusMessage(type, params) {
+  board.perform("send_status_message", { type, params })
 }
 
 function setCallback(fn) {
