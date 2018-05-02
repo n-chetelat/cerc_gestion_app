@@ -36,10 +36,10 @@ class BoardChannel < ApplicationCable::Channel
       logged_in: "%user% has logged in.",
       logged_out: "%user% has logged out.",
       comment: "%user% has left a comment about %applicant% in column '%phase%'",
-      keyword: "%user% has added a keyword for %applicant% in column '%phase%'",
-      email: "%user% has left sent an email to %applicant% in column '%phase%'",
+      composing: "%user% has started composing an email for %applicant% in column '%phase%'",
+      email: "%user% has sent an email to %applicant% in column '%phase%'",
       phase_change: "%user% has moved %applicant% to column '%phase%'",
-      application_change: "%user% has made a change to the information on an application: %applicant% in column '%phase%'"
+      application_change: "%user% has made a change to an application: %applicant% in column '%phase%'"
     }
 
     def format_message(data)

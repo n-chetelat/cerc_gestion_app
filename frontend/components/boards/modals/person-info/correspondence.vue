@@ -88,6 +88,10 @@ export default {
     scrapMessage() {
       this.composing = false
     },
+    onSuccess() {
+      this.$emit("email")
+      this.showFlash("success")
+    },
     async showFlash(status) {
       if (status === "success") {
         await this.loadPersonCorrespondence()
@@ -95,11 +99,14 @@ export default {
       this.composing = false
       this.flashMessage = status
       const wrapper = this.$el.querySelector(".correspondence-wrapper")
-      wrapper.scrollTo({top: -10000, behavior: "smooth"})
+      wrapper.scrollBy({top: -10000, behavior: "smooth"})
       setTimeout(() => {
         this.flashMessage = null
       }, 5000)
     },
+    onComposing() {
+      this.$emit("composing")
+    }
   },
   components: {
     Modal,
@@ -142,13 +149,13 @@ export default {
             h2 Messages from thread "{{getThreadSubject(openThread)}}"
             button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
           collapse-transition
-            compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
+            compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="onSuccess", @error="showFlash('error')", @composing="onComposing")
           message-list(:thread="openThread")
 
         div.correspondence-wrapper.new-thread(v-if="newThread && newMessageIsLoaded", :key="'threadNew'")
           flash-messages(:flash-message="flashMessage", @close="flashMessage = null")
           button.icon.back-btn(@click="goToThreadList") Back
-          compose-email(:thread="newMessageThread", :message="newMessageTemplate", @scrap="scrapMessage", @success="showFlash('success')", @error="showFlash('error')")
+          compose-email(:thread="newMessageThread", :message="newMessageTemplate", @scrap="scrapMessage", @success="onSuccess", @error="showFlash('error')", @composing="onComposing")
 
 
 

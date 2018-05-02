@@ -3,6 +3,8 @@ import { mapGetters, mapActions } from "vuex"
 
 import { find } from "lodash-es"
 
+import { sendStatusMessage } from "cable/board"
+
 import PersonCard from "./person-card.vue"
 
 export default {
@@ -44,15 +46,21 @@ export default {
       if (oldPhaseId === this.phase.uuid) return false
       const payload = {phaseId: this.phase.uuid, personId, oldPhaseId}
       this.changePersonPhase(payload).then(() => {
+        this.broadcastPhaseChange(personId)
         if (this.phase.has_callback) {
           this.showEmailModal(personId)
         }
       })
     },
-    showEmailModal(personId) {
+    showEmailModal(personId) { //pass personId instead of person to avoid stale data
       const person = find(this.phase.persons, (p) => p.uuid === personId)
       this.openModal("person-info", { person, tab: "email"})
-    }
+    },
+    broadcastPhaseChange(personId) {
+      const person = find(this.phase.persons, (p) => p.uuid === personId)
+      const params = {applicant: person.full_name, phase: this.phase.title}
+      sendStatusMessage("phase_change", params)
+    },
   },
   components: {
     PersonCard

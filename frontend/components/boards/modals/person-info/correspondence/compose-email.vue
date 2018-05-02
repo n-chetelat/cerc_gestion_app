@@ -19,6 +19,9 @@ export default {
   created() {
     this.messageRecipients = this.thread.participants.slice(0)
   },
+  mounted() {
+    this.$emit("composing")
+  },
   data() {
     return {
       isLoading: false,

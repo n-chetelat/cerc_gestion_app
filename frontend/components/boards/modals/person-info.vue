@@ -59,12 +59,13 @@ export default {
       }
     },
     async onUpdateApplication(data) {
+      this.broadcastToLoggedInUsers("application_change")
       await this.getApplication()
       this.editing = false
     },
-    broadcastNewComment() {
+    broadcastToLoggedInUsers(type) {
       const params = {applicant: this.person.full_name, phase: this.phasesById[this.person.phase_id].title}
-      sendStatusMessage("comment", params)
+      sendStatusMessage(type, params)
     }
   },
   components: {
@@ -101,11 +102,11 @@ export default {
 
         div.comments(v-show="currentTab === 'comments'")
           slide-y-up-transition
-            comments-component(:application="application", @comment="broadcastNewComment")
+            comments-component(:application="application", @comment="broadcastToLoggedInUsers('comment')")
 
         div.correspondence(v-show="currentTab === 'email'")
           slide-y-up-transition
-            correspondence(:person="person", :section="emailSection")
+            correspondence(:person="person", :section="emailSection", @email="broadcastToLoggedInUsers('email')", @composing="broadcastToLoggedInUsers('composing')")
 
 </template>
 
