@@ -5,7 +5,7 @@ import ModalMixin from "mixins/modal-mixin.js"
 import { mapGetters, mapActions } from "vuex"
 import { find, filter } from "lodash-es"
 
-import { getParticipantInfo, setCallback } from "cable/board"
+import { sendStatusMessage, getParticipantInfo, setCallback } from "cable/board"
 
 
 import Phase from "./boards/phase.vue"
@@ -23,10 +23,11 @@ import BoardSidebar from "./boards/board-sidebar.vue"
     beforeCreate() {
       setCallback((data) => {
         if (!this.currentUser) return
-        const loggedIn = filter(data.users, (user) => {
-          return user.email !== this.currentUser.email
-        })
-        this.loggedIn = loggedIn
+        if (data.users) {
+          this.setLoggedInUsers(data.users)
+        } else if (data.message) {
+          this.addStatusMessage(data.message)
+        }
       })
     },
     async created() {
@@ -38,7 +39,6 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       return {
         person: null,
         tab: null,
-        loggedIn: []
       }
     },
     computed: {
@@ -49,7 +49,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       },
     },
     methods: {
-      ...mapActions("users", ["fetchUserInfo"]),
+      ...mapActions("users", ["fetchUserInfo", "addStatusMessage", "setLoggedInUsers"]),
       ...mapActions("boards", ["fetchBoard"]),
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
@@ -58,6 +58,9 @@ import BoardSidebar from "./boards/board-sidebar.vue"
         }
         this.openModal(modalName)
       },
+      broadcastStatusMessage(type) {
+        sendStatusMessage(type)
+      }
     },
     components: {
       Phase,
@@ -74,7 +77,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       div.phases-wrapper
         div.phases(:style="{width: (nonFinalPhases.length * 320) + 'px'}")
           phase(v-for="phase in nonFinalPhases", :phase="phase", @modal="openModalByName")
-      board-sidebar.sidebar(v-if="currentUser", @modal="openModalByName", :user="currentUser", :logged-in="loggedIn")
+      board-sidebar.sidebar(v-if="currentUser", @modal="openModalByName", :user="currentUser")
 
 
   </template>
@@ -112,7 +115,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
   }
 
   .sidebar {
-    width: 250px;
+    width: 350px;
   }
 
   </style>

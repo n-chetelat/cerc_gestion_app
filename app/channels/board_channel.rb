@@ -1,6 +1,7 @@
 class BoardChannel < ApplicationCable::Channel
   def subscribed
     stream_from "board"
+    send_status_message({"type" => "logged_in"})
     send_participant_info
   end
 
@@ -21,10 +22,18 @@ class BoardChannel < ApplicationCable::Channel
       { users: participants.map {|user| user.slice(:name, :lastname, :email) } }
   end
 
-  # def send_status_message(data)
-  #   ActionCable.server.broadcast "board",
-  #     { message: data.message }
-  # end
+  def send_status_message(data)
+    message_content = MESSAGE_TYPES[data["type"].to_sym].gsub("%user%", current_admin_user.full_name)
+    ActionCable.server.broadcast "board",
+      { message: {author: current_admin_user.slice(:email),
+        content: message_content, timestamp: DateTime.now} }
+  end
+
+  private
+
+    MESSAGE_TYPES = {
+      logged_in: "%user% just logged in."
+    }
 
 
 end

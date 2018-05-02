@@ -12,12 +12,12 @@ function getParticipantInfo() {
   board.perform("send_participant_info")
 }
 
-function sendMessage(message) {
-  board.perforn("send_status_message", { message })
+function sendStatusMessage(type) {
+  board.perforn("send_status_message", { type })
 }
 
 function setCallback(fn) {
   callback = fn
 }
 
-export { sendMessage, getParticipantInfo, setCallback }
+export { sendStatusMessage, getParticipantInfo, setCallback }

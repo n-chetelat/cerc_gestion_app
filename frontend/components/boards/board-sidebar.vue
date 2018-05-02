@@ -3,6 +3,7 @@
 import { mapGetters } from "vuex"
 
 import DropBox from "./board-sidebar/drop-box.vue"
+import LoggedInUsers from "./board-sidebar/logged-in-users.vue"
 
 export default {
   name: "BoardSidebar",
@@ -10,30 +11,29 @@ export default {
     user: {
       required: true
     },
-    loggedIn: {
-      default: () => { return [] }
-    }
   },
   data() {
     return {
     }
   },
   computed: {
+    ...mapGetters("users", ["loggedInUsers"]),
     ...mapGetters("boards", ["finalPhases"]),
+    userInitials() {
+      return this.user.name[0] + this.user.lastname[0]
+    },
+    userTooltip() {
+      return `${this.user.name} ${this.user.lastname} (${this.user.email})`
+    }
   },
   methods: {
     openModal(modalName, data) {
       this.$emit('modal', modalName, data)
     },
-    userInitials(user) {
-      return user.name[0] + user.lastname[0]
-    },
-    userTooltip(user) {
-      return `${user.name} ${user.lastname} (${user.email})`
-    }
   },
   components: {
-    DropBox
+    DropBox,
+    LoggedInUsers
   }
 }
 </script>
@@ -41,18 +41,16 @@ export default {
 <template lang="pug">
   div.board-sidebar
     div.heading
-      span.circle.user-initials(v-tooltip="userTooltip(user)") {{userInitials(user)}}
+      span.circle.user-initials(v-tooltip="userTooltip") {{userInitials}}
       a.circle.admin-link(href="/admin", v-tooltip="'To admin dashboard'", target="_blank") ""
-    div.logged-in(v-if="loggedIn.length")
-      p.logged-in-label Now logged in:
-      div
-        span.circle.user_initials(v-for="loggedUser in loggedIn", v-tooltip="userTooltip(loggedUser)") {{userInitials(loggedUser)}}
+    logged-in-users.logged-in(v-if="loggedInUsers.length")
+
     div.drop-boxes
       drop-box.box(v-for="phase in finalPhases", :phase="phase", @modal="openModal")
 
 </template>
 
-<style scoped>
+<style>
 
 :root {
   --themeColor: #00a668;
@@ -63,6 +61,7 @@ export default {
   display: flex;
   overflow-y: auto;
   flex-direction: column;
+  justify-content: space-between;
   box-shadow: -2px 0px 6px;
   z-index: 4;
   & .heading {
@@ -82,27 +81,8 @@ export default {
       }
     }
   }
-
   & .logged-in {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 0 5px;
-    & .logged-in-label {
-      width: 100%;
-      color: white;
-      font-size: .8em;
-      margin-right: 3px;
-    }
-    & .circle {
-      margin: auto 3px;
-      width: 40px;
-      height: 40px;
-      padding: 3px;
-      background-color: #3e94e2;
-      color: white;
-      border: 3px solid white;
-    }
+    height: 40%;
   }
 
   & .circle {
@@ -123,16 +103,16 @@ export default {
   }
 
   & .drop-boxes {
-    height: 80%;
+    height: 50%;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
   }
   & .box {
     width: 90%;
     margin: auto;
-    height: 20%;
-    max-height: 100px;
+    min-height: 100px;
+    margin-bottom: 1em;
   }
 }
 
