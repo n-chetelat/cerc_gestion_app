@@ -31,7 +31,7 @@ module Api
 
         def broadcast_changes
           slugs = @old_phase.boards.pluck(:slug) + @phase.boards.pluck(:slug)
-          BoardChannel.send_phases_update(slugs)
+          BoardChannelService.send_phases_update(slugs)
         end
 
     end

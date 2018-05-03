@@ -51,7 +51,7 @@ module Api
         def broadcast_changes
           person_ids = @resource.persons.pluck(:uuid)
           person_ids.each do |person|
-            BoardChannel.send_emails_update(person)
+            BoardChannelService.send_emails_update(person)
           end
         end
 

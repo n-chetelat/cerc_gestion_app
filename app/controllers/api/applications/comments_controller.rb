@@ -60,7 +60,7 @@ module Api
         end
 
         def broadcast_changes
-          BoardChannel.send_comments_update(@application)
+          BoardChannelService.send_comments_update(@application)
         end
 
     end

@@ -49,7 +49,7 @@ ActiveAdmin.register Phase do
     private
 
       def broadcast_changes
-        BoardChannel.send_phases_update(resource.boards.pluck(:slug))
+        BoardChannelService.send_phases_update(resource.boards.pluck(:slug))
       end
 
   end

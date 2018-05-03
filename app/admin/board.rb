@@ -14,7 +14,7 @@ ActiveAdmin.register Board do
     private
 
       def broadcast_changes
-        BoardChannel.send_phases_update([resource.slug])
+        BoardChannelService.send_phases_update([resource.slug])
       end
 
   end
