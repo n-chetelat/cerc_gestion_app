@@ -8,6 +8,17 @@ ActiveAdmin.register Board do
 
   config.filters = false
 
+  controller do
+    after_action :broadcast_changes, only: [:create, :update, :destroy]
+
+    private
+
+      def broadcast_changes
+        BoardChannel.send_phases_update([resource.slug])
+      end
+
+  end
+
   index do
     selectable_column
     column :title

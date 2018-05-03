@@ -6,8 +6,8 @@ module ApplicationHelper
     end
   end
 
-  def current_admin_user
-    
+  def render_template(path, locals = {})
+    render(path, locals)
   end
 
 end

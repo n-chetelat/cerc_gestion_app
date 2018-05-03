@@ -6,6 +6,7 @@ ActiveAdmin.register Phase do
   config.filters = false
 
   controller do
+    after_action :broadcast_changes, only: [:create, :update, :destroy]
 
     def create
       resource = resource_class.create!(permitted_params[:phase])
@@ -44,6 +45,12 @@ ActiveAdmin.register Phase do
       label_id = resource.email_label.google_label_id
       PhaseService.update_email_labels(resource, [label_id], [], request)
     end
+
+    private
+
+      def broadcast_changes
+        BoardChannel.send_phases_update(resource.boards.pluck(:slug))
+      end
 
   end
 

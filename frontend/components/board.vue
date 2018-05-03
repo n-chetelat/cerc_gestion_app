@@ -3,7 +3,7 @@ import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
-import { find, filter } from "lodash-es"
+import { find, filter, includes } from "lodash-es"
 
 import { getParticipantInfo, setCallback } from "cable/board"
 
@@ -27,6 +27,9 @@ import BoardSidebar from "./boards/board-sidebar.vue"
           this.setLoggedInUsers(data.users)
         } else if (data.message) {
           this.addStatusMessage(data.message)
+        } else if (data.refresh_phases) {
+          if (!includes(data.refresh_phases.board_ids, this.boardSlug)) return
+          this.fetchBoard(this.boardSlug)
         }
       })
     },
@@ -50,13 +53,14 @@ import BoardSidebar from "./boards/board-sidebar.vue"
     },
     methods: {
       ...mapActions("users", ["fetchUserInfo", "addStatusMessage", "setLoggedInUsers"]),
-      ...mapActions("boards", ["fetchBoard"]),
+      ...mapActions("boards", ["fetchBoard", "addNewPhase"]),
+      ...mapActions("comments", ["fetchApplicationComments"]),
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
           this.person = data.person
           this.tab = data.tab
         }
-        this.openModal(modalName)                             
+        this.openModal(modalName)
       },
     },
     components: {

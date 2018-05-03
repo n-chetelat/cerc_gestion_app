@@ -1,4 +1,5 @@
 <script>
+import { setCommentsCallback } from "cable/board"
 
 import { mapGetters, mapActions } from "vuex"
 import { focus } from "vue-focus"
@@ -17,6 +18,13 @@ export default {
       required: true
     },
   },
+  beforeCreate() {
+    setCommentsCallback((data) => {
+      this.fetchApplicationComments(this.application.id).then(() => {
+        this.comments = this.commentsByApplication[this.application.id]
+      })
+    })
+  },
   async created() {
     if (!this.commentsByApplication[this.application.id]) {
       await this.fetchApplicationComments(this.application.id)
@@ -31,6 +39,9 @@ export default {
   },
   computed: {
     ...mapGetters("comments", ["commentsByApplication"]),
+    hasComments() {
+      return this.comments && this.comments.length
+    },
   },
   methods: {
     ...mapActions("comments", ["fetchApplicationComments", "updateComment"]),
@@ -64,7 +75,7 @@ export default {
 <template lang="pug">
   div.comment-list-component
     h2 Comments
-    ul.comment-list(v-if="comments.length")
+    ul.comment-list(v-if="hasComments")
       li.comment-line(v-for="comment in comments")
         div.comment-header
           span.comment-timestamp By &nbsp;

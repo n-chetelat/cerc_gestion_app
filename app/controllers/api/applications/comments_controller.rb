@@ -4,9 +4,10 @@ module Api
       before_action :authenticate_admin_user!
       before_action :set_application
       before_action :set_resource, only: [:show, :update, :destroy]
+      after_action :broadcast_changes, only: [:create, :update, :destroy]
 
       def index
-        @resources = @application.comments
+        @resources = @application.comments.order(:created_at)
       end
 
       def show
@@ -56,6 +57,10 @@ module Api
 
         def set_resource
           @resource ||= @application.comments.find(params[:id])
+        end
+
+        def broadcast_changes
+          BoardChannel.send_comments_update(@application)
         end
 
     end

@@ -30,6 +30,25 @@ class BoardChannel < ApplicationCable::Channel
         content: message_content, timestamp: DateTime.now} }
   end
 
+  ### class methods ###
+
+  def self.send_phases_update(slugs)
+    ActionCable.server.broadcast "board", {refresh_phases: {board_ids: slugs}}
+  end
+
+  def self.send_comments_update(application)
+    ActionCable.server.broadcast "board", { refresh_comments: {application_id: application.id} }
+  end
+
+  def send_emails_update
+  end
+
+  def send_applications_update
+  end
+
+  def send_phase_change_update
+  end
+
   private
 
     MESSAGE_TYPES = {
@@ -43,10 +62,11 @@ class BoardChannel < ApplicationCable::Channel
     }
 
     def format_message(data)
+      data.stringify_keys!
       message_str = MESSAGE_TYPES[data["type"].to_sym]
       return if message_str.blank?
       {
-        "user" => current_admin_user.full_name,
+        "user" => data["params"].try(:[], "user") || current_admin_user.full_name,
         "applicant" => data["params"].try(:[], "applicant"),
         "phase" => data["params"].try(:[], "phase")
       }.compact.each do |attr, source|
