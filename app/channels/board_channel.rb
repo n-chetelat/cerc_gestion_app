@@ -44,6 +44,12 @@ class BoardChannel < ApplicationCable::Channel
     ActionCable.server.broadcast "board", { refresh_emails: {person_id: person_id} }
   end
 
+  def self.send_new_application_message
+    ActionCable.server.broadcast "board",
+      { message: {author: "new_application",
+        content: MESSAGE_TYPES[:new_application], timestamp: DateTime.now} }
+  end
+
 
   private
 
@@ -54,7 +60,8 @@ class BoardChannel < ApplicationCable::Channel
       composing: "%user% has started composing an email for %applicant% in column '%phase%'",
       email: "%user% has sent an email to %applicant% in column '%phase%'",
       phase_change: "%user% has moved %applicant% to column '%phase%'",
-      application_change: "%user% has made a change to an application: %applicant% in column '%phase%'"
+      application_change: "%user% has made a change to an application: %applicant% in column '%phase%'",
+      new_application: "A new application has been arrived."
     }
 
     def format_message(data)

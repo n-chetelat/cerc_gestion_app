@@ -20,6 +20,7 @@ module Api
         PhaseService.apply_automatic_callbacks_for(@resource.person, Phase.current_initial, request)
         PhaseService.update_email_labels_for(@resource.person, email_labels[:add_label_ids],
           email_labels[:remove_label_ids], request)
+        BoardChannel.send_new_application_message
       else
         render json: {
           error: "There was an error when creating the application", status: 500
