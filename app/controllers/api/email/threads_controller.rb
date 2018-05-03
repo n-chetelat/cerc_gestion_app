@@ -4,10 +4,11 @@ module Api
       before_action :authenticate_admin_user!
       before_action :authorize_gmail
       before_action :set_resource, only: [:update]
+      after_action :broadcast_changes, only: [:create, :update]
 
       def create
         mail = format_message
-        thread = ::EmailService.new(request).send_email_to(mail, {})
+        @resource = ::EmailService.new(request).send_email_to(mail, {})
         head :ok
       end
 
@@ -45,6 +46,13 @@ module Api
           mail.text_part = text_part
           mail.html_part = html_part
           mail
+        end
+
+        def broadcast_changes
+          person_ids = @resource.persons.pluck(:uuid)
+          person_ids.each do |person|
+            BoardChannel.send_emails_update(person)
+          end
         end
 
     end

@@ -1,4 +1,5 @@
 <script>
+import { setEmailsCallback } from "cable/board"
 
 import { mapGetters, mapActions } from "vuex"
 
@@ -35,6 +36,13 @@ export default {
       },
       newMessageTemplate: null,
     }
+  },
+  beforeCreate() {
+    setEmailsCallback((data) => {
+      this.fetchPersonEmail(data.refresh_emails.person_id).then(() => {
+        this.correspondence = this.emailByPerson[this.person.uuid]
+      })
+    })
   },
   async created() {
     await this.loadPersonCorrespondence()
@@ -93,9 +101,6 @@ export default {
       this.showFlash("success")
     },
     async showFlash(status) {
-      if (status === "success") {
-        await this.loadPersonCorrespondence()
-      }
       this.composing = false
       this.flashMessage = status
       const wrapper = this.$el.querySelector(".correspondence-wrapper")

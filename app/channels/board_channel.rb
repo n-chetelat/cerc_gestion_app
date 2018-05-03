@@ -40,7 +40,8 @@ class BoardChannel < ApplicationCable::Channel
     ActionCable.server.broadcast "board", { refresh_comments: {application_id: application.id} }
   end
 
-  def send_emails_update
+  def self.send_emails_update(person_id)
+    ActionCable.server.broadcast "board", { refresh_emails: {person_id: person_id} }
   end
 
   def send_applications_update
