@@ -44,8 +44,6 @@ class BoardChannel < ApplicationCable::Channel
     ActionCable.server.broadcast "board", { refresh_emails: {person_id: person_id} }
   end
 
-  def send_applications_update
-  end
 
   private
 

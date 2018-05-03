@@ -2,6 +2,7 @@ module Api
   class ApplicationsController < ApiController
     before_action :set_resource, only: [:show,:update]
     before_action :authorize_gmail, only: [:create]
+    after_action :broadcast_changes, only: [:create, :update]
 
     def index
       @resources = Application.all
@@ -14,7 +15,7 @@ module Api
     def create
       if @resource = ApplicationService.create_application(params)
         email_labels = PhaseService.prepare_email_label_lists(@resource.person, Phase.current_initial)
-        
+
         PhaseService.place_person_in_phase(@resource.person, Phase.current_initial, request)
         PhaseService.apply_automatic_callbacks_for(@resource.person, Phase.current_initial, request)
         PhaseService.update_email_labels_for(@resource.person, email_labels[:add_label_ids],
@@ -49,6 +50,11 @@ module Api
 
       def set_resource
         @resource = Application.find(params[:id])
+      end
+
+      def broadcast_changes
+        slugs = @resource.person.current_phase.boards.pluck(:slug)
+        BoardChannel.send_phases_update(slugs)
       end
 
   end
