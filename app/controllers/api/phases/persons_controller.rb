@@ -1,8 +1,9 @@
 module Api
   module Phases
     class PersonsController < ApiController
-      before_action :authorize_gmail, only: [:update, :archive]
+      before_action :authorize_gmail, only: [:update]
       before_action :set_resource
+      after_action :broadcast_changes, only: [:update]
 
       attr_reader :partial_path, :resource_name
 
@@ -25,6 +26,12 @@ module Api
         def set_resource
           @phase ||= Phase.find_by(uuid: params[:phase_id])
           @resource ||= Person.find_by(uuid: params[:id])
+          @old_phase ||= @resource.current_phase
+        end
+
+        def broadcast_changes
+          slugs = @old_phase.boards.pluck(:slug) + @phase.boards.pluck(:slug)
+          BoardChannel.send_phases_update(slugs)
         end
 
     end

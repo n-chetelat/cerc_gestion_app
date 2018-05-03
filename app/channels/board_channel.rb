@@ -46,9 +46,6 @@ class BoardChannel < ApplicationCable::Channel
   def send_applications_update
   end
 
-  def send_phase_change_update
-  end
-
   private
 
     MESSAGE_TYPES = {
