@@ -36,8 +36,10 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
           },
           back: {en: "Back to the home page",
             fr: "Retour à l'accueil"
-          }
-        }
+          },
+          copyright: {en: "Copyright © 2016 - All Rights Reserved - Canada Excellence Research Chair in Data Science for Real-Time Decision-Making",
+            fr: "Copyright © 2016 - All Rights Reserved - Canada Excellence Research Chair in Data Science for Real-Time Decision-Making"}
+        },
       }
     },
     async created() {
@@ -110,46 +112,50 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
   </script>
 
   <template lang="pug">
-    div.recruitment-form(v-if="loaded")
-      loading-screen(v-if="loading")
+    div.recruitment-form-container
+      div.recruitment-form(v-if="loaded")
+        loading-screen(v-if="loading")
 
-      recruitment-form-success-modal(v-if="modalVisible && modalName === 'recruitment-form-success'", @close="closeModal")
-      recruitment-form-error-modal(v-if="modalVisible && modalName === 'recruitment-form-error'", @close="closeModal")
+        recruitment-form-success-modal(v-if="modalVisible && modalName === 'recruitment-form-success'", @close="closeModal")
+        recruitment-form-error-modal(v-if="modalVisible && modalName === 'recruitment-form-error'", @close="closeModal")
 
-      nav
-        a.logo-link(href="http://cerc-datascience.polymtl.ca/", target="_blank")
-          img.logo(src="../static/images/DSDMlogo_Full.png")
-        locale-switcher.locale-switcher(@switch="fetchAllData")
+        nav
+          a.logo-link(href="http://cerc-datascience.polymtl.ca/", target="_blank")
+            img.logo(src="../static/images/DSDMlogo_Full.png")
+          locale-switcher.locale-switcher(@switch="fetchAllData")
 
-      div.application-form-container
+        div.application-form-container
 
-        div.application-information
-          div(v-html="recruitmentInfo")
+          div.application-information
+            div(v-html="recruitmentInfo")
 
-        div.application-form
-          form(enctype="multipart/form-data")
+          div.application-form
+            form(enctype="multipart/form-data")
 
-          div(v-if="!applicationSent")
-            div.position-select.mandatory
-              label.label {{translations["position"][currentLocale]}}
-              select(v-model="positionId", @change="generatePositionForm")
-                option(:value="null") --
-                option(v-for="position in allPositions", :value="position.id") {{position.title}}
+            div(v-if="!applicationSent")
+              div.position-select.mandatory
+                label.label {{translations["position"][currentLocale]}}
+                select(v-model="positionId", @change="generatePositionForm")
+                  option(:value="null") --
+                  option(v-for="position in allPositions", :value="position.id") {{position.title}}
 
-            transition(name="ease")
-              div.position-fields(v-if="applicationForm && !loadingApplication")
-                component.form-row(
-                  ref="field", v-for="field in recruitmentFormFields",
-                  :is="field.type", :label="field.label", :options="field.options",
-                  :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
-                  @input="calculateFormIsValid"
-                )
-                div.form-row
-                  button.submit(type="button", @click="submitApplication", :disabled="!formIsValid", :class="{'--disabled': !formIsValid}") {{translations["send"][currentLocale]}}
+              transition(name="ease")
+                div.position-fields(v-if="applicationForm && !loadingApplication")
+                  component.form-row(
+                    ref="field", v-for="field in recruitmentFormFields",
+                    :is="field.type", :label="field.label", :options="field.options",
+                    :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
+                    @input="calculateFormIsValid"
+                  )
+                  div.form-row
+                    button.submit(type="button", @click="submitApplication", :disabled="!formIsValid", :class="{'--disabled': !formIsValid}") {{translations["send"][currentLocale]}}
 
-          div(v-else)
-            p.back-link
-              a(href="http://cerc-datascience.polymtl.ca/") {{translations["back"][currentLocale]}}
+            div(v-else)
+              p.back-link
+                a(href="http://cerc-datascience.polymtl.ca/") {{translations["back"][currentLocale]}}
+
+      footer
+        div.copyright {{translations["copyright"][currentLocale]}}
 
   </template>
 
@@ -158,6 +164,27 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
   :root {
     --navHeight: 8;
   }
+
+.recruitment-form-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  & footer {
+    margin: 0;
+    margin-top: 3em;
+    padding: 15px 0px;
+    background-color: black;
+    color: #828282;
+    width: 100%;
+    & .copyright {
+      font-size: .9em;
+      margin: 0 15px;
+      text-align: center;
+    }
+  }
+}
 
 .recruitment-form {
 
