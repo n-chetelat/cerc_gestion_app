@@ -3,14 +3,14 @@
 import { mapActions } from "vuex"
 import { keyBy } from "lodash-es"
 
-import InputText from '../../../recruitment-form/form-fields/input-text.vue'
-import InputUploadSingle from '../../../recruitment-form/form-fields/input-upload-single.vue'
-import InputUploadMultiple from '../../../recruitment-form/form-fields/input-upload-multiple.vue'
-import InputTextarea from '../../../recruitment-form/form-fields/input-textarea.vue'
-import InputCheckbox from '../../../recruitment-form/form-fields/input-checkbox.vue'
-import InputRadio from '../../../recruitment-form/form-fields/input-radio.vue'
-import InputDate from '../../../recruitment-form/form-fields/input-date.vue'
-import InputSelect from '../../../recruitment-form/form-fields/input-select.vue'
+import InputText from '../../../shared/form-fields/input/input-text.vue'
+import InputUploadSingle from '../../../shared/form-fields/input/input-upload-single.vue'
+import InputUploadMultiple from '../../../shared/form-fields/input/input-upload-multiple.vue'
+import InputTextarea from '../../../shared/form-fields/input/input-textarea.vue'
+import InputCheckbox from '../../../shared/form-fields/input/input-checkbox.vue'
+import InputRadio from '../../../shared/form-fields/input/input-radio.vue'
+import InputDate from '../../../shared/form-fields/input/input-date.vue'
+import InputSelect from '../../../shared/form-fields/input/input-select.vue'
 
 export default {
   name: "ApplicationInfoEdit",

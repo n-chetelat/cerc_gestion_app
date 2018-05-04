@@ -1,5 +1,5 @@
 <script>
-import FormFieldMixin from "../../../mixins/form-field-mixin.js"
+import FormFieldMixin from "../../../../mixins/form-field-mixin.js"
 
 import { find, difference, filter } from "lodash-es"
 

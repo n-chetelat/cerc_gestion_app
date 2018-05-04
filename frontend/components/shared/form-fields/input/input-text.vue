@@ -1,6 +1,6 @@
 <script>
 
-import FormFieldMixin from "../../../mixins/form-field-mixin.js"
+import FormFieldMixin from "../../../../mixins/form-field-mixin.js"
 
 export default {
   name: "InputText",

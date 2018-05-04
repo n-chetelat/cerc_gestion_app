@@ -2,14 +2,14 @@
 
 import { keyBy } from "lodash-es"
 
-import DisplayText from "../../form-fields/display-text.vue"
-import DisplayTextarea from "../../form-fields/display-textarea.vue"
-import DisplayDate from "../../form-fields/display-date.vue"
-import DisplayRadio from "../../form-fields/display-radio.vue"
-import DisplaySelect from "../../form-fields/display-select.vue"
-import DisplayCheckbox from "../../form-fields/display-checkbox.vue"
-import DisplayUploadSingle from "../../form-fields/display-upload-single.vue"
-import DisplayUploadMultiple from "../../form-fields/display-upload-multiple.vue"
+import DisplayText from "../../../shared/form-fields/display/display-text.vue"
+import DisplayTextarea from "../../../shared/form-fields/display/display-textarea.vue"
+import DisplayDate from "../../../shared/form-fields/display/display-date.vue"
+import DisplayRadio from "../../../shared/form-fields/display/display-radio.vue"
+import DisplaySelect from "../../../shared/form-fields/display/display-select.vue"
+import DisplayCheckbox from "../../../shared/form-fields/display/display-checkbox.vue"
+import DisplayUploadSingle from "../../../shared/form-fields/display/display-upload-single.vue"
+import DisplayUploadMultiple from "../../../shared/form-fields/display/display-upload-multiple.vue"
 
 export default {
   name: "ApplicationInfoDisplay",
