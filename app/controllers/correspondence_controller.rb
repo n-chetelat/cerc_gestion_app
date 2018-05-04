@@ -3,11 +3,12 @@ class CorrespondenceController < ApplicationController
   before_action :set_resource, only: [:fetch]
 
   def new
-    if params[:token].present? && params[:token] == Redis.current.get("email-threads")
+    token = Email::Token.find_by(name: "email-threads")
+    if params[:token].present? && params[:token] == token.token
+      token.destroy!
       email_service = ::EmailService.new(request)
       date = params[:date].try(:to_datetime) || DateTime.now
       email_service.fetch_threads_from_date(date)
-      Redis.current.del("email-threads")
       head :ok
     else
       render json: {error: "Unauthorized to take this action"}, status: 401
@@ -15,12 +16,13 @@ class CorrespondenceController < ApplicationController
   end
 
   def fetch
-    if params[:token].present? && params[:token] == Redis.current.get("email-fetch-#{@person.uuid}")
+    token = Email::Token.find_by(name: "email-fetch-#{@person.uuid}")
+    if params[:token].present? && params[:token] == token.token
+      token.destroy!
       email_service = ::EmailService.new(request)
       @person.threads.each do |thread|
         email_service.fetch_thread_message_details(thread)
       end
-      Redis.current.del("email-fetch-#{@person.uuid}")
       head :ok
     else
       render json: {error: "Unauthorized to take this action"}, status: 401

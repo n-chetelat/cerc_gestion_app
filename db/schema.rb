@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180429203205) do
+ActiveRecord::Schema.define(version: 20180503232939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,13 @@ ActiveRecord::Schema.define(version: 20180429203205) do
     t.string "subject"
     t.string "google_create_timestamp"
     t.string "google_update_timestamp"
+  end
+
+  create_table "email_tokens", force: :cascade do |t|
+    t.string "token", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "persons", force: :cascade do |t|

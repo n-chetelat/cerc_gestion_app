@@ -4,7 +4,7 @@ class Email::PersonCorrespondenceWorker
   def perform(person_id)
     # This needs to be an http request because
     # Gmail OAuth requires a request object.
-    token = Redis.current.get("email-fetch-#{person_id}")
+    token = Email::Token.find_by(name: "email-fetch-#{person_id}").try(:token)
     ::HTTParty.get("#{ENV["RAILS_HOST"]}/correspondence/#{person_id}/fetch?token=#{token}")
   end
 end

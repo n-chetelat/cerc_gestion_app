@@ -107,7 +107,7 @@ class EmailService
           overwrite_thread_labels(thread, thread.email_labels)
           # preload correspondence with person
           token = SecureRandom.base58(24)
-          Redis.current.set("email-fetch-#{person.uuid}", token)
+          Email::Token.create!(name: "email-fetch-#{person.uuid}", token: token)
           Email::PersonCorrespondenceWorker.perform_async(person.uuid)
         end
       end
