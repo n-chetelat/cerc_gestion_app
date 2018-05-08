@@ -1,4 +1,7 @@
 class ApplicationService
+  require 'zip'
+
+  ZIP_PATH = "tmp/application_uploads"
 
   def self.create_application(params)
     begin
@@ -48,7 +51,58 @@ class ApplicationService
     position + common_fields + custom_fields
   end
 
+  def self.fields_to_plain_text_for(application)
+    custom_fields = application.fields_for_current_position.map do |key, value|
+      form_field_type, form_field_id = /input_(\w+)_(\d+)/.match(key).captures
+      form_field = Positions::FormField.find_by(id: form_field_id.to_i)
+      next unless form_field
+      self.field_to_plain_text(form_field, value)
+    end.compact
+
+    common_fields = application.position.recruitment_form.common_fields.map do |field|
+      next if field[:id] == "starting_date"
+      {label: field[:label], value: application.person.send(field[:id])}
+    end.compact
+
+    other_fields = [
+      {label: "Position", value: application.position.title},
+      {label: "Starting on", value: application.starting_date_to_s}
+    ]
+
+    other_fields + common_fields + custom_fields
+  end
+
+  def self.email_application_materials(application)
+
+    Dir.mkdir(ZIP_PATH) unless Dir.exists?(ZIP_PATH)
+    path = "#{ZIP_PATH}/#{application.id}.zip"
+    self.zip_application_uploads(application, path)
+
+    ::ApplicationMaterialsMailer.with(
+      application: application,
+      fields: self.fields_to_plain_text_for(application),
+      attachment_path: path
+    ).send_application_materials.deliver_now
+
+    File.delete(path)
+  end
+
+
   private
+
+    def self.zip_application_uploads(application, zipfile_name)
+      return if (attachments = application.attachments).empty?
+
+      zip_file = Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+        attachments.each do |attachment|
+          begin
+            zipfile.add(attachment.file_name, attachment.file.path)
+          rescue Zip::EntryExistsError
+            next
+          end
+        end
+      end
+    end
 
     def self.set_person_attributes(person, params)
       person_attributes = {}
@@ -122,6 +176,38 @@ class ApplicationService
         (value || []).map do |val|
           file = GlobalID::Locator.locate(val["uri"])
           {name: file.file.name, url: file.file.url}
+        end
+      else
+        nil
+      end
+
+      attrs
+    end
+
+    def self.field_to_plain_text(form_field, value)
+      attrs = {label: form_field.label}
+      attrs[:value] = case form_field.form
+      when :text, :textarea, :date
+        value
+      when :date
+        value.to_formatted_s(:long)
+      when :radio, :select
+        form_field.locale_choices[value].try(:[], I18n.locale.to_s)
+      when :checkbox
+        (value || []).map do |val|
+          form_field.locale_choices[val][I18n.locale.to_s]
+        end
+      when :upload_single
+        if value
+          file = GlobalID::Locator.locate(value["uri"])
+          file.file.name
+        else
+          nil
+        end
+      when :upload_multiple
+        (value || []).map do |val|
+          file = GlobalID::Locator.locate(val["uri"])
+          file.file.name
         end
       else
         nil

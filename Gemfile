@@ -34,6 +34,7 @@ gem 'redis', '~> 4.0'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'sidekiq'
 gem 'httparty'
+gem 'rubyzip', '>= 1.0.0'
 
 # Attachments
 gem 'dragonfly', '~> 1.1.4'

@@ -305,6 +305,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
       & .logo {
         height: calc(var(--navHeight) + 2)em;
         margin: -2.5em;
+        margin-left: -3.5em;
       }
     }
     & .locale-switcher {

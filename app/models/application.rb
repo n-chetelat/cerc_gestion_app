@@ -15,6 +15,19 @@ class Application < ApplicationRecord
 
   validates :starting_date, presence: true
 
+  def attachments
+    @attachments ||= begin
+
+      uploads = self.fields.select {|k, v| /input_upload/.match(k) }
+      uploads.values.flatten.map do |upload|
+        if uri = upload["uri"]
+          GlobalID::Locator.locate(uri)
+        end
+      end.compact
+
+    end
+  end
+
   def starting_date_to_s
     case self.time_interval
     when :semester

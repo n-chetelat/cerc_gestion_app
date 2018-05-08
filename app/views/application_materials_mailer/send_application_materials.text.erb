@@ -1,0 +1,17 @@
+
+Dear Administrator,
+
+
+  The following application was received on <%= @application.created_at.to_formatted_s(:long) %>.
+
+Last updated: <%= @application.updated_at.to_formatted_s(:long) %>
+  <% @fields.each do |field| %>
+    <%= field[:label] %>:
+    <% if field[:value].is_a?(Array) %>
+      <%= field[:value].join(", ") %>
+    <% else %>
+      <%= field[:value] %>
+    <% end %>
+  <% end %>
+
+Uploaded files are attached in a compressed format.
