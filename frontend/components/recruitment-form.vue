@@ -220,6 +220,8 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
     height: var(--navHeight)em;
     background-color: black;
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
     & .logo-link {
       display: inline-block;
     }
@@ -276,6 +278,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
 }
 
 @media screen and (max-width: 400px) {
+
   .recruitment-form .application-form  {
     & .position-select, & .position-fields {
       & .form-row {
@@ -290,6 +293,23 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
         & input, & textarea, & select, & button.submit, & .input, & .file-list {
           width: 100%;
         }
+      }
+    }
+  }
+  .recruitment-form nav {
+    display: flex;
+    align-items: center;
+    & .logo-link {
+      text-align: center;
+      & .logo {
+        height: calc(var(--navHeight) + 2)em;
+        margin: -2.5em;
+      }
+    }
+    & .locale-switcher {
+      margin: 0;
+      & button {
+        padding: .9em;
       }
     }
   }
