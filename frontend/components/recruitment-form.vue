@@ -1,6 +1,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex"
-import { omitBy } from "lodash-es"
+import { omitBy, map } from "lodash-es"
 
 import SceneMixin from 'mixins/scene-mixin.js'
 import ModalMixin from 'mixins/modal-mixin.js'
@@ -18,6 +18,7 @@ import InputSelect from './shared/form-fields/input/input-select.vue'
 
 import RecruitmentFormSuccessModal from './recruitment-form/modals/recruitment-form-success.vue'
 import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-form-error.vue'
+import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission.vue'
 
   export default {
     name: "RecruitmentForm",
@@ -29,6 +30,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
         applicationForm: null,
         applicationSent: false,
         formIsValid: false,
+        recruitmentFormInput: null,
         translations: {
           send: {en: "Send", fr: "Envoyer"},
           position: {en: "Select the type of application you wish to send",
@@ -80,6 +82,20 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
           this.loadingApplication = false
         }
       },
+
+      showConfirmationModal() {
+        if (!this.formIsValid || this.loading) return
+        const positions = map(this.allPositions, (p) => ({id: p.id, label: p.title }))
+        this.recruitmentFormInput = [
+            {
+              value: this.positionId, inputName: "input_select_position_id",
+              fieldType: "select", label: "Position", fieldId: "position_id",
+              options: {choices: positions}
+            },
+            ...this.$refs.field
+          ]
+        this.openModal("confirm-submission")
+      },
       async submitApplication() {
         if (!this.formIsValid || this.loading) return
         this.loading = true
@@ -106,7 +122,8 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
       InputSelect,
       InputTextarea,
       RecruitmentFormSuccessModal,
-      RecruitmentFormErrorModal
+      RecruitmentFormErrorModal,
+      ConfirmSubmissionModal
     },
   }
   </script>
@@ -118,6 +135,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
 
         recruitment-form-success-modal(v-if="modalVisible && modalName === 'recruitment-form-success'", @close="closeModal")
         recruitment-form-error-modal(v-if="modalVisible && modalName === 'recruitment-form-error'", @close="closeModal")
+        confirm-submission-modal(v-if="modalVisible && modalName === 'confirm-submission'", @close="closeModal", :recruitment-form-input="recruitmentFormInput", @sumbit="submitApplication")
 
         nav
           a.logo-link(href="http://cerc-datascience.polymtl.ca/", target="_blank")
@@ -148,7 +166,7 @@ import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-for
                     @input="calculateFormIsValid"
                   )
                   div.form-row
-                    button.submit(type="button", @click="submitApplication", :disabled="!formIsValid", :class="{'--disabled': !formIsValid}") {{translations["send"][currentLocale]}}
+                    button.submit(type="button", @click="showConfirmationModal", :disabled="!formIsValid", :class="{'--disabled': !formIsValid}") {{translations["send"][currentLocale]}}
 
             div(v-else)
               p.back-link

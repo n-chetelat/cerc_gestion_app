@@ -29,6 +29,7 @@ export default {
 <template lang="pug">
   div.input-upload-single
     label.label {{label}}
+      span (pdf)
     input(type="file", accept=".pdf", @change="onChange($event.target.files)")
     p.file-list(v-if="value")
       span.file-line
@@ -37,5 +38,12 @@ export default {
 </template>
 
 <style>
+
+.input-upload-single {
+  & label span {
+    font-size: .8em;
+    margin-left: 3px;
+  }
+}
 
 </style>

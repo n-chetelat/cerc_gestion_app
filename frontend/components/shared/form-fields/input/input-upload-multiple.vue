@@ -49,6 +49,7 @@ export default {
 <template lang="pug">
   div.input-upload-multiple
     label.label {{label}}
+      span (pdf)
     input(type="file", accept=".pdf", multiple, @change="onChange($event.target.files)")
     ul.file-list
       li.file-line(v-for="file in value")
@@ -58,5 +59,11 @@ export default {
 
 <style>
 
+  .input-upload-multiple {
+    & label span {
+      font-size: .8em;
+      margin-left: 3px;
+    }
+  }
 
 </style>
