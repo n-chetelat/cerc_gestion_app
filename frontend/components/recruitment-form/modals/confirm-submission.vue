@@ -52,7 +52,7 @@ export default {
       this.$emit("close")
     },
     submitApplication() {
-      this.$emit("submit")
+      this.$emit("confirm")
     },
   },
   components: {

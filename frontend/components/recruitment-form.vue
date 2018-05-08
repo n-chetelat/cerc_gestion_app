@@ -98,6 +98,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
       },
       async submitApplication() {
         if (!this.formIsValid || this.loading) return
+        this.closeModal()
         this.loading = true
         try {
           await this.sendApplication([...this.$refs.field,
@@ -135,7 +136,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
 
         recruitment-form-success-modal(v-if="modalVisible && modalName === 'recruitment-form-success'", @close="closeModal")
         recruitment-form-error-modal(v-if="modalVisible && modalName === 'recruitment-form-error'", @close="closeModal")
-        confirm-submission-modal(v-if="modalVisible && modalName === 'confirm-submission'", @close="closeModal", :recruitment-form-input="recruitmentFormInput", @sumbit="submitApplication")
+        confirm-submission-modal(v-if="modalVisible && modalName === 'confirm-submission'", @close="closeModal", :recruitment-form-input="recruitmentFormInput", @confirm="submitApplication")
 
         nav
           a.logo-link(href="http://cerc-datascience.polymtl.ca/", target="_blank")
