@@ -152,10 +152,11 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
 
             div(v-if="!applicationSent")
               div.position-select.mandatory
-                label.label {{translations["position"][currentLocale]}}
-                select(v-model="positionId", @change="generatePositionForm")
-                  option(:value="null") --
-                  option(v-for="position in allPositions", :value="position.id") {{position.title}}
+                div.form-row
+                  label.label {{translations["position"][currentLocale]}}
+                  select(v-model="positionId", @change="generatePositionForm")
+                    option(:value="null") --
+                    option(v-for="position in allPositions", :value="position.id") {{position.title}}
 
               transition(name="ease")
                 div.position-fields(v-if="applicationForm && !loadingApplication")
@@ -272,6 +273,26 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
 
 .back-link {
   text-align: center;
+}
+
+@media screen and (max-width: 400px) {
+  .recruitment-form .application-form  {
+    & .position-select, & .position-fields {
+      & .form-row {
+        display: flex;
+        flex-direction: column;
+        margin: 2em auto;
+        & label {
+          width: 100%;
+          text-align: left;
+          margin: auto;
+        }
+        & input, & textarea, & select, & button.submit, & .input, & .file-list {
+          width: 100%;
+        }
+      }
+    }
+  }
 }
 
   </style>

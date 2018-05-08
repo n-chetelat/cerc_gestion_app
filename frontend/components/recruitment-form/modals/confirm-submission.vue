@@ -154,4 +154,19 @@ export default {
 
   }
 
+  @media screen and (max-width: 400px) {
+      .confirm-submission .field-row {
+        flex-direction: column;
+        & label {
+          width: 100%;
+          padding: 0;
+          text-align: left;
+        }
+        &.display-textarea span {
+          width: 100%;
+          overflow: auto;
+        }
+      }
+  }
+
 </style>
