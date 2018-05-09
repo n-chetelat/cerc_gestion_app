@@ -19,7 +19,7 @@ class Application < ApplicationRecord
     @attachments ||= begin
 
       uploads = self.fields.select {|k, v| /input_upload/.match(k) }
-      uploads.values.flatten.map do |upload|
+      uploads.values.flatten.compact.map do |upload|
         if uri = upload["uri"]
           GlobalID::Locator.locate(uri)
         end

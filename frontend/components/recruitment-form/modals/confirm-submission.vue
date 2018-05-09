@@ -145,6 +145,7 @@ export default {
 
       &.display-textarea span {
         width: 60%;
+        white-space: pre-wrap;
       }
     }
 

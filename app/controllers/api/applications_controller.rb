@@ -21,6 +21,7 @@ module Api
         PhaseService.update_email_labels_for(@resource.person, email_labels[:add_label_ids],
           email_labels[:remove_label_ids], request)
         BoardChannelService.send_new_application_message
+        ApplicationService.email_application_materials(@resource)
       else
         render json: {
           error: "There was an error when creating the application", status: 500
