@@ -72,19 +72,40 @@ class ApplicationService
     other_fields + common_fields + custom_fields
   end
 
-  def self.email_application_materials(application)
+  def self.email_application_materials(application, request)
+
+    mail = Mail.new do
+      subject "Application materials for #{application.person.full_name}"
+      to ENV["GMAIL_ADDRESS"]
+      from ENV["GMAIL_ADDRESS"]
+    end
+    fields = self.fields_to_plain_text_for(application)
+    text_part = Mail::Part.new do
+      body ApplicationController.new.helpers.render_template("application_materials_mailer/send_application_materials.text.erb",
+        application: application,
+        fields: fields
+      )
+    end
+    html_part = Mail::Part.new do
+      content_type "text/html; charset=UTF-8"
+      body ApplicationController.new.helpers.render_template("application_materials_mailer/send_application_materials.html.erb",
+        application: application,
+        fields: fields
+      )
+    end
+
+    mail.text_part = text_part
+    mail.html_part = html_part
 
     if application.attachments.any?
       Dir.mkdir(ZIP_PATH) unless Dir.exists?(ZIP_PATH)
       path = "#{ZIP_PATH}/#{application.id}.zip"
       self.zip_application_uploads(application, path)
+
+      mail.add_file(path)
     end
 
-    ::ApplicationMaterialsMailer.with(
-      application: application,
-      fields: self.fields_to_plain_text_for(application),
-      attachment_path: path
-    ).send_application_materials.deliver_now
+    ::EmailService.new(request).send_email_to(mail, {})
 
     File.delete(path) if path
   end

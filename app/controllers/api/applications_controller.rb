@@ -60,7 +60,7 @@ module Api
       end
 
       def email_application_materials
-        ApplicationService.email_application_materials(@resource)
+        ApplicationService.email_application_materials(@resource, request)
       end
 
   end

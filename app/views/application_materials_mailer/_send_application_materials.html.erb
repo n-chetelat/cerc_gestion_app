@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+
+      ul {
+        width: 90%;
+        margin: 50px auto;
+      }
+
+      .field {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px auto;
+      }
+      .label {
+        font-weight: bold;
+        width: 10%;
+      }
+      .value {
+        width: 80%;
+        white-space: pre-wrap;
+      }
+
+    </style>
+  </head>
+  <body>
+    <p>
+      Dear Administrator,
+    </p>
+    <p>
+      The following application was received on <%= application.created_at.to_formatted_s(:long) %>.
+    </p>
+    <ul>
+      <li class="field">
+        <span class="label">Last updated:</span>
+        <span class="value"><%= application.updated_at.to_formatted_s(:long) %></span>
+      </li>
+      <% fields.each do |field| %>
+        <li class="field">
+          <span class="label"><%= field[:label] %>:</span>
+          <% if field[:value].is_a?(Array) %>
+            <span class="value"><%= field[:value].join(", ") %></span>
+          <% else %>
+            <span class="value"><%= field[:value] %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <p>
+      Uploaded files are attached in a compressed format.
+    </p>
+  </body>
+</html>
