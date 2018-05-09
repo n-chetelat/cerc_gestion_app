@@ -3,6 +3,7 @@ module Api
     before_action :set_resource, only: [:show,:update]
     before_action :authorize_gmail, only: [:create]
     after_action :broadcast_changes, only: [:create, :update]
+    after_action :email_application_materials, only: [:create]
 
     def index
       @resources = Application.all
@@ -21,7 +22,6 @@ module Api
         PhaseService.update_email_labels_for(@resource.person, email_labels[:add_label_ids],
           email_labels[:remove_label_ids], request)
         BoardChannelService.send_new_application_message
-        ApplicationService.email_application_materials(@resource)
       else
         render json: {
           error: "There was an error when creating the application", status: 500
@@ -57,6 +57,10 @@ module Api
       def broadcast_changes
         slugs = @resource.person.current_phase.boards.pluck(:slug)
         BoardChannelService.send_phases_update(slugs)
+      end
+
+      def email_application_materials
+        ApplicationService.email_application_materials(@resource)
       end
 
   end

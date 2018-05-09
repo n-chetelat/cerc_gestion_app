@@ -74,9 +74,11 @@ class ApplicationService
 
   def self.email_application_materials(application)
 
-    Dir.mkdir(ZIP_PATH) unless Dir.exists?(ZIP_PATH)
-    path = "#{ZIP_PATH}/#{application.id}.zip"
-    self.zip_application_uploads(application, path)
+    if application.attachments.any?
+      Dir.mkdir(ZIP_PATH) unless Dir.exists?(ZIP_PATH)
+      path = "#{ZIP_PATH}/#{application.id}.zip"
+      self.zip_application_uploads(application, path)
+    end
 
     ::ApplicationMaterialsMailer.with(
       application: application,
@@ -84,7 +86,7 @@ class ApplicationService
       attachment_path: path
     ).send_application_materials.deliver_now
 
-    File.delete(path)
+    File.delete(path) if path
   end
 
 
