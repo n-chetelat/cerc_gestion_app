@@ -10,17 +10,17 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:name"
 
-  if Rails.env.development?
-    keyfile_path = Rails.application.secrets.google_cloud[:gc_keyfile]
-  else
+  # if Rails.env.development?
+  #   keyfile_path = Rails.application.secrets.google_cloud[:gc_keyfile]
+  # else
     # create tmp json keyfile with permissions
-    temp_keyfile_path = "tmp/google-cloud-credentials.json"
-    keyfile = File.new(temp_keyfile_path, "w+")
+    keyfile_path = "tmp/google-cloud-credentials.json"
+    keyfile = File.new(keyfile_path, "w+")
     keyfile << {
       "type": "service_account",
       "project_id" => ENV["GC_PROJECT_ID"] || Rails.application.secrets.google_cloud[:gc_project_id],
       "private_key_id" => ENV["GC_PRIVATE_KEY_ID"] || Rails.application.secrets.google_cloud[:gc_private_key_id],
-      "private_key" => ENV["GC_PRIVATE_KEY"] || Rails.application.secrets.google_cloud[:gc_private_key],
+      "private_key" => ENV["GC_PRIVATE_KEY"].try(:gsub, "\\n", "\n") || Rails.application.secrets.google_cloud[:gc_private_key].try(:gsub, "\\n", "\n"),
       "client_email" => ENV["GC_CLIENT_EMAIL"] || Rails.application.secrets.google_cloud[:gc_client_email],
       "client_id" => ENV["GC_CLIENT_ID"] || Rails.application.secrets.google_cloud[:gc_client_id],
       "auth_uri" => "https://accounts.google.com/o/oauth2/auth",
@@ -30,8 +30,7 @@ Dragonfly.app.configure do
     }.to_json
 
     keyfile.rewind
-    keyfile_path = temp_keyfile_path
-  end
+  # end
 
   datastore :google,
     bucket: ENV["GC_BUCKET_NAME"] || Rails.application.secrets.google_cloud[:gc_bucket_name],
