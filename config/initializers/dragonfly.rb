@@ -11,7 +11,9 @@ Dragonfly.app.configure do
   url_format "/media/:job/:name"
 
   temp_keyfile_path = "tmp/google-cloud-credentials.json"
-  unless keyfile_path = Rails.application.secrets.google_cloud[:gc_keyfile]
+  if Rails.env.development?
+    keyfile_path = Rails.application.secrets.google_cloud[:gc_keyfile]
+  else
     # create tmp json keyfile with permissions
     keyfile = File.new(temp_keyfile_path, "w+")
     keyfile << {
