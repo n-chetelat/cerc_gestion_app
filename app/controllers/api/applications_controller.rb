@@ -55,12 +55,14 @@ module Api
       end
 
       def broadcast_changes
-        slugs = @resource.person.current_phase.boards.pluck(:slug)
-        BoardChannelService.send_phases_update(slugs)
+        if @resource
+          slugs = @resource.person.current_phase.boards.pluck(:slug)
+          BoardChannelService.send_phases_update(slugs)
+        end
       end
 
       def email_application_materials
-        ApplicationService.email_application_materials(@resource, request)
+        ApplicationService.email_application_materials(@resource, request) if @resource
       end
 
   end

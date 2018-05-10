@@ -10,11 +10,11 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:name"
 
-  temp_keyfile_path = "tmp/google-cloud-credentials.json"
   if Rails.env.development?
     keyfile_path = Rails.application.secrets.google_cloud[:gc_keyfile]
   else
     # create tmp json keyfile with permissions
+    temp_keyfile_path = "tmp/google-cloud-credentials.json"
     keyfile = File.new(temp_keyfile_path, "w+")
     keyfile << {
       "type": "service_account",
@@ -31,15 +31,12 @@ Dragonfly.app.configure do
 
     keyfile.rewind
     keyfile_path = temp_keyfile_path
-
   end
 
   datastore :google,
     bucket: ENV["GC_BUCKET_NAME"] || Rails.application.secrets.google_cloud[:gc_bucket_name],
     project: ENV["GC_PROJECT_ID"] || Rails.application.secrets.google_cloud[:gc_project_id],
     keyfile: keyfile_path
-
-    File.delete(temp_keyfile_path) if File.exists?(temp_keyfile_path)
 
 end
 
