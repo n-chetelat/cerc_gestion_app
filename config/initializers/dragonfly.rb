@@ -1,5 +1,6 @@
 require 'dragonfly'
-require 'dragonfly/s3_data_store'
+# require 'dragonfly/s3_data_store'
+require 'dragonfly/google_data_store'
 
 # Configure
 Dragonfly.app.configure do
@@ -9,15 +10,35 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:name"
 
-  datastore :s3,
-    bucket_name: ENV["S3_BUCKET_NAME"] || Rails.application.secrets.aws[:s3_bucket_name],
-    access_key_id: ENV["S3_KEY"] || Rails.application.secrets.aws[:s3_key],
-    secret_access_key: ENV["S3_SECRET"] || Rails.application.secrets.aws[:s3_secret],
-    region: "us-east-2"
+  temp_keyfile_path = "tmp/google-cloud-credentials.json"
+  unless keyfile_path = Rails.application.secrets.google_cloud[:gc_keyfile]
+    # create tmp json keyfile with permissions
+    keyfile = File.new(temp_keyfile_path, "w+")
+    keyfile << {
+      "type": "service_account",
+      "project_id" => ENV["GC_PROJECT_ID"] || Rails.application.secrets.google_cloud[:gc_project_id],
+      "private_key_id" => ENV["GC_PRIVATE_KEY_ID"] || Rails.application.secrets.google_cloud[:gc_private_key_id],
+      "private_key" => ENV["GC_PRIVATE_KEY"] || Rails.application.secrets.google_cloud[:gc_private_key],
+      "client_email" => ENV["GC_CLIENT_EMAIL"] || Rails.application.secrets.google_cloud[:gc_client_email],
+      "client_id" => ENV["GC_CLIENT_ID"] || Rails.application.secrets.google_cloud[:gc_client_id],
+      "auth_uri" => "https://accounts.google.com/o/oauth2/auth",
+      "token_uri" => "https://accounts.google.com/o/oauth2/token",
+      "auth_provider_x509_cert_url" => "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url" => ENV["GC_CLIENT_X509_CERT_URL"] || Rails.application.secrets.google_cloud[:gc_client_x509_cert_url]
+    }.to_json
 
-  # datastore :file,
-  #   root_path: Rails.root.join('public/system/dragonfly', Rails.env),
-  #   server_root: Rails.root.join('public')
+    keyfile.rewind
+    keyfile_path = temp_keyfile_path
+
+  end
+
+  datastore :google,
+    bucket: ENV["GC_BUCKET_NAME"] || Rails.application.secrets.google_cloud[:gc_bucket_name],
+    project: ENV["GC_PROJECT_ID"] || Rails.application.secrets.google_cloud[:gc_project_id],
+    keyfile: keyfile_path
+
+    File.delete(temp_keyfile_path) if File.exists?(temp_keyfile_path)
+
 end
 
 # Logger

@@ -42,6 +42,7 @@ gem 'dragonfly', '~> 1.1.4'
 # Cloud
 gem 'fog-aws'
 gem 'dragonfly-s3_data_store'
+gem 'dragonfly-google_data_store', '~> 1.0'
 
 # UX helpers
 gem 'jquery-rails'
