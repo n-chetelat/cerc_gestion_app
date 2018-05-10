@@ -1,5 +1,4 @@
 require 'dragonfly'
-# require 'dragonfly/s3_data_store'
 require 'dragonfly/google_data_store'
 
 # Configure
@@ -10,27 +9,22 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:name"
 
-  # if Rails.env.development?
-  #   keyfile_path = Rails.application.secrets.google_cloud[:gc_keyfile]
-  # else
-    # create tmp json keyfile with permissions
-    keyfile_path = "tmp/google-cloud-credentials.json"
-    keyfile = File.new(keyfile_path, "w+")
-    keyfile << {
-      "type": "service_account",
-      "project_id" => ENV["GC_PROJECT_ID"] || Rails.application.secrets.google_cloud[:gc_project_id],
-      "private_key_id" => ENV["GC_PRIVATE_KEY_ID"] || Rails.application.secrets.google_cloud[:gc_private_key_id],
-      "private_key" => ENV["GC_PRIVATE_KEY"].try(:gsub, "\\n", "\n") || Rails.application.secrets.google_cloud[:gc_private_key].try(:gsub, "\\n", "\n"),
-      "client_email" => ENV["GC_CLIENT_EMAIL"] || Rails.application.secrets.google_cloud[:gc_client_email],
-      "client_id" => ENV["GC_CLIENT_ID"] || Rails.application.secrets.google_cloud[:gc_client_id],
-      "auth_uri" => "https://accounts.google.com/o/oauth2/auth",
-      "token_uri" => "https://accounts.google.com/o/oauth2/token",
-      "auth_provider_x509_cert_url" => "https://www.googleapis.com/oauth2/v1/certs",
-      "client_x509_cert_url" => ENV["GC_CLIENT_X509_CERT_URL"] || Rails.application.secrets.google_cloud[:gc_client_x509_cert_url]
-    }.to_json
+  keyfile_path = "tmp/google-cloud-credentials.json"
+  keyfile = File.new(keyfile_path, "w+")
+  keyfile << {
+    "type": "service_account",
+    "project_id" => ENV["GC_PROJECT_ID"] || Rails.application.secrets.google_cloud[:gc_project_id],
+    "private_key_id" => ENV["GC_PRIVATE_KEY_ID"] || Rails.application.secrets.google_cloud[:gc_private_key_id],
+    "private_key" => (ENV["GC_PRIVATE_KEY"] || Rails.application.secrets.google_cloud[:gc_private_key]).try(:gsub, "\\n", "\n"),
+    "client_email" => ENV["GC_CLIENT_EMAIL"] || Rails.application.secrets.google_cloud[:gc_client_email],
+    "client_id" => ENV["GC_CLIENT_ID"] || Rails.application.secrets.google_cloud[:gc_client_id],
+    "auth_uri" => "https://accounts.google.com/o/oauth2/auth",
+    "token_uri" => "https://accounts.google.com/o/oauth2/token",
+    "auth_provider_x509_cert_url" => "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url" => ENV["GC_CLIENT_X509_CERT_URL"] || Rails.application.secrets.google_cloud[:gc_client_x509_cert_url]
+  }.to_json
 
-    keyfile.rewind
-  # end
+  keyfile.rewind
 
   datastore :google,
     bucket: ENV["GC_BUCKET_NAME"] || Rails.application.secrets.google_cloud[:gc_bucket_name],
