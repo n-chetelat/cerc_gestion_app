@@ -99,7 +99,8 @@ class ApplicationService
 
     if application.attachments.any?
       Dir.mkdir(ZIP_PATH) unless Dir.exists?(ZIP_PATH)
-      path = "#{ZIP_PATH}/#{application.id}.zip"
+      filename = "#{application.person.full_name.parameterize}-#{application.id}"
+      path = "#{ZIP_PATH}/#{filename}.zip"
       self.zip_application_uploads(application, path)
 
       mail.add_file(path)

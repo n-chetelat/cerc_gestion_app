@@ -32,6 +32,7 @@ yarn-debug.log*
 client_secret*.json
 service_key.json
 aws-cerc-credentials.csv
+google-cloud-credentials.json
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
