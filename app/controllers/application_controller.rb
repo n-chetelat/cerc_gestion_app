@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     render json: {error: "#{error.status_code} Error with Google Api: #{error}"}, status: error.status_code
   end
   rescue_from ::GmailOauthError, ::Google::Apis::AuthorizationError do |error|
-    ::GmailOauthMailer.authorization_needed.deliver_now
+    # ::GmailOauthMailer.authorization_needed.deliver_now # Uncomment if smpt server available to app.
     render json: {error: "#{error.msg}"}, status: 500
   end
 
