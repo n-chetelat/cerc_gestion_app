@@ -1,7 +1,7 @@
 ActiveAdmin.register Board do
   menu parent: "Boards"
   permit_params :title, :description, boards_phases_attributes: [
-    :id, :_destroy, :phase_id, :position
+    :id, :_destroy, :phase_id, :position, :final
   ]
 
   # actions :index, :show, :update, :edit
@@ -34,6 +34,7 @@ ActiveAdmin.register Board do
     table_for resource.boards_phases.order(position: :asc) do
       orderable_handle_column url: :sort_admin_board_phase_path
       column :phase
+      column :final
     end
   end
 
@@ -45,6 +46,7 @@ ActiveAdmin.register Board do
         f.inputs do
           f.has_many :boards_phases, sortable: :position, sortable_start: 1, heading: "", allow_destroy: true, new_record: "Add a Tag" do |a|
             a.input :phase_id, as: :select, collection: Phase.limit(10).map {|ph| [ph.title, ph.id]}, input_html: {class: "select2", data: {placeholder: "Select a Tag", "ajax--url" => autocomplete_admin_phases_url(:format => :json)}}
+            a.input :final
           end
         end
       else

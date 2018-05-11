@@ -21,9 +21,6 @@ class Phase < ApplicationRecord
 
   accepts_nested_attributes_for :phases_callback, allow_destroy: true
 
-  scope :finals, -> { where(final: true) }
-  scope :non_finals, -> { where(final: false) }
-
   def to_s
     self.title
   end

@@ -1,6 +1,6 @@
 ActiveAdmin.register Phase do
   menu parent: "Boards"
-  permit_params :title, :description, :initial, :final, :color, :no_color, :email_label_name,
+  permit_params :title, :description, :initial, :color, :no_color, :email_label_name,
     phases_callback_attributes: [:id, :_destroy, :title, :email_template_id]
 
   config.filters = false
@@ -58,7 +58,6 @@ ActiveAdmin.register Phase do
     selectable_column
     column :title
     column :initial
-    column :final
     column :created_at
     actions
   end
@@ -68,7 +67,6 @@ ActiveAdmin.register Phase do
       row :title
       row :color
       row :initial
-      row :final
       row :email_label
       row(:description) { resource.description.try(:html_safe) }
     end
@@ -85,7 +83,6 @@ ActiveAdmin.register Phase do
       else
         f.input :initial, hint: "Is this the tag under which newly submitted applications are classified? Selecting this tag will deselect any other as initial. Existing persons will not be moved to or from this tag if selected."
       end
-      f.input :final, hint: "An application moved to this category will be marked as closed as removed from the admin interface."
       f.input :description, input_html: {class: "tinymce"}
       f.inputs "", for: [:phases_callback, f.object.phases_callback || f.object.build_phases_callback] do |a|
         a.input :title
