@@ -5,7 +5,8 @@ import "./recruitment-info.css";
 import "./tooltip.css";
 
 import Vue from 'vue'
-import store from '../store'
+import Vuex from 'vuex'
+import { adminStore, publicStore } from '../store'
 import router from '../router'
 import App from '../components/app.vue'
 import AppAdmin from '../components/app-admin.vue'
@@ -13,6 +14,8 @@ import AppAdmin from '../components/app-admin.vue'
 import Vue2Filters from 'vue2-filters'
 import VTooltip from 'v-tooltip'
 import Transitions from 'vue2-transitions'
+
+Vue.use(Vuex)
 
 Vue.use(Vue2Filters)
 Vue.use(VTooltip)
@@ -22,18 +25,18 @@ import axios from "axios"
 axios.defaults.headers.common["X-CSRF-TOKEN"] = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
 document.addEventListener('DOMContentLoaded', () => {
-  let options = { store }
+  let options = {}
   let el = document.getElementById("app-admin")
   let component = AppAdmin
   if (el) {
     options = {
-      ...options,
+      store: new Vuex.Store(adminStore),
       el: document.getElementById("app-admin"),
       router
     }
   } else {
     options = {
-      ...options,
+      store: new Vuex.Store(publicStore),
       el: document.getElementById("app"),
     }
     component = App
