@@ -1,1 +1,1 @@
-json.extract! info, :content
+json.extract! info, :content, :copyright, :positions

@@ -1,6 +1,6 @@
 desc "Call action for fetching new email"
 task :fetch_recent_email_threads, [:days_ago] => :environment do |t, args|
-  # HACK - limit hours action will be performed to remedy inflexible Heroku Scheduler intervals.
+  # HACK - limit the times the action will be performed to remedy inflexible Heroku Scheduler intervals.
   # https://elements.heroku.com/addons/scheduler
   now = DateTime.now
   during_day = now.hour.between?(5, 19) # Make calls only during the day

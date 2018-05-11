@@ -3,20 +3,24 @@ import axios from "axios"
 const BASE_URL = "api/recruitment_info"
 
 const state = {
-  info: null
+  content: null,
+  copyright: null,
+  positionLabel: null,
 }
 
 // getters
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
-  recruitmentInfo: state => state.info,
+  recruitmentInfo: state => state.content,
+  pageCopyright: state => state.copyright,
+  positionLabel: state => state.positionLabel,
 }
 
 // actions
 const actions = {
   getRecruitmentInfo({ commit, getters }) {
     return axios.get(getters.endpoint).then(({ data }) => {
-      commit('setRecruitmentInfo', data.content)
+      commit('setRecruitmentInfo', data)
     })
   },
 }
@@ -24,7 +28,9 @@ const actions = {
 // mutations
 const mutations = {
   setRecruitmentInfo(state, info) {
-    state.info = info
+    state.content = info.content
+    state.copyright = info.copyright
+    state.positionLabel = info.positions
   },
 }
 

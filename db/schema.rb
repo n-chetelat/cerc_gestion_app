@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180504182231) do
+ActiveRecord::Schema.define(version: 20180511154717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,6 +262,8 @@ ActiveRecord::Schema.define(version: 20180504182231) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "content"
+    t.string "copyright"
+    t.string "positions"
     t.index ["locale"], name: "index_recruitment_info_translations_on_locale"
     t.index ["recruitment_info_id"], name: "index_recruitment_info_translations_on_recruitment_info_id"
   end

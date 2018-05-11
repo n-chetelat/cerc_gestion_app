@@ -33,14 +33,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
         recruitmentFormInput: null,
         translations: {
           send: {en: "Send", fr: "Envoyer"},
-          position: {en: "Select the type of application you wish to send",
-            fr: "Sélectionnez le type d'application que vous désirez envoyer"
-          },
-          back: {en: "Back to the home page",
-            fr: "Retour à l'accueil"
-          },
-          copyright: {en: "Copyright © 2016 - All Rights Reserved - Canada Excellence Research Chair in Data Science for Real-Time Decision-Making",
-            fr: "Copyright © 2016 - All Rights Reserved - Canada Excellence Research Chair in Data Science for Real-Time Decision-Making"}
+          back: {en: "Back to the home page", fr: "Retour à l'accueil"},
         },
       }
     },
@@ -50,7 +43,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
     computed: {
       ...mapGetters("locales", ["currentLocale"]),
       ...mapGetters("positions", ["allPositions", "positionFormsById"]),
-      ...mapGetters("recruitmentInfo", ["recruitmentInfo"]),
+      ...mapGetters("recruitmentInfo", ["recruitmentInfo", "pageCopyright", "positionLabel"]),
       recruitmentFormFields() {
         // excludes positions to avoid repetition
         return omitBy(this.applicationForm.form, (field) => field.id === "position_id")
@@ -154,7 +147,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
             div(v-if="!applicationSent")
               div.position-select.mandatory
                 div.form-row
-                  label.label {{translations["position"][currentLocale]}}
+                  label.label {{positionLabel}}
                   select(v-model="positionId", @change="generatePositionForm")
                     option(:value="null") --
                     option(v-for="position in allPositions", :value="position.id") {{position.title}}
@@ -175,7 +168,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
                 a(href="http://cerc-datascience.polymtl.ca/") {{translations["back"][currentLocale]}}
 
       footer
-        div.copyright {{translations["copyright"][currentLocale]}}
+        div.copyright {{pageCopyright}}
 
   </template>
 

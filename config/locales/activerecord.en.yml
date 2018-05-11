@@ -39,3 +39,7 @@ en:
       recruitment_info:
         content_en: English content
         content_fr: French content
+        copyright_en: English copyright
+        copyright_fr: French copyright
+        positions_en: English label for position selection
+        positions_fr: French label for position selection
