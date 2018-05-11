@@ -21,6 +21,7 @@ class CorrespondenceController < ApplicationController
       token.destroy!
       email_service = ::EmailService.new(request)
       @person.threads.each do |thread|
+        next unless email_service.thread_exists_in_inbox?(thread.google_thread_id)
         email_service.fetch_thread_message_details(thread)
       end
       head :ok

@@ -12,9 +12,14 @@ class EmailService
   def send_email_to(mail_object, options={})
 
     message = Google::Apis::GmailV1::Message.new(
-      raw: mail_object.to_s,
-      thread_id: options[:thread_id]
+      raw: mail_object.to_s
     )
+
+    if options[:thread_id]
+      # Check if thread exists. There can be an error if it was deleted from inbox.
+      thread_exists = self.thread_exists_in_inbox?(options[:thread_id])
+      message[:thread_id] = options[:thread_id] if thread_exists
+    end
     gmail_service.send_user_message(USER_ID, message) do |result, error|
       raise error if error
       thread = ::Email::Thread.find_or_create_by(google_thread_id: result.thread_id)
@@ -22,6 +27,11 @@ class EmailService
       self.associate_thread_with_persons!(thread, result.thread_id)
       return thread
     end
+  end
+
+  def thread_exists_in_inbox?(google_thread_id)
+    thread_exists = gmail_service.get_user_thread(USER_ID, google_thread_id) rescue false
+    !!thread_exists
   end
 
   def create_email_label!(phase, name)
@@ -144,7 +154,11 @@ class EmailService
     request_object = Google::Apis::GmailV1::ModifyThreadRequest.new(
       add_label_ids: add_label_ids.compact, remove_label_ids: remove_label_ids.compact)
 
-    gmail_service.modify_thread(USER_ID, thread.google_thread_id, request_object)
+    begin
+      gmail_service.modify_thread(USER_ID, thread.google_thread_id, request_object)
+    rescue ::Google::Apis::ClientError
+      false
+    end
 
   end
 

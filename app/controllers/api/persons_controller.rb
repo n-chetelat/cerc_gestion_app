@@ -1,7 +1,7 @@
 module Api
   class PersonsController < ApiController
     before_action :authenticate_admin_user!
-    before_action :set_resource, only: [:show,:update, :delete]
+    before_action :set_resource, only: [:show,:update, :destroy]
 
     def index
       @resources = Person.all
@@ -14,8 +14,8 @@ module Api
       render :show
     end
 
-    def delete
-      @resource.destroy
+    def destroy
+      @resource.destroy!
       render :show
     end
 
