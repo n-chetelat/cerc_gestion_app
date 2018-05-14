@@ -4,32 +4,24 @@ class ApplicationService
   ZIP_PATH = "tmp/application_uploads"
 
   def self.create_application(params)
-    begin
-      Application.transaction do
-        person = self.set_person_attributes(Person.new, params)
-        application = person.application || person.build_application
-        self.set_application_common_attributes(application, params)
-        self.set_form_fields(application, params)
-        application.locale = I18n.locale
-        application.save!
-        application
-      end
-    rescue
-      nil
+    Application.transaction do
+      person = self.set_person_attributes(Person.new, params)
+      application = person.application || person.build_application
+      self.set_application_common_attributes(application, params)
+      self.set_form_fields(application, params)
+      application.locale = I18n.locale
+      application.save!
+      application
     end
   end
 
   def self.update_application(application, params)
-    begin
-      application.with_lock do
-        person = self.set_person_attributes(application.person, params)
-        self.set_application_common_attributes(application, params)
-        self.set_form_fields(application, params)
-        application.save!
-        application
-      end
-    rescue
-      nil
+    application.with_lock do
+      person = self.set_person_attributes(application.person, params)
+      self.set_application_common_attributes(application, params)
+      self.set_form_fields(application, params)
+      application.save!
+      application
     end
   end
 
@@ -152,6 +144,11 @@ class ApplicationService
 
     def self.set_form_fields(application, params)
       form_fields = application.position.recruitment_form.form_fields
+
+      unless self.validate_form_fields(form_fields, params)
+        raise "One or more fields in the application are invalid."
+      end
+
       form_fields.each do |field|
         attribute_name = "input_#{field.form}_#{field.id}"
         attribute = params[attribute_name]
@@ -182,6 +179,37 @@ class ApplicationService
           application.fields[attribute_name] = attribute
         end
       end
+    end
+
+    def self.validate_form_fields(form_fields, params)
+      all_valid = form_fields.all? do |field|
+        attribute_name = "input_#{field.form}_#{field.id}"
+        value = params[attribute_name]
+        next true if value.nil?
+
+        valid = case field.form
+          when :upload_multiple
+            value.respond_to?(:each) && value.values.all? do |upload|
+              upload.is_a?(ActionDispatch::Http::UploadedFile) &&
+              upload.content_type == "application/pdf"
+            end
+          when :upload_single
+            value.is_a?(ActionDispatch::Http::UploadedFile) &&
+              value.content_type == "application/pdf"
+          when :text, :textarea
+            value.is_a?(String)
+          when :date
+            !!(Date.parse(value) rescue false)
+          when :select, :radio
+            field.locale_choices.keys.include?(value)
+          when :checkbox
+            value.respond_to?(:each) && value.values.all? do |check|
+              field.locale_choices.keys.include?(check)
+            end
+        end
+        valid
+      end
+      all_valid
     end
 
     def self.field_to_hash(form_field, value)
