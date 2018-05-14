@@ -1,14 +1,9 @@
 <script>
 
-import { mapGetters } from "vuex"
-
 import Modal from "../../shared/modal.vue"
 
 export default {
-  name: "RecruitmentFormError",
-  computed: {
-    ...mapGetters("locales", ["currentLocale"]),
-  },
+  name: "ServerError",
   methods: {
     closeModal() {
       this.$emit("close")
@@ -23,19 +18,11 @@ export default {
 <template lang="pug">
   modal.error-message(@close="closeModal")
     h1.error-message-header(slot="header")
-      span(v-if="currentLocale === 'en'") We are sorry!
-      span(v-if="currentLocale === 'fr'") Nous sommes désolés !
+      span Server Error
     div.error-message-body(slot="body")
-      div(v-if="currentLocale === 'en'")
-        p There was an error when processing this action.
-        p Please try again later.
-        p
-          a(href="http://cerc-datascience.polymtl.ca/") Back to the home page
-      div(v-if="currentLocale === 'fr'")
-        p Il s'est produit une erreur avec l'execution de cette action.
-        p Veuillez réessayer plus tard.
-        p
-          a(href="http://cerc-datascience.polymtl.ca/") Retour à l'accueil
+      div
+        p There has been an error with this action.
+        p Please try reloading the page or contact technical support.
 
 
 

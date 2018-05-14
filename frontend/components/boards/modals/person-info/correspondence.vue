@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       correspondence: null,
-      correspondenceNotFound: false,
+      showError: false,
       openThread: null,
       composing: false,
       flashMessage: null,
@@ -45,12 +45,16 @@ export default {
     })
   },
   async created() {
-    await this.loadPersonCorrespondence()
-    if (this.section === "new") {
-      const payload = {phaseId: this.person.phase_id, personId: this.person.uuid}
-      await this.fetchPhaseEmailTemplate(payload).then(() => {
-        this.newMessageTemplate = this.emailTemplatesByPhase[this.person.phase_id]
-      })
+    try {
+      await this.loadPersonCorrespondence()
+      if (this.section === "new") {
+        const payload = {phaseId: this.person.phase_id, personId: this.person.uuid}
+        await this.fetchPhaseEmailTemplate(payload).then(() => {
+          this.newMessageTemplate = this.emailTemplatesByPhase[this.person.phase_id]
+        })
+      }
+    } catch(err) {
+      this.showError = true
     }
   },
   computed: {
@@ -73,7 +77,7 @@ export default {
       this.fetchPersonEmail(this.person.uuid).then(() => {
         this.correspondence = this.emailByPerson[this.person.uuid]
       }).catch((error) => {
-        this.correspondenceNotFound = true
+        this.showError = true
       })
     },
     closeModal() {
@@ -127,9 +131,12 @@ export default {
 <template lang="pug">
 
   div
-    div(v-if="correspondenceNotFound", style="text-align: center;")
-      p There was an error while fetching this applicant's correspondence.
-      p Please try again later.
+    div(v-if="showError", style="text-align: center;")
+      p There was an error when fetching this applicant's correspondence.
+      p Make sure that this application has permission to access the associated Gmail account by navigating
+        span
+          a(href="/admin/google/authorize", target="_blank") &nbsp; here.
+      p Otherwise, please try reloading the page or contact technical support.
 
     div.correspondence(v-if="isLoaded")
 

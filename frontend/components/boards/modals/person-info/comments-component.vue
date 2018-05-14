@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       newCommentContent: "",
+      showError: false,
     }
   },
   computed: {
@@ -32,6 +33,8 @@ export default {
         this.comments = this.commentsByApplication[this.application.id]
         this.newCommentContent = ""
         this.$emit("comment")
+      }).catch((err) => {
+        this.showError = true
       })
     },
   },
@@ -44,11 +47,14 @@ export default {
 
 <template lang="pug">
   div.comments-component
-    comments-list-component(:application="application")
-    div.new-comment
-      textarea(v-model="newCommentContent", placeholder="Enter new comment...")
-      button.submit.save-btn(type="button", @click="saveNewComment") Save
-    hr
+    div(v-if="showError")
+      p There has been an error when fetching this applicant's comments.
+    div(v-else)
+      comments-list-component(:application="application", @error="showError = true")
+      div.new-comment
+        textarea(v-model="newCommentContent", placeholder="Enter new comment...")
+        button.submit.save-btn(type="button", @click="saveNewComment") Save
+      hr
     keywords-component(:application="application")
 
 

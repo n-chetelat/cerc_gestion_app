@@ -35,8 +35,10 @@ export default {
       this.changePersonPhase(payload).then(() => {
         if (this.phase.has_callback) {
           const person = find(this.phase.persons, (p) => p.uuid === personId)
-          this.$emit('modal', "person-info", { person, tab: "email"})
+          this.$emit("modal", "person-info", { person, tab: "email"})
         }
+      }).catch((err) => {
+        this.$emit("modal", "server-error", {})
       })
     },
   },

@@ -7,9 +7,10 @@ import { find, filter, includes } from "lodash-es"
 
 import { getParticipantInfo, setCallback } from "cable/board"
 
+import PersonInfoModal from "./boards/modals/person-info.vue"
+import ServerErrorModal from "./boards/modals/server-error.vue"
 
 import Phase from "./boards/phase.vue"
-import PersonInfoModal from "./boards/modals/person-info.vue"
 import BoardSidebar from "./boards/board-sidebar.vue"
 
   export default {
@@ -29,14 +30,22 @@ import BoardSidebar from "./boards/board-sidebar.vue"
           this.addStatusMessage(data.message)
         } else if (data.refresh_phases) {
           if (!includes(data.refresh_phases.board_ids, this.boardSlug)) return
-          this.fetchBoard(this.boardSlug)
+          try {
+            this.fetchBoard(this.boardSlug)
+          } catch(err) {
+            this.openModal("server-error", {})
+          }
         }
       })
     },
     async created() {
-      await this.fetchBoard(this.boardSlug)
-      await this.fetchUserInfo()
-      getParticipantInfo()
+      try {
+        await this.fetchBoard(this.boardSlug)
+        await this.fetchUserInfo()
+        getParticipantInfo()
+      } catch (err) {
+        this.openModal("server-error", {})
+      }
     },
     data() {
       return {
@@ -53,8 +62,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
     },
     methods: {
       ...mapActions("users", ["fetchUserInfo", "addStatusMessage", "setLoggedInUsers"]),
-      ...mapActions("boards", ["fetchBoard", "addNewPhase"]),
-      ...mapActions("comments", ["fetchApplicationComments"]),
+      ...mapActions("boards", ["fetchBoard"]),
       openModalByName(modalName, data) {
         if (modalName === "person-info") {
           this.person = data.person
@@ -64,9 +72,10 @@ import BoardSidebar from "./boards/board-sidebar.vue"
       },
     },
     components: {
-      Phase,
       PersonInfoModal,
-      BoardSidebar
+      ServerErrorModal,
+      Phase,
+      BoardSidebar,
     }
   }
   </script>
@@ -74,6 +83,7 @@ import BoardSidebar from "./boards/board-sidebar.vue"
   <template lang="pug">
     div.boards(v-if="isLoaded")
       person-info-modal(@close="closeModal", v-if="modalVisible && modalName === 'person-info'", :person="person", :tab="tab")
+      server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
 
       div.phases-wrapper
         div.phases(:style="{width: (nonFinalPhases.length * 320) + 'px'}")

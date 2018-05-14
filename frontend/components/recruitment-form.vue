@@ -44,6 +44,9 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
       ...mapGetters("locales", ["currentLocale"]),
       ...mapGetters("positions", ["allPositions", "positionFormsById"]),
       ...mapGetters("recruitmentInfo", ["recruitmentInfo", "pageCopyright", "positionLabel"]),
+      dataIsLoaded() {
+        return (this.recruitmentInfo && this.positionLabel && this.allPositions.length)
+      },
       recruitmentFormFields() {
         // excludes positions to avoid repetition
         return omitBy(this.applicationForm.form, (field) => field.id === "position_id")
@@ -54,12 +57,18 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
       ...mapActions("recruitmentInfo", ["getRecruitmentInfo"]),
       ...mapActions("application", ["sendApplication"]),
       async fetchInitialData() {
-        await this.getRecruitmentInfo()
-        await this.getAllPositions()
+        try {
+          await this.getRecruitmentInfo()
+          await this.getAllPositions()
+        } catch (err) {
+          this.openModal("recruitment-form-error")
+        }
       },
       async fetchAllData() {
         await this.fetchInitialData()
-        await this.generatePositionForm()
+        if (this.dataIsLoaded) {
+          await this.generatePositionForm()
+        }
       },
       calculateFormIsValid() {
         const fieldsValid = this.$refs.field.every((field) => field.isValid)
@@ -75,7 +84,6 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
           this.loadingApplication = false
         }
       },
-
       showConfirmationModal() {
         if (!this.formIsValid || this.loading) return
         const positions = map(this.allPositions, (p) => ({id: p.id, label: p.title }))
@@ -98,7 +106,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
             {value: this.positionId, inputName: "input_select_position_id"}])
             this.applicationSent = true
           this.openModal("recruitment-form-success")
-        } catch(error) {
+        } catch(err) {
           this.openModal("recruitment-form-error")
         }
         this.applicationForm = null
@@ -136,7 +144,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
             img.logo(src="../static/images/DSDMlogo_Full.png")
           locale-switcher.locale-switcher(@switch="fetchAllData")
 
-        div.application-form-container
+        div.application-form-container(v-if="dataIsLoaded")
 
           div.application-information
             div(v-html="recruitmentInfo")

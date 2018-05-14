@@ -13,15 +13,20 @@ export default {
     },
   },
   async created() {
-    if (!this.keywordsByApplication[this.application.id]) {
-      await this.fetchApplicationKeywords(this.application.id)
+    try {
+      if (!this.keywordsByApplication[this.application.id]) {
+        await this.fetchApplicationKeywords(this.application.id)
+      }
+      this.keywords = this.keywordsByApplication[this.application.id]
+    } catch(err) {
+      this.showError = true
     }
-    this.keywords = this.keywordsByApplication[this.application.id]
   },
   data() {
     return {
       keywords: [],
-      autocompleteList: []
+      autocompleteList: [],
+      showError: false,
     }
   },
   computed: {
@@ -39,6 +44,8 @@ export default {
       this.updateKeywords(payload).then(() => {
         this.$refs.autocomplete.clearValues()
         this.keywords = this.keywordsByApplication[this.application.id]
+      }).catch((err) => {
+        this.showError = true
       })
     },
     removeKeyword(keyword) {
@@ -46,6 +53,8 @@ export default {
         params: { keywords: [keyword] } }
       this.removeKeywords(payload).then(() => {
         this.keywords = this.keywordsByApplication[this.application.id]
+      }).catch((err) => {
+        this.showError = true
       })
     },
   },
@@ -58,16 +67,19 @@ export default {
 <template lang="pug">
   div.keywords-component
     h2 Keywords
-    div.keyword-list(v-if="keywords.length")
-      span.keyword-line(v-for="keyword in keywords") {{keyword}}
-        button.remove-btn(@click="removeKeyword(keyword)") x
-    div.keyword-placeholder(v-else)
-      p There are no keywords added to this application so far.
-    div.keyword-form
-      autocomplete(ref="autocomplete", :source="autocompleteEndpoint", @enter="addNewKeyword"
-        results-property="data",
-        @selected="addNewKeyword",
-        placeholder="Add a keyword...")
+    div.keyword-placeholder(v-if="showError")
+      p There has been an error when loading the applicant's keywords.
+    div(v-else)
+      div.keyword-list(v-if="keywords.length")
+        span.keyword-line(v-for="keyword in keywords") {{keyword}}
+          button.remove-btn(@click="removeKeyword(keyword)") x
+      div.keyword-placeholder(v-else)
+        p There are no keywords added to this application so far.
+      div.keyword-form
+        autocomplete(ref="autocomplete", :source="autocompleteEndpoint", @enter="addNewKeyword"
+          results-property="data",
+          @selected="addNewKeyword",
+          placeholder="Add a keyword...")
 
 
 </template>

@@ -50,6 +50,8 @@ export default {
         if (this.phase.has_callback) {
           this.showEmailModal(personId)
         }
+      }).catch((err) => {
+        this.openModal("server-error", {})
       })
     },
     showEmailModal(personId) { //pass personId instead of person to avoid stale data

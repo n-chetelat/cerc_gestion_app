@@ -26,15 +26,19 @@ export default {
     })
   },
   async created() {
-    if (!this.commentsByApplication[this.application.id]) {
-      await this.fetchApplicationComments(this.application.id)
+    try {
+      if (!this.commentsByApplication[this.application.id]) {
+        await this.fetchApplicationComments(this.application.id)
+      }
+      this.comments = this.commentsByApplication[this.application.id]
+    } catch(err) {
+      this.$emit("error")
     }
-    this.comments = this.commentsByApplication[this.application.id]
   },
   data() {
     return {
       comments: [],
-      editingComments: {}
+      editingComments: {},
     }
   },
   computed: {
@@ -63,10 +67,14 @@ export default {
       const payload = {applicationId: this.application.id,
         commentId: comment.id,
         params: {content: event.target.innerText}}
-      await this.updateComment(payload).then(() => {
-        this.comments = this.commentsByApplication[this.application.id]
-      })
-      Vue.delete(this.editingComments, comment.id)
+      try {
+        await this.updateComment(payload).then(() => {
+          this.comments = this.commentsByApplication[this.application.id]
+        })
+        Vue.delete(this.editingComments, comment.id)
+      } catch(err) {
+        this.$emit("console.error();")
+      }
     },
   },
 }

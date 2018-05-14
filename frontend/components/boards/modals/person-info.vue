@@ -23,7 +23,7 @@ export default {
     return {
       application: null,
       applicationForm: null,
-      applicationError: false,
+      showError: false,
       editing: false,
       currentTab: this.tab || "information",
       tabs: ["information", "comments", "email"],
@@ -31,10 +31,14 @@ export default {
     }
   },
   async created() {
-    await this.getApplication()
-    await this.getPositionForm(this.application.position_id)
-    await this.getAllPositions()
-    this.applicationForm = this.positionFormsById[this.application.position_id]
+    try {
+      await this.getApplication()
+      await this.getPositionForm(this.application.position_id)
+      await this.getAllPositions()
+      this.applicationForm = this.positionFormsById[this.application.position_id]
+    } catch (err) {
+      this.showError = true
+    }
   },
   computed: {
     ...mapGetters("positions", ["allPositions", "positionFormsById"]),
@@ -54,13 +58,17 @@ export default {
         return this.fetchApplication(this.person.application_id).then(({data}) => {
           this.application = data
         }).catch((error) => {
-          this.applicationError = true
+          this.showError = true
         })
       }
     },
     async onUpdateApplication(data) {
-      this.broadcastToLoggedInUsers("application_change")
-      await this.getApplication()
+      try {
+        this.broadcastToLoggedInUsers("application_change")
+        await this.getApplication()
+      } catch(err) {
+        showError = true
+      }
       this.editing = false
     },
     broadcastToLoggedInUsers(type) {
@@ -84,7 +92,7 @@ export default {
     template(slot="header")
       h1 {{person.full_name}}
     template(slot="body")
-      div(v-if="applicationError", style="text-align: center;")
+      div(v-if="showError", style="text-align: center;")
         p There was an error while fetching this applicant's information.
 
       div.person-info(v-if="isLoaded")
@@ -98,7 +106,7 @@ export default {
           slide-y-up-transition
             application-info-display(:application="application", :person="person", :application-form="applicationForm", v-if="!editing")
           slide-y-up-transition
-            application-info-edit(:application="application", :person="person", :application-form="applicationForm" v-if="editing", @update="onUpdateApplication", @error="applicationError = true")
+            application-info-edit(:application="application", :person="person", :application-form="applicationForm" v-if="editing", @update="onUpdateApplication", @error="showError = true")
 
         div.comments(v-show="currentTab === 'comments'")
           slide-y-up-transition
