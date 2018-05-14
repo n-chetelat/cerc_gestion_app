@@ -4,6 +4,7 @@ module Api
       before_action :authenticate_admin_user!
       before_action :authorize_gmail
       before_action :set_resource, only: [:update]
+
       after_action :broadcast_changes, only: [:create, :update]
 
       def create

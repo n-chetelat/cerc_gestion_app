@@ -1,8 +1,10 @@
 module Api
   module Phases
     class PersonsController < ApiController
+      before_action :authenticate_admin_user!
       before_action :authorize_gmail, only: [:update]
       before_action :set_resource
+
       after_action :broadcast_changes, only: [:update]
 
       attr_reader :partial_path, :resource_name

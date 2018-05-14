@@ -4,6 +4,13 @@ module Api
       before_action :authenticate_admin_user!
       before_action :set_resource
 
+      attr_reader :partial_path, :resource_name
+
+      def initialize
+        @partial_path = "api/phases/email_templates/email_template"
+        @resource_name = :email_template
+      end
+
       def show
         template = @phase.email_template
         if template
@@ -11,14 +18,6 @@ module Api
         else
           render json: nil
         end
-      end
-
-      def partial_path
-        "api/phases/email_templates/email_template"
-      end
-
-      def resource_name
-        :email_template
       end
 
       private

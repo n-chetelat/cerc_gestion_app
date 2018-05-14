@@ -28,7 +28,7 @@ Rails.application.routes.draw do
           resource :keywords, only: [:show, :update, :destroy]
         end
       end
-      resources :persons, only: [:index, :show, :update, :destroy] do
+      resources :persons, only: [:index, :show, :destroy] do
         scope module: "persons" do
           resource :email, only: [:show]
         end

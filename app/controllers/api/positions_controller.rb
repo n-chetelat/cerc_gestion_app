@@ -1,6 +1,13 @@
 module Api
   class PositionsController < ApiController
 
+    attr_reader :partial_path, :resource_name
+
+    def initialize
+      @partial_path = "api/positions/position"
+      @resource_name = :position
+    end
+
     def index
       @resources = Position.visible
     end
@@ -19,16 +26,6 @@ module Api
           options: options
         )
       end
-
-      render json: {position_id: @resource.id, form: @form_fields}
-    end
-
-    def partial_path
-      "api/positions/position"
-    end
-
-    def resource_name
-      :position
     end
 
   end

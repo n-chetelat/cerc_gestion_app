@@ -21,10 +21,6 @@ module Api
         @application.keyword_list.add(params[:keywords])
         if @application.save!
           render json: @application.keyword_list
-        else
-          render json: {
-            error: "There was an error when saving the keyword", status: 500
-            }, status: 500
         end
       end
 
@@ -32,10 +28,6 @@ module Api
         @application.keyword_list.remove(params[:keywords])
         if @application.save!
           render json: @application.keyword_list
-        else
-          render json: {
-            error: "There was an error when deleting the keyword", status: 500
-            }, status: 500
         end
       end
 

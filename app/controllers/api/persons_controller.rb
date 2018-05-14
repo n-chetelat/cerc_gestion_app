@@ -3,6 +3,13 @@ module Api
     before_action :authenticate_admin_user!
     before_action :set_resource, only: [:show,:update, :destroy]
 
+    attr_reader :partial_path, :resource_name
+
+    def initialize
+      @partial_path = "api/persons/person"
+      @resource_name = :person
+    end
+
     def index
       @resources = Person.all
     end
@@ -10,21 +17,9 @@ module Api
     def show
     end
 
-    def update
-      render :show
-    end
-
     def destroy
       @resource.destroy!
       render :show
-    end
-
-    def partial_path
-      "api/persons/person"
-    end
-
-    def resource_name
-      :person
     end
 
     private

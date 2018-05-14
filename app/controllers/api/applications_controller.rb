@@ -1,9 +1,18 @@
 module Api
   class ApplicationsController < ApiController
-    before_action :set_resource, only: [:show,:update]
+    before_action :authenticate_admin_user!, only: [:index, :show, :update]
     before_action :authorize_gmail, only: [:create]
+    before_action :set_resource, only: [:show,:update]
+
     after_action :broadcast_changes, only: [:create, :update]
     after_action :email_application_materials, only: [:create]
+
+    attr_reader :partial_path, :resource_name
+
+    def initialize
+      @partial_path = "api/applications/application"
+      @resource_name = :application
+    end
 
     def index
       @resources = Application.all
@@ -22,29 +31,14 @@ module Api
         PhaseService.update_email_labels_for(@resource.person, email_labels[:add_label_ids],
           email_labels[:remove_label_ids], request)
         BoardChannelService.send_new_application_message
-      else
-        render json: {
-          error: "There was an error when creating the application", status: 500
-          }, status: 500
+        head :ok
       end
     end
 
     def update
       if @resource = ApplicationService.update_application(@resource, params)
         render :show
-      else
-        render json: {
-          error: "There was an error when updating the application", status: 500
-          }, status: 500
       end
-    end
-
-    def partial_path
-      "api/applications/application"
-    end
-
-    def resource_name
-      :application
     end
 
 

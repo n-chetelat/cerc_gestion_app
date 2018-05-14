@@ -9,9 +9,10 @@ class CorrespondenceController < ApplicationController
       email_service = ::EmailService.new(request)
       date = params[:date].try(:to_datetime) || DateTime.now
       email_service.fetch_threads_from_date(date)
+      Rails.logger.info("Fetch of new correspondence successful.")
       head :ok
     else
-      render json: {error: "Unauthorized to take this action"}, status: 401
+      head :unauthorized
     end
   end
 
@@ -24,9 +25,10 @@ class CorrespondenceController < ApplicationController
         next unless email_service.thread_exists_in_inbox?(thread.google_thread_id)
         email_service.fetch_thread_message_details(thread)
       end
+      Rails.logger.info("Fetch of thread content successful.")
       head :ok
     else
-      render json: {error: "Unauthorized to take this action"}, status: 401
+      head :unauthorized
     end
   end
 
