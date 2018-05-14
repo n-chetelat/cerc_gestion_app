@@ -8,7 +8,9 @@ export default {
   mixins: [DisplayFieldMixin],
   computed: {
     formattedDate() {
-      return moment(this.field.value).format("D MMMM YYYY")
+      let date =  moment(this.field.value).format("D MMMM YYYY")
+      if (date === "Invalid date") { date = null }
+      return date
     }
   }
 }

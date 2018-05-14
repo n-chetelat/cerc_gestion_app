@@ -190,10 +190,12 @@ class ApplicationService
         valid = case field.form
           when :upload_multiple
             value.respond_to?(:each) && value.values.all? do |upload|
+              upload.is_a?(String) ||
               upload.is_a?(ActionDispatch::Http::UploadedFile) &&
               upload.content_type == "application/pdf"
             end
           when :upload_single
+            value.is_a?(String) ||
             value.is_a?(ActionDispatch::Http::UploadedFile) &&
               value.content_type == "application/pdf"
           when :text, :textarea

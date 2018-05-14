@@ -6,11 +6,11 @@ export default {
   mixins: [FormFieldMixin],
   computed: {
     fieldData() {
-      if (this.value.constructor === Object) {
+      if (this.value && this.value.constructor === Object) {
         return this.value.name
       }
       return this.value
-    }
+    },
   },
   methods: {
     onChange(files) {
@@ -31,7 +31,7 @@ export default {
     label.label {{label}}
       span (pdf)
     input(type="file", accept=".pdf", @change="onChange($event.target.files)")
-    p.file-list(v-if="value")
+    p.file-list(v-if="fieldData")
       span.file-line
         span {{value.name}}
         button.remove(type="button", @click="removeFile")
