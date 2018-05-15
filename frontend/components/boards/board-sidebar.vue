@@ -41,7 +41,7 @@ export default {
   div.board-sidebar
     div.heading
       span.circle.user-initials(v-tooltip="userTooltip") {{userInitials}}
-      a.circle.admin-link(href="/admin", v-tooltip="'To admin dashboard'", target="_blank") ""
+      a.admin-link(href="/admin", target="_blank") Go to admin dashboard
     logged-in-users.logged-in
 
     div.drop-boxes
@@ -67,17 +67,15 @@ export default {
     text-align: left;
     padding: 10px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     & * {
       margin: auto 3px;
     }
 
     & .admin-link {
-      color: transparent;
-      background: url("../../static/icons/key.svg") center center / 50% no-repeat white;
-      &:hover {
-        background-color: gray(90%);
-      }
+      color: white;
+      font-size: .8em;
+      text-decoration: underline;
     }
   }
   & .logged-in {
