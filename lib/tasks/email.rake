@@ -4,7 +4,8 @@ task :fetch_recent_email_threads, [:days_ago] => :environment do |t, args|
   # https://elements.heroku.com/addons/scheduler
   now = DateTime.now
   during_day = now.hour.between?(5, 19) # Make calls only during the day
-  twenty_minutes = [2, 3, 22, 23, 42, 43].include?(now.minute) # Make calls every 20 minutes, with a one minute allowance.
+  (0..5).to_a.include?(now.minute % 20)
+  twenty_minutes = (0..5).to_a.include?(now.minute % 20) # Make calls every 20 minutes, with a 5-minute allowance for cron to boot.
 
 
   if during_day && twenty_minutes
