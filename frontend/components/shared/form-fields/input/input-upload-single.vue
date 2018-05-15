@@ -33,7 +33,7 @@ export default {
     input(type="file", accept=".pdf", @change="onChange($event.target.files)")
     p.file-list(v-if="fieldData")
       span.file-line
-        span {{value.name}}
+        span {{value.name | truncate(30)}}
         button.remove(type="button", @click="removeFile")
 </template>
 

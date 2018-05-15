@@ -25,7 +25,7 @@ def fetch_email(days_ago = 1)
   date = days.to_i.days.ago
   token = SecureRandom.base58(24)
   Email::Token.create!(name: "email-threads", token: token)
-  host = Rails.env.development? ? "http://localhost:5000" : "https://staging-cerc-gestion.herokuapp.com"
+  host = Rails.env.development? ? "http://localhost:5000" : ENV["RAILS_HOST"]
   puts "Performing email thread refresh..."
   ::HTTParty.get("#{host}/correspondence/new?token=#{token}&date=#{date}")
 end

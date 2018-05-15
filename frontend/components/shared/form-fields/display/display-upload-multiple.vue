@@ -14,7 +14,7 @@ export default {
     ul
       li.value(v-for="val in field.value")
         span.icon.pdf-icon
-        a(:href="val.url", target="_blank") {{val.name}}
+        a(:href="val.url", target="_blank") {{val.name | truncate(30)}}
 
 </template>
 

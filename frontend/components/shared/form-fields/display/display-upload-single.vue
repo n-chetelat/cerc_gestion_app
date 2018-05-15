@@ -13,7 +13,7 @@ export default {
     label {{field.label}}
     span(v-if="field.value.name")
       span.icon.pdf-icon
-      a(:href="field.value.url", target="_blank") {{field.value.name}}
+      a(:href="field.value.url", target="_blank") {{field.value.name | truncate(30)}}
 
 </template>
 

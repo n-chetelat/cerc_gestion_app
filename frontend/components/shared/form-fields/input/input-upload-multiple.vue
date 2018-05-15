@@ -53,7 +53,7 @@ export default {
     input(type="file", accept=".pdf", multiple, @change="onChange($event.target.files)")
     ul.file-list
       li.file-line(v-for="file in value")
-        span {{file.name}}
+        span {{file.name | truncate(30)}}
         button.remove(type="button", @click="removeFile(file)")
 </template>
 
