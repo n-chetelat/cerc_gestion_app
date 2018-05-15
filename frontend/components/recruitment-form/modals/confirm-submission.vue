@@ -84,11 +84,8 @@ export default {
 
 <style>
 
-  :root {
-    --themeColor: #00a668;
-    --windowHeight: 400;
-    --navColor: #4490ce;
-  }
+  @import "../../../init/variables.css";
+
 
   .confirm-submission-heading {
     text-align: center;

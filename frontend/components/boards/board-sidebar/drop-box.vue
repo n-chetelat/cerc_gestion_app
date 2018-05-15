@@ -60,10 +60,6 @@ export default {
 
 <style scoped>
 
-:root {
-
-}
-
 .drop-box {
   border: 3px dashed;
   display: flex;

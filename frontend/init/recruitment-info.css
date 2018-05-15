@@ -1,7 +1,4 @@
-:root {
-  --headerColor: #292929;
-  --paragraphColor: #767676;
-}
+@import "./variables.css";
 
 .application-information {
   margin: 15px 10%;

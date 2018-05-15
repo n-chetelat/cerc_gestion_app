@@ -182,9 +182,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
 
   <style>
 
-  :root {
-    --navHeight: 8;
-  }
+  @import "../init/variables.css";
 
 .recruitment-form-container {
   width: 100%;

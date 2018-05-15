@@ -1,0 +1,12 @@
+:root {
+  --themeColor: #00a668;
+  --textFamily: 'Open Sans', Arial, sans-serif;
+  --textColor: gray(20);
+  --windowHeight: 400;
+  --navColor: #4490ce;
+  --fieldsBoxShadow: -1px 1px 2px;
+  --paragraphColor: #767676;
+  --cardBg: #fafafa;
+  --navHeight: 8;
+  --headerColor: #292929;
+}

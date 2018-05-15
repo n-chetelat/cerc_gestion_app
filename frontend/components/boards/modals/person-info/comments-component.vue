@@ -63,11 +63,7 @@ export default {
 
 <style>
 
-  :root {
-    --textFamily: 'Open Sans', Arial, sans-serif;
-    --textColor: gray(20);
-    --themeColor: #00a668;
-  }
+@import "../../../../init/variables.css";
 
   .comments-component {
     width: 90%;

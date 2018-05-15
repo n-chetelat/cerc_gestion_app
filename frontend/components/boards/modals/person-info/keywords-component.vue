@@ -86,10 +86,7 @@ export default {
 
 <style>
 
-  :root {
-    --textFamily: 'Open Sans', Arial, sans-serif;
-    --textColor: gray(20);
-  }
+  @import "../../../../init/variables.css";
 
   .keywords-component {
 

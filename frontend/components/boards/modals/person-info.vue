@@ -120,11 +120,7 @@ export default {
 
 <style>
 
-  :root {
-    --themeColor: #00a668;
-    --windowHeight: 400;
-    --navColor: #4490ce;
-  }
+@import "../../../init/variables.css";
 
   .person-info {
     min-height: 300px;

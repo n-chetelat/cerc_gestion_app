@@ -178,9 +178,7 @@ export default {
 
 <style>
 
-  :root {
-    --windowHeight: 400;
-  }
+@import "../../../../init/variables.css";
 
   .correspondence {
     & .correspondence-wrapper {

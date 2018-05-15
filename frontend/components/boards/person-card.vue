@@ -49,10 +49,7 @@ export default {
 
 <style>
 
-:root {
-  --themeColor: #00a668;
-  --cardBg: #fafafa;
-}
+@import "../../init/variables.css";
 
 .person-card {
   padding: 10px;

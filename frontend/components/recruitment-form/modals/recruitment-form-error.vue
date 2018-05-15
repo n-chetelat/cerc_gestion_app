@@ -44,9 +44,7 @@ export default {
 
 <style>
 
-  :root {
-    --paragraphColor: #767676;
-  }
+  @import "../../../init/variables.css";
 
   .error-message {
     min-height: 300px;

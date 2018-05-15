@@ -37,9 +37,7 @@ export default {
 
 <style>
 
-:root {
-  --headerColor: #292929;
-}
+@import "../../init/variables.css";
 
   .modal {
     z-index: 200;

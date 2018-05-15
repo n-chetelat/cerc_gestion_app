@@ -144,10 +144,7 @@ export default {
 </template>
 
 <style>
-  :root {
-    --windowHeight: 400;
-    --fieldsBoxShadow: -1px 1px 2px;
-  }
+@import "../../../../../init/variables.css";
 
   .compose-email {
     position: relative;

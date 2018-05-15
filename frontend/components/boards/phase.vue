@@ -92,9 +92,7 @@ export default {
 
 <style>
 
-:root {
-  --themeColor: #00a668;
-}
+@import "../../init/variables.css";
 
 .phase {
 

@@ -15,9 +15,7 @@ export default {
 
 <style>
 
-  :root {
-    --textFamily: 'Open Sans', Arial, sans-serif;
-  }
+  @import "../../../../init/variables.css";
 
   .input-textarea textarea {
     font-family: var(--textFamily);

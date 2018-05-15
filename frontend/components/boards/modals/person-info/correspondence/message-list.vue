@@ -63,9 +63,7 @@ export default {
 
 <style>
 
-  :root {
-    --themeColor: #00a668;
-  }
+  @import "../../../../../init/variables.css";
 
   .message-list {
     & .message-line {

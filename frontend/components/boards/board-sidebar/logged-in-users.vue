@@ -45,11 +45,7 @@ export default {
 
 <style>
 
-:root {
-  --themeColor: #00a668;
-  --textFamily: 'Open Sans', Arial, sans-serif;
-  --textColor: gray(20);
-}
+@import "../../../init/variables.css";
 
 .logged-in-users {
   padding: 0 5px;
