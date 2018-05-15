@@ -85,7 +85,7 @@ export default {
         :field-id="field.id", :field-type="field.type", :class="{'mandatory': !field.options.optional}",
         @input="calculateFormIsValid", :saved-value="getSavedValue(field)"
       )
-      button.submit(type="button", :disabled="!formIsValid", @click="saveApplication") Save
+      button.submit(type="button", :disabled="!formIsValid", @click="saveApplication", :class="{'--disabled': !formIsValid}") Save
 
 
 </template>

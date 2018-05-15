@@ -18,6 +18,7 @@ export default {
     },
     formatIsValid() {
       return !this.value ||
+        this.value.constructor === Object ||
         (this.value && this.value.type === "application/pdf")
     },
     isValid() {

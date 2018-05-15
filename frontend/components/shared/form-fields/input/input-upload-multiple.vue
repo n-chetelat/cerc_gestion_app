@@ -23,7 +23,10 @@ export default {
     },
     formatIsValid() {
       return !this.value.length ||
-        every(this.value, (val) => val.type === "application/pdf")
+        every(this.value, (val) => {
+          return val.constructor === Object ||
+            val.type === "application/pdf"
+        })
     },
     isValid() {
       if (!this.options.optional) {
