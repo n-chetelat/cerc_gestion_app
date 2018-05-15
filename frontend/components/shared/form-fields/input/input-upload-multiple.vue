@@ -48,9 +48,11 @@ export default {
           that.value.push(files[index])
         }
       })
+      this.$emit("input")
     },
     removeFile(file) {
       this.value = difference(this.value, [file])
+      this.$emit("input")
     },
   }
 }
