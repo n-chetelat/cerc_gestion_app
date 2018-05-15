@@ -1,4 +1,4 @@
-desc "Call action for fetching new email"
+desc "Call action for fetching new email at specific interval"
 task :fetch_recent_email_threads, [:days_ago] => :environment do |t, args|
   # HACK - limit the times the action will be performed to remedy inflexible Heroku Scheduler intervals.
   # https://elements.heroku.com/addons/scheduler
@@ -9,14 +9,23 @@ task :fetch_recent_email_threads, [:days_ago] => :environment do |t, args|
 
 
   if during_day && twenty_minutes
-    days = args[:days_ago] || 1
-    date = days.to_i.days.ago
-    token = SecureRandom.base58(24)
-    Email::Token.create!(name: "email-threads", token: token)
-    host = Rails.env.development? ? "http://localhost:5000" : "https://staging-cerc-gestion.herokuapp.com"
-    puts "Performing email thread refresh..."
-    ::HTTParty.get("#{host}/correspondence/new?token=#{token}&date=#{date}")
+    fetch_email(args[:days_ago])
   else
     puts "Skipping email threads refresh."
   end
+end
+
+desc "Call action for fetching email at any time"
+task :fetch_email_threads, [:days_ago] => :environment do |t, args|
+  fetch_email(args[:days_ago])
+end
+
+def fetch_email(days_ago = 1)
+  days = days_ago
+  date = days.to_i.days.ago
+  token = SecureRandom.base58(24)
+  Email::Token.create!(name: "email-threads", token: token)
+  host = Rails.env.development? ? "http://localhost:5000" : "https://staging-cerc-gestion.herokuapp.com"
+  puts "Performing email thread refresh..."
+  ::HTTParty.get("#{host}/correspondence/new?token=#{token}&date=#{date}")
 end
