@@ -160,6 +160,9 @@ export default {
             button.icon.back-btn(@click="goToThreadList") Back
             h2 Messages from thread "{{getThreadSubject(openThread)}}"
             button.icon.edit-btn(type="button", @click="composing = !composing", v-tooltip="'Compose message'")
+            div.attachment-msg
+              p The messages below may contain attachments not shown here.
+              p Please visit the associated Gmail account to view or send attachments.
           collapse-transition
             compose-email(v-show="composing", :thread="openThread", @scrap="scrapMessage", @success="onSuccess", @error="showFlash('error')", @composing="onComposing")
           message-list(:thread="openThread")
@@ -183,6 +186,15 @@ export default {
     & .correspondence-wrapper {
       max-height: var(--windowHeight)px;
       padding: 2em 2em;
+    }
+    & .attachment-msg {
+      font-size: .8em;
+      border: 1px solid;
+      padding: 5px;
+      text-align: center;
+      & p {
+        margin: 0;
+      }
     }
     & .thread-line {
       cursor: pointer;
