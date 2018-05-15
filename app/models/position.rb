@@ -1,6 +1,5 @@
 class Position < ApplicationRecord
 
-  after_initialize :add_default_values
   before_save :add_recruitment_form
 
   translates :title
@@ -23,10 +22,6 @@ class Position < ApplicationRecord
 
   def to_s
     self.title
-  end
-
-  def add_default_values
-    self.hidden = true if self.hidden.nil?
   end
 
   def duplicate!

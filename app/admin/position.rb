@@ -52,7 +52,7 @@ ActiveAdmin.register Position do
           t.input :title
         end
       end
-      f.input :hidden, input_html: {checked: true}
+      f.input :hidden
       f.input :time_interval_cd, as: :select, collection: enum_option_pairs(Position, :time_interval, true), hint: "The starting date for the applicant will be divided into this unit.", input_html: {class: "select2"}
       if !f.object.new_record?
         panel "Recruitment Form" do
