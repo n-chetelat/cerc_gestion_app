@@ -68,7 +68,7 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "cerc_gestion_#{Rails.env}"
   config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = {host: "staging-cerc-gestion.herokuapp.com"}
+  config.action_mailer.default_url_options = {host: "www.cerc-recruitment.com"}
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

@@ -1,15 +1,21 @@
 <script>
 import FormFieldMixin from "../../../../mixins/form-field-mixin.js"
 
+import { mapGetters } from "vuex"
+
 export default {
   name: "InputUploadSingle",
   mixins: [FormFieldMixin],
   data() {
     return {
       invalidDataType: false,
+      translations: {
+        invalid: {en: "Only PDF format is accepted", fr: "Seulement le format PDF est accepté"}
+      }
     }
   },
   computed: {
+    ...mapGetters("locales", ["currentLocale"]),
     fieldData() {
       if (this.value && this.value.constructor === Object) {
         return this.value.name
@@ -54,7 +60,7 @@ export default {
     label.label {{label}}
       span (pdf)
     input(type="file", accept=".pdf", @change="onChange($event.target.files)")
-    p.invalid-msg(v-if="invalidDataType") Only PDF format is accepted.
+    p.invalid-msg(v-if="invalidDataType") {{translations.invalid[currentLocale]}}
     p.file-list(v-if="fieldData")
       span.file-line
         span {{value.name | truncate(30)}}

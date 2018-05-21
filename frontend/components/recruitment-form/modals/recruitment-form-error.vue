@@ -32,7 +32,7 @@ export default {
         p
           a(href="http://cerc-datascience.polymtl.ca/") Back to the home page
       div(v-if="currentLocale === 'fr'")
-        p Il s'est produit une erreur avec l'execution de cette action.
+        p Il s'est produit une erreur durant l'exécution de cette action.
         p Veuillez réessayer plus tard.
         p
           a(href="http://cerc-datascience.polymtl.ca/") Retour à l'accueil

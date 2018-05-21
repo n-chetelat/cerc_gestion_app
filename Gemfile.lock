@@ -251,6 +251,7 @@ GEM
     public_suffix (3.0.2)
     puma (3.11.3)
     rack (2.0.4)
+    rack-cors (1.0.2)
     rack-protection (2.0.1)
       rack
     rack-proxy (0.6.4)
@@ -399,6 +400,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   pg (>= 0.18, < 2.0)
   puma (~> 3.7)
+  rack-cors
   rails (~> 5.1.5)
   redis (~> 4.0)
   rubyzip (>= 1.0.0)

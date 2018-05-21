@@ -33,7 +33,7 @@ export default {
           a(href="http://cerc-datascience.polymtl.ca/") Back to the home page
       div(v-if="currentLocale === 'fr'")
         p Votre application a été envoyée avec succès.
-        p Nous serons bientôt en contact.
+        p Nous vous contacterons sous peu.
         p
           a(href="http://cerc-datascience.polymtl.ca/") Retour à l'accueil
 

@@ -32,7 +32,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
         formIsValid: false,
         recruitmentFormInput: null,
         translations: {
-          send: {en: "Send", fr: "Envoyer"},
+          send: {en: "Continue", fr: "Continuer"},
           back: {en: "Back to the home page", fr: "Retour à l'accueil"},
         },
       }

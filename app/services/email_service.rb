@@ -18,7 +18,7 @@ class EmailService
     if options[:thread_id]
       # Check if thread exists. There can be an error if it was deleted from inbox.
       thread_exists = self.thread_exists_in_inbox?(options[:thread_id])
-      message[:thread_id] = options[:thread_id] if thread_exists
+      message.thread_id = options[:thread_id] if thread_exists
     end
     gmail_service.send_user_message(USER_ID, message) do |result, error|
       raise error if error

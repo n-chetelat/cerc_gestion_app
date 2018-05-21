@@ -29,9 +29,9 @@ export default {
           en: "Confirmation", fr: "Confirmation"
         },
         subtitle: {en: "Please review your information before submitting",
-          fr: "Veuillez relire votre information avant de la soumettre"
+          fr: "Veuillez vérifier votre information avant de la soumettre"
         },
-        confirm: {en: "Confirm", fr: "Confirmer"}
+        confirm: {en: "Send", fr: "Envoyer"}
       }
     }
   },

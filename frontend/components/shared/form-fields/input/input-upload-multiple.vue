@@ -3,6 +3,8 @@ import FormFieldMixin from "../../../../mixins/form-field-mixin.js"
 
 import { find, difference, filter, every, some } from "lodash-es"
 
+import { mapGetters } from "vuex"
+
 export default {
   name: "InputUploadMultiple",
   mixins: [FormFieldMixin],
@@ -10,9 +12,13 @@ export default {
     return {
       value: [],
       invalidDataType: false,
+      translations: {
+        invalid: {en: "Only PDF format is accepted", fr: "Seulement le format PDF est accepté"}
+      }
     }
   },
   computed: {
+    ...mapGetters("locales", ["currentLocale"]),
     fieldData() {
       return this.value.map((val) => {
         if (val.constructor === Object) {
@@ -66,7 +72,7 @@ export default {
     label.label {{label}}
       span (pdf)
     input(type="file", accept=".pdf", multiple, @change="onChange($event.target.files)")
-    p.invalid-msg(v-if="invalidDataType") Only PDF format is accepted.
+    p.invalid-msg(v-if="invalidDataType") {{translations.invalid[currentLocale]}}
     ul.file-list
       li.file-line(v-for="file in value")
         span {{file.name | truncate(30)}}
