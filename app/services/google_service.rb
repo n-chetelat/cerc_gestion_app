@@ -44,7 +44,7 @@ class GoogleService
   def needs_authorization?
     begin
       @gmail_service.get_user_profile(USER_ID)
-      false
+      @token_store.load(USER_ID).nil?
     rescue Google::Apis::AuthorizationError
       @token_store.delete(USER_ID)
       true
