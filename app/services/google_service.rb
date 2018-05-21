@@ -52,6 +52,7 @@ class GoogleService
 
   end
 
+
   def authorization_uri
     authorizer.get_authorization_url(login_hint: USER_ID, request: request)
   end
