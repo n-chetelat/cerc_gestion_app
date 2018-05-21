@@ -30,10 +30,8 @@ module CercGestion
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins "localhost:5000", "127.0.0.1:5000",
-            "cerc-recruitment.com", "www.cerc-recruitment.com",
-            "staging-cerc-gestion.herokuapp.com"
-        resource '*', headers: :any, methods: [:get, :post, :options]
+        origins "*"
+        resource "*", headers: :any, methods: [:get, :post, :options]
       end
     end
 
