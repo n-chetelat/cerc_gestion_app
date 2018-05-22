@@ -34,11 +34,11 @@ export default {
       if (oldPhaseId === this.phase.uuid) return false
       const payload = {phaseId: this.phase.uuid, personId, oldPhaseId}
       this.changePersonPhase(payload).then(() => {
+        const person = find(this.phase.persons, (p) => p.uuid === personId)
         if (this.phase.has_callback) {
-          const person = find(this.phase.persons, (p) => p.uuid === personId)
           this.$emit("modal", "person-info", { person, tab: "email"})
-          return this.markApplicationForDeletion(person.application_id)
         }
+        return this.markApplicationForDeletion(person.application_id)
       }).catch((err) => {
         this.$emit("modal", "server-error", {})
       })

@@ -9,6 +9,7 @@ class Phase < ApplicationRecord
   validate :only_one_initial_phase
 
   has_many :persons_phases, class_name: "PersonPhase", foreign_key: "phase_id"
+  has_many :persons_phases_not_deleted, -> { not_deleted }, class_name: "PersonPhase", foreign_key: "phase_id"
   has_many :persons, through: :persons_phases
 
   has_many :boards_phases, class_name: "BoardPhase"

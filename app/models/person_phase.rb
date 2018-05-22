@@ -9,4 +9,13 @@ class PersonPhase < ApplicationRecord
 
   acts_as_list scope: :phase
 
+  scope :not_deleted, -> { where(person_id: not_deleted_persons_ids) }
+
+  protected
+
+
+    def self.not_deleted_persons_ids
+      Application.joins(:person).where("applications.to_delete = ?", false)
+        .select(:person_id)
+    end
 end
