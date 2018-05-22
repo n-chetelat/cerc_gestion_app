@@ -50,7 +50,7 @@ const actions = {
     return axios.get(`${getters.phaseEndpoint}/${phaseId}/email_template`, {params: {person_id: personId}}).then(({ data }) => {
       commit("setEmailTemplate", { phaseId, emailTemplate: data })
     })
-  }
+  },
 }
 
 // mutations

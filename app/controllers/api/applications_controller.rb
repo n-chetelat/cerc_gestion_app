@@ -1,10 +1,10 @@
 module Api
   class ApplicationsController < ApiController
-    before_action :authenticate_admin_user!, only: [:index, :show, :update]
+    before_action :authenticate_admin_user!, only: [:index, :show, :update, :deletion]
     before_action :authorize_gmail, only: [:create]
-    before_action :set_resource, only: [:show,:update]
+    before_action :set_resource, only: [:show, :update, :deletion]
 
-    after_action :broadcast_changes, only: [:create, :update]
+    after_action :broadcast_changes, only: [:create, :update, :destroy]
     after_action :email_application_materials, only: [:create]
 
     attr_reader :partial_path, :resource_name
@@ -41,6 +41,13 @@ module Api
       end
     end
 
+    # Mark application for deletion in rake task
+    def deletion
+      @resource.to_delete = true
+      if @resource.save
+        render :show
+      end
+    end
 
     private
 

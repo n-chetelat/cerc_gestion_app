@@ -23,7 +23,7 @@ ActiveAdmin.register Position do
   end
 
   index do
-    # selectable_column
+    selectable_column
     orderable_handle_column url: :sort_admin_position_path
     column :position
     column :title

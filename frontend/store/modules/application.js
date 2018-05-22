@@ -43,6 +43,9 @@ const actions = {
   async fetchApplication({ commit, getters }, applicationId) {
     return axios.get(`${getters.endpoint}/${applicationId}`)
   },
+  markApplicationForDeletion({ commit, getters }, applicationId) {
+    return axios.put(`${getters.endpoint}/${applicationId}/deletion`)
+  }
 }
 
 // mutations
