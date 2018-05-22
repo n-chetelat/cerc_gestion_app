@@ -12,6 +12,10 @@ module StartingDates
     def semester_to_s(date)
       date = Date.parse(date) if date.is_a?(String)
       season = SEMESTERS_MONTHS.invert[date.month]
+
+      # Season may be nil when position in application is changed from semester-centerd to month-centered
+      return month_to_s(date) if season.nil?
+
       season_name = "date.seasons.#{season}"
        "#{ActionController::Base.helpers.t(season_name)} #{date.year}"
     end

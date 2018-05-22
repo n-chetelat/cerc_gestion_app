@@ -66,6 +66,8 @@ export default {
       try {
         this.broadcastToLoggedInUsers("application_change")
         await this.getApplication()
+        await this.getPositionForm(this.application.position_id)
+        this.applicationForm = this.positionFormsById[this.application.position_id]
       } catch(err) {
         showError = true
       }
