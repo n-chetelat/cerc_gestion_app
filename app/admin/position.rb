@@ -5,7 +5,7 @@ ActiveAdmin.register Position do
   scope :visible
   scope :hidden
 
-  permit_params :hidden, :time_interval_cd,
+  permit_params :hidden, :time_interval_cd, :position,
   translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
       :id, :_destroy, :position, :form_cd, :optional, :choices,
@@ -13,6 +13,8 @@ ActiveAdmin.register Position do
     ]
 
   config.filters = false
+  config.sort_order = "position_asc"
+  orderable
 
   sidebar :action, only: [:show] do
     para do
@@ -21,7 +23,9 @@ ActiveAdmin.register Position do
   end
 
   index do
-    selectable_column
+    # selectable_column
+    orderable_handle_column url: :sort_admin_position_path
+    column :position
     column :title
     column :hidden
     column :updated_at
@@ -32,6 +36,7 @@ ActiveAdmin.register Position do
     attributes_table do
       row :title
       row :hidden
+      row :position
       row(:time_interval_cd) { te(resource, :time_interval) }
     end
     panel "Recruitment Form" do
@@ -53,6 +58,7 @@ ActiveAdmin.register Position do
         end
       end
       f.input :hidden
+      f.input :position
       f.input :time_interval_cd, as: :select, collection: enum_option_pairs(Position, :time_interval, true), hint: "The starting date for the applicant will be divided into this unit.", input_html: {class: "select2"}
       if !f.object.new_record?
         panel "Recruitment Form" do

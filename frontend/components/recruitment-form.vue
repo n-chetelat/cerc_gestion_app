@@ -296,6 +296,10 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
       }
     }
   }
+
+
+
+
   .recruitment-form nav {
     display: flex;
     align-items: center;

@@ -9,7 +9,7 @@ module Api
     end
 
     def index
-      @resources = Position.visible
+      @resources = Position.visible.order(:position)
     end
 
     def form

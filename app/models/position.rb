@@ -20,6 +20,9 @@ class Position < ApplicationRecord
     semester: 1,
   }
 
+  acts_as_list
+
+
   def to_s
     self.title
   end
