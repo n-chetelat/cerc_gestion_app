@@ -2,6 +2,7 @@
 .rspec
 /log
 /tmp
+/credentials/*
 /public/system
 /public/images
 /public/packs
@@ -27,12 +28,6 @@ config/database.yml
 /node_modules
 yarn-debug.log*
 .yarn-integrity
-
-# API keys
-client_secret*.json
-service_key.json
-aws-cerc-credentials.csv
-google-cloud-credentials.json
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
