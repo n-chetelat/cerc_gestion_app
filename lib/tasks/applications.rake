@@ -4,6 +4,7 @@ task :delete_marked_applications => :environment do
 
   applications.each do |application|
     person = application.person
+    person.threads.destroy_all
     person.destroy!
   end
 end

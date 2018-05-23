@@ -22,6 +22,7 @@ class EmailService
     end
     gmail_service.send_user_message(USER_ID, message) do |result, error|
       raise error if error
+      return if options[:do_not_save_thread]
       thread = ::Email::Thread.find_or_create_by(google_thread_id: result.thread_id)
       self.fetch_thread_message_details(thread)
       self.associate_thread_with_persons!(thread, result.thread_id)

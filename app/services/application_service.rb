@@ -98,7 +98,7 @@ class ApplicationService
       mail.add_file(path)
     end
 
-    ::EmailService.new(request).send_email_to(mail, {})
+    ::EmailService.new(request).send_email_to(mail, {do_not_save_thread: true})
 
     File.delete(path) if path
   end
