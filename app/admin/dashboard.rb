@@ -31,6 +31,7 @@ ActiveAdmin.register_page "Dashboard" do
           ul do
             li link_to("Recruitment form", root_path, target: "_blank")
             li link_to("Grant Google authorization", "/admin/google/authorize")
+            li link_to("App documentation", app_documentation_url, target: "_blank")
           end
         end
       end

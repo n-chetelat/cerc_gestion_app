@@ -76,7 +76,7 @@ ActiveAdmin.register Phase do
     f.inputs do
       f.input :title
       f.input :color, input_html: { class: 'colorpicker' }
-      f.input :no_color, as: :boolean, hint: "Select to remove theme color."
+      f.input :no_color, label: "No colour", as: :boolean, hint: "Select to remove theme colour."
       f.input :email_label_name, hint: "The label you input here can only be associated with this tag!"
       if f.object.initial
         f.input :initial, hint: "This is currently the tag under which new applications are classified. Deselecting it does not move any existing persons to or from this tag."
@@ -84,9 +84,11 @@ ActiveAdmin.register Phase do
         f.input :initial, hint: "Is this the tag under which newly submitted applications are classified? Selecting this tag will deselect any other as initial. Existing persons will not be moved to or from this tag if selected."
       end
       f.input :description, input_html: {class: "tinymce"}
-      f.inputs "", for: [:phases_callback, f.object.phases_callback || f.object.build_phases_callback] do |a|
-        a.input :title
-        a.input :email_template_id, as: :select, collection: EmailTemplate.limit(10).map {|t| [t.subject, t.id]}, input_html: {class: "select2"}
+      panel "Email Template" do
+        f.inputs "", for: [:phases_callback, f.object.phases_callback || f.object.build_phases_callback] do |a|
+          a.input :title
+          a.input :email_template_id, as: :select, collection: EmailTemplate.limit(10).map {|t| [t.subject, t.id]}, input_html: {class: "select2"}
+        end
       end
     end
     f.actions
