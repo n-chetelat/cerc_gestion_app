@@ -12,7 +12,7 @@ class Phase < ApplicationRecord
   has_many :persons_phases_not_deleted, -> { not_deleted }, class_name: "PersonPhase", foreign_key: "phase_id"
   has_many :persons, through: :persons_phases
 
-  has_many :boards_phases, class_name: "BoardPhase"
+  has_many :boards_phases, class_name: "BoardPhase", dependent: :destroy
   has_many :boards, through: :boards_phases
 
   has_one :phases_callback, class_name: "Phases::Callback", dependent: :destroy

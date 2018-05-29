@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   rescue_from ::Google::Apis::ClientError, ::Google::Apis::ServerError do |error|
-    render json: {error: "#{error.status_code} Error with Google Api: #{error}"}, status: error.status_code
+    render json: {error: "#{error.status_code} Error with Google Api: #{error}"}, status: error.try(:status_code)
   end
   rescue_from ::GmailOauthError, ::Google::Apis::AuthorizationError do |error|
     # ::GmailOauthMailer.authorization_needed.deliver_now # Uncomment if app configured to send email.

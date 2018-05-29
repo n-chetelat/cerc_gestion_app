@@ -6,12 +6,14 @@ ActiveAdmin.register Phase do
   config.filters = false
 
   controller do
-    after_action :broadcast_changes, only: [:create, :update, :destroy]
+    after_action :broadcast_changes, only: [:update, :destroy]
 
     def create
       resource = resource_class.create!(permitted_params[:phase])
       create_or_update_email_label(resource, params)
-      resource.save!
+      if resource.save!
+        BoardChannelService.send_phases_update(resource.boards.pluck(:slug))
+      end
       redirect_to admin_phase_path(resource)
     end
 
@@ -59,7 +61,18 @@ ActiveAdmin.register Phase do
     column :title
     column :initial
     column :created_at
-    actions
+
+    actions defaults: false do |resource|
+      item "View", admin_phase_path(resource)
+      text_node "&nbsp".html_safe
+      item "Edit", edit_admin_phase_path(resource)
+      text_node "&nbsp".html_safe
+      if resource.persons.empty?
+        item "Delete", admin_phase_path(resource), method: :delete
+      else
+        link_to "Delete", "#", data: { :confirm => "You cannot delete this Tag!\nIt currently contains active applications.\nPlease move all applications from this Tag in order to delete it." }
+      end
+    end
   end
 
   show do

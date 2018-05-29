@@ -2,7 +2,7 @@ class Board < ApplicationRecord
 
   before_validation :set_slug, if: Proc.new {|board| board.changes["title"].present? }
 
-  has_many :boards_phases, -> { order(position: :asc) }, class_name: "BoardPhase"
+  has_many :boards_phases, -> { order(position: :asc) }, class_name: "BoardPhase", dependent: :destroy
   has_many :phases, through: :boards_phases
 
   accepts_nested_attributes_for :boards_phases, allow_destroy: true
