@@ -1,6 +1,6 @@
 <script>
 
-import { mapGetters, mapActions } from "vuex"
+import { mapGetters } from "vuex"
 
 import { map } from "lodash-es"
 
@@ -37,6 +37,7 @@ export default {
   },
   computed: {
     ...mapGetters("locales", ["currentLocale"]),
+    ...mapGetters("recruitmentInfo", ["termsConditions"]),
     recruitmentFormFields() {
       return map(this.recruitmentFormInput, (input) => {
         const {fieldType, label, value, fieldId, options} = input
@@ -78,6 +79,7 @@ export default {
     template(slot="body")
       div.confirm-submission
         component.field-row(v-for="field in recruitmentFormFields", :is="`display-${field.type}`", :field="field", :options="field.options")
+        p.field-row.terms-conditions(v-if="termsConditions") {{termsConditions}}
         button.submit(@click="submitApplication") {{translations.confirm[currentLocale]}}
 
 </template>
@@ -144,6 +146,18 @@ export default {
         width: 60%;
         white-space: pre-wrap;
       }
+    }
+
+    & .terms-conditions {
+      word-wrap: break-word;
+      width: 90%;
+      text-align: justify;
+      color: rgb(20, 20, 20);
+      font-size: .8em;
+      margin: auto;
+      border-top: 1px solid;
+      padding-top: 2em;
+      line-height: 1.4em;
     }
 
     & .submit {

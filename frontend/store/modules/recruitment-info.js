@@ -6,6 +6,7 @@ const state = {
   content: null,
   copyright: null,
   positionLabel: null,
+  terms: null,
 }
 
 // getters
@@ -14,6 +15,7 @@ const getters = {
   recruitmentInfo: state => state.content,
   pageCopyright: state => state.copyright,
   positionLabel: state => state.positionLabel,
+  termsConditions: state => state.terms,
 }
 
 // actions
@@ -31,6 +33,7 @@ const mutations = {
     state.content = info.content
     state.copyright = info.copyright
     state.positionLabel = info.positions
+    state.terms = info.terms
   },
 }
 
