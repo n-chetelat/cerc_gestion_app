@@ -86,6 +86,7 @@ export default {
 
 <style>
 
+
   @import "../../../init/variables.css";
 
 
