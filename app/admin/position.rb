@@ -29,7 +29,18 @@ ActiveAdmin.register Position do
     column :title
     column :hidden
     column :updated_at
-    actions
+
+    actions defaults: false do |resource|
+      item "View", admin_position_path(resource)
+      text_node "&nbsp".html_safe
+      item "Edit", edit_admin_position_path(resource)
+      text_node "&nbsp".html_safe
+      if resource.applications.empty?
+        item "Delete", admin_position_path(resource), method: :delete
+      else
+        link_to "Delete", "#", data: { :confirm => "You cannot delete this Position!\nIt is currently tied to one or more applications.\nPlease finalize all the applications related to this position in order to delete it." }
+      end
+    end
   end
 
   show do

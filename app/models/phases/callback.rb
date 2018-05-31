@@ -23,6 +23,7 @@ module Phases
       else
         new_template = EmailTemplate.find(template_id.to_i)
         self.build_callbacks_email_template(email_template: new_template)
+        self.save!
       end
     end
 
