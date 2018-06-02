@@ -1,6 +1,7 @@
 module Positions
   class FormField < ApplicationRecord
     include ::FormEnumerable
+    include ::StartingDates
 
     self.table_name = "positions_form_fields"
 
@@ -26,10 +27,18 @@ module Positions
     end
 
     def choices_with_locale(locale = I18n.locale)
-      return nil unless self.needs_choices?
-      self.locale_choices.map do |id, line|
-        {id: id, label: line[locale.to_s]}
+      if self.needs_choices?
+        self.locale_choices.map {|id, line| {id: id, label: line[locale.to_s]} }
+      elsif self.has_default_choices?
+        self.default_choices
+      else
+        nil
       end
+    end
+
+    def default_choices
+      return nil unless self.has_default_choices?
+      self.class.generate_starting_dates(self.form)
     end
 
   end

@@ -15,6 +15,8 @@ import InputCheckbox from './shared/form-fields/input/input-checkbox.vue'
 import InputRadio from './shared/form-fields/input/input-radio.vue'
 import InputDate from './shared/form-fields/input/input-date.vue'
 import InputSelect from './shared/form-fields/input/input-select.vue'
+import InputMonth from './shared/form-fields/input/input-month.vue'
+import InputSemester from './shared/form-fields/input/input-semester.vue'
 
 import RecruitmentFormSuccessModal from './recruitment-form/modals/recruitment-form-success.vue'
 import RecruitmentFormErrorModal from './recruitment-form/modals/recruitment-form-error.vue'
@@ -123,6 +125,8 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
       InputDate,
       InputSelect,
       InputTextarea,
+      InputMonth,
+      InputSemester,
       RecruitmentFormSuccessModal,
       RecruitmentFormErrorModal,
       ConfirmSubmissionModal

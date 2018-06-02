@@ -17,7 +17,7 @@ module Positions
         fields << {
           id: "starting_date",
           label: ActionController::Base.helpers.t("activerecord.attributes.positions/recruitment_form.starting_date"),
-          options: { choices: self.class.generate_startng_dates(self.position.time_interval) },
+          options: { choices: self.class.generate_starting_dates(self.position.time_interval) },
           type: "input-select"
         }
     end

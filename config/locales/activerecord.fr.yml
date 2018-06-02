@@ -9,6 +9,8 @@ fr:
       select: Menu déroulant
       upload_single: Téléversement (un seule fichier)
       upload_multiple: Téléversement (plusieurs fichiers)
+      month: Mois
+      semester: Sessions
     time_interval:
       semester: Session
       month: Mois

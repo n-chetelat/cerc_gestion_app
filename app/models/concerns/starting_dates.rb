@@ -25,7 +25,7 @@ module StartingDates
        "#{ActionController::Base.helpers.t("date.month_names")[month_index]} #{date.year}"
     end
 
-    def generate_startng_dates(interval_type)
+    def generate_starting_dates(interval_type)
       choices = []
       current_year = Date.today.year
       case interval_type

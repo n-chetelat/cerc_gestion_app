@@ -9,6 +9,8 @@ en:
       select: Pull-down menu
       upload_single: Upload (single file)
       upload_multiple: Upload (multiple files)
+      month: Months
+      semester: Semesters
     time_interval:
       semester: Semester
       month: Month
