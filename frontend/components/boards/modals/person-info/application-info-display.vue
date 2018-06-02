@@ -7,6 +7,8 @@ import DisplayTextarea from "../../../shared/form-fields/display/display-textare
 import DisplayDate from "../../../shared/form-fields/display/display-date.vue"
 import DisplayRadio from "../../../shared/form-fields/display/display-radio.vue"
 import DisplaySelect from "../../../shared/form-fields/display/display-select.vue"
+import DisplayMonth from "../../../shared/form-fields/display/display-month.vue"
+import DisplaySemester from "../../../shared/form-fields/display/display-semester.vue"
 import DisplayCheckbox from "../../../shared/form-fields/display/display-checkbox.vue"
 import DisplayUploadSingle from "../../../shared/form-fields/display/display-upload-single.vue"
 import DisplayUploadMultiple from "../../../shared/form-fields/display/display-upload-multiple.vue"
@@ -44,6 +46,8 @@ export default {
     DisplayDate,
     DisplayRadio,
     DisplaySelect,
+    DisplayMonth,
+    DisplaySemester,
     DisplayTextarea,
     DisplayCheckbox,
     DisplayUploadSingle,

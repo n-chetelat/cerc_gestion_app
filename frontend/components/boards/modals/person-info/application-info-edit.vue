@@ -11,6 +11,8 @@ import InputCheckbox from '../../../shared/form-fields/input/input-checkbox.vue'
 import InputRadio from '../../../shared/form-fields/input/input-radio.vue'
 import InputDate from '../../../shared/form-fields/input/input-date.vue'
 import InputSelect from '../../../shared/form-fields/input/input-select.vue'
+import InputMonth from '../../../shared/form-fields/input/input-month.vue'
+import InputSemester from '../../../shared/form-fields/input/input-semester.vue'
 
 export default {
   name: "ApplicationInfoEdit",
@@ -68,6 +70,8 @@ export default {
     InputDate,
     InputRadio,
     InputSelect,
+    InputMonth,
+    InputSemester,
     InputTextarea,
     InputCheckbox,
     InputUploadSingle,
