@@ -204,6 +204,8 @@ class ApplicationService
             !!(Date.parse(value) rescue false)
           when :select, :radio
             field.locale_choices.keys.include?(value)
+          when :month, :semester
+            field.choices_with_locale.map {|ch| ch[:id].to_s }.include?(value)
           when :checkbox
             value.respond_to?(:each) && value.values.all? do |check|
               field.locale_choices.keys.include?(check)
@@ -217,7 +219,7 @@ class ApplicationService
     def self.field_to_hash(form_field, value)
       attrs = {form_field_id: form_field.id, label: form_field.label, type: form_field.form}
       attrs[:value] = case form_field.form
-      when :text, :textarea, :date, :radio, :select, :checkbox
+      when :text, :textarea, :date, :radio, :select, :checkbox, :month, :semester
         value
       when :upload_single
         if value
@@ -247,6 +249,9 @@ class ApplicationService
         value.to_formatted_s(:long)
       when :radio, :select
         form_field.locale_choices[value].try(:[], I18n.locale.to_s)
+      when :month, :semester
+        item = form_field.choices_with_locale.find {|ch| ch[:id].to_s == value}
+        item[:label]
       when :checkbox
         (value || []).map do |val|
           form_field.locale_choices[val][I18n.locale.to_s]
