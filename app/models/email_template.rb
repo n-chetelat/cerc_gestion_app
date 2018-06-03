@@ -13,14 +13,14 @@ class EmailTemplate < ApplicationRecord
 
   TEMPLATE_VARIABLES = [
     "name", "lastname", "full_name", "email",
-    "position", "starting_date_label"
+    "position", "starting_date_label", "sender_name"
   ]
 
   def to_s
     self.subject
   end
 
-  def compile_with_vars(recipient)
+  def compile_with_vars(recipient, options = {})
     compiled_attrs = {}
     recipient_locale = recipient.application.try(:locale) || I18n.locale
     ["subject", "body"].each do |attr|
@@ -28,8 +28,12 @@ class EmailTemplate < ApplicationRecord
       compiled = self.send(attr_with_locale)
       if (matches = self.send(attr_with_locale).scan(/(\{\{\w+\}\})/))
         matches.flatten.uniq.each do |match|
-          method = match.gsub(/[\{|\}]/, "").strip
-          replacement = recipient.respond_to?(method) ? recipient.send(method).try(:to_s) : ""
+          if /sender_name/.match(match)
+            replacement = options[:sender_name]
+          else
+            method = match.gsub(/[\{|\}]/, "").strip
+            replacement = recipient.respond_to?(method) ? recipient.send(method).try(:to_s) : ""
+          end
           compiled.gsub!(match, replacement)
         end
       end

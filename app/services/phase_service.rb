@@ -2,7 +2,7 @@ class PhaseService
 
   def self.place_person_in_phase(person, phase, request)
     return if phase.nil? || person.nil?
-    
+
     person_phase = PersonPhase.find_or_initialize_by(person: person)
     person_phase.phase = phase
     person_phase.save!
@@ -32,7 +32,8 @@ class PhaseService
   def self.apply_automatic_callbacks_for(person, phase, request)
     return unless callback = phase.phases_callback
     if template = callback.email_template
-      compiled_email = template.compile_with_vars(person)
+      sender_name = request.env["warden"].user.try(:full_name) || "CERC Data Science Team"
+      compiled_email = template.compile_with_vars(person, {sender_name: sender_name})
 
       mail = Mail.new do
         to person.email

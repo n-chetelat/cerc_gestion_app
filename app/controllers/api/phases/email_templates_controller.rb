@@ -14,7 +14,7 @@ module Api
       def show
         template = @phase.email_template
         if template
-          @resource = template.compile_with_vars(@person)
+          @resource = template.compile_with_vars(@person, {sender_name: current_admin_user.full_name})
         else
           render json: nil
         end
