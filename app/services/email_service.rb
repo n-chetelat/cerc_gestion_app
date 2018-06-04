@@ -89,7 +89,7 @@ class EmailService
 
     gmail_service.list_user_threads(USER_ID, q: query, max_results: max_results, page_token: options[:next_page_token]) do |result, error|
       raise error if error
-      result.threads.each do |thread_object|
+      (result.threads || []).each do |thread_object|
         unless thread = Email::Thread.find_by(google_thread_id: thread_object.id)
           thread = Email::Thread.new(google_thread_id: thread_object.id)
         end
