@@ -25,6 +25,7 @@ desc "Delete files not attached to an application"
 task :delete_unused_files => :environment do
   used_attachment_ids = Application.all.map(&:attachment_ids).flatten
   to_delete = Attachment.where.not(id: used_attachment_ids)
+  
   to_delete.each do |attachment|
     begin
       attachment.file.try(:destroy!)
