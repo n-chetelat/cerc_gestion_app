@@ -15,7 +15,7 @@ class PersonPhase < ApplicationRecord
 
 
     def self.not_deleted_persons_ids
-      Application.joins(:person).where("applications.to_delete = ?", false)
+      Application.joins(:person).where(closed_at: nil)
         .select(:person_id)
     end
 end

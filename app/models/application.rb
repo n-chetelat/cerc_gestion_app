@@ -21,11 +21,17 @@ class Application < ApplicationRecord
       uploads = self.fields.select {|k, v| /input_upload/.match(k) }
       uploads.values.flatten.compact.map do |upload|
         if uri = upload["uri"]
-          GlobalID::Locator.locate(uri)
+          GlobalID::Locator.locate(uri) rescue nil
         end
       end.compact
 
     end
+  end
+
+  def attachment_ids
+    upload_uris = self.fields.select {|k, v| /input_upload/.match(k) }
+      .values.flatten.compact.map {|upload| upload["uri"] }.compact
+    upload_uris.map {|uri| uri.scan(/(\d+$)/).flatten.first.try(:to_i) }
   end
 
   def starting_date_to_s

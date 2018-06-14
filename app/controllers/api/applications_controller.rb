@@ -43,7 +43,7 @@ module Api
 
     # Mark application for deletion in rake task
     def deletion
-      @resource.to_delete = true
+      @resource.closed_at = DateTime.now
       if @resource.save
         render :show
       end
