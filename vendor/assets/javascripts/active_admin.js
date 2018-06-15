@@ -4,6 +4,7 @@
 //= require activeadmin-orderable
 //= require tinymce
 //= require position
+//= require board
 //= require jquery.minicolors
 
 $(document)

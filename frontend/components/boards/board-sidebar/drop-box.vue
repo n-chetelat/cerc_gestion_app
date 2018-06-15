@@ -38,7 +38,8 @@ export default {
         if (this.phase.has_callback) {
           this.$emit("modal", "person-info", { person, tab: "email"})
         }
-        return this.markApplicationForDeletion(person.application_id)
+        const params = {applicationId: person.application_id, accepted: this.phase.accepting}
+        return this.markApplicationForDeletion(params)
       }).catch((err) => {
         this.$emit("modal", "server-error", {})
       })

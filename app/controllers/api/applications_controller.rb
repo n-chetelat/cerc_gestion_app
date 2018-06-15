@@ -41,9 +41,10 @@ module Api
       end
     end
 
-    # Mark application for deletion in rake task
+    # Mark application for cleanup of materials in rake task
     def deletion
       @resource.closed_at = DateTime.now
+      @resource.accepted = true if params[:accepted]
       if @resource.save
         render :show
       end

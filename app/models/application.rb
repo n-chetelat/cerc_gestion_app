@@ -14,6 +14,7 @@ class Application < ApplicationRecord
   delegate :time_interval, to: :position
 
   validates :starting_date, presence: true
+  validate :only_accepted_when_closed
 
   def attachments
     @attachments ||= begin
@@ -61,5 +62,13 @@ class Application < ApplicationRecord
       end
     end
   end
+
+  protected
+
+    def only_accepted_when_closed
+      if !self.closed_at && self.accepted
+        errors.add(:accepted, "Application cannot be accepted if not closed.")
+      end
+    end
 
 end
