@@ -14,6 +14,8 @@ class Person < ApplicationRecord
   has_many :persons_threads, class_name: "Email::PersonThread", foreign_key: "person_id", dependent: :destroy, inverse_of: :person
   has_many :threads, through: :persons_threads
 
+  has_many :persons_profile_fields, dependent: :destroy
+
   scope :not_in_phase, -> { where.not(id: joins(:persons_phases).select(:person_id)) }
   delegate :starting_date, to: :application
 

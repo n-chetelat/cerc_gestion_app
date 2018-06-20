@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180615175338) do
+ActiveRecord::Schema.define(version: 20180620174132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -175,6 +175,16 @@ ActiveRecord::Schema.define(version: 20180615175338) do
     t.index ["phase_id"], name: "index_persons_phases_on_phase_id"
   end
 
+  create_table "persons_profile_fields", force: :cascade do |t|
+    t.bigint "person_id"
+    t.bigint "profile_field_id"
+    t.jsonb "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_persons_profile_fields_on_person_id"
+    t.index ["profile_field_id"], name: "index_persons_profile_fields_on_profile_field_id"
+  end
+
   create_table "phases", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -260,6 +270,16 @@ ActiveRecord::Schema.define(version: 20180615175338) do
     t.index ["positions_requirement_id"], name: "index_758f0a08048846c3abd13663ef37786654691ba1"
   end
 
+  create_table "profile_fields", force: :cascade do |t|
+    t.string "label"
+    t.integer "form_cd", default: 0
+    t.jsonb "options", default: {}
+    t.boolean "optional", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "form_field_id"
+  end
+
   create_table "recruitment_info_translations", force: :cascade do |t|
     t.integer "recruitment_info_id", null: false
     t.string "locale", null: false
@@ -318,6 +338,8 @@ ActiveRecord::Schema.define(version: 20180615175338) do
   add_foreign_key "email_persons_threads", "persons"
   add_foreign_key "persons_phases", "persons"
   add_foreign_key "persons_phases", "phases"
+  add_foreign_key "persons_profile_fields", "persons"
+  add_foreign_key "persons_profile_fields", "profile_fields"
   add_foreign_key "phases_callbacks", "phases"
   add_foreign_key "phases_callbacks_email_templates", "phases_callbacks"
   add_foreign_key "positions_form_fields", "positions_recruitment_forms", column: "recruitment_form_id"
