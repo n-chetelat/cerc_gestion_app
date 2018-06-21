@@ -6,6 +6,6 @@ class ProfileField < ApplicationRecord
 
   has_many :persons_profile_fields, class_name: "PersonProfileField", dependent: :destroy
 
-  validates :label, uniqueness: true
+  validates :label, uniqueness: true, unless: Proc.new {|f| f.form_field_id.present? }
 
 end

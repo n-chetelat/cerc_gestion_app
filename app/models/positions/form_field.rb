@@ -41,5 +41,9 @@ module Positions
       self.class.generate_starting_dates(self.form)
     end
 
+    def input_field_generated_id
+      "input_#{self.form}_#{self.id}"
+    end
+
   end
 end

@@ -20,6 +20,10 @@ module FormEnumerable
     NEED_CHOICES = [5, 6, 7]
 
     HAS_DEFAULT_CHOICES = [8, 9]
+
+    UPLOADS = [2, 3]
+
+    scope :without_uploads, -> { where.not(form_cd: UPLOADS) }
   end
 
   def needs_choices?

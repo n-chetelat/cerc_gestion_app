@@ -150,7 +150,7 @@ class ApplicationService
       end
 
       form_fields.each do |field|
-        attribute_name = "input_#{field.form}_#{field.id}"
+        attribute_name = field.input_field_generated_id
         attribute = params[attribute_name]
         if attribute.nil?
           application.fields[attribute_name] = nil
@@ -183,7 +183,7 @@ class ApplicationService
 
     def self.validate_form_fields(form_fields, params)
       all_valid = form_fields.all? do |field|
-        attribute_name = "input_#{field.form}_#{field.id}"
+        attribute_name = field.input_field_generated_id
         value = params[attribute_name]
         next true if value.nil?
 
