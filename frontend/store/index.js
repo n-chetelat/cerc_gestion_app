@@ -8,6 +8,7 @@ import boards from './modules/boards'
 import email from './modules/email'
 import comments from './modules/comments'
 import keywords from './modules/keywords'
+import profiles from './modules/profiles'
 
 const adminStore = {
   getters: {
@@ -23,7 +24,8 @@ const adminStore = {
     boards,
     email,
     comments,
-    keywords
+    keywords,
+    profiles,
   },
 }
 

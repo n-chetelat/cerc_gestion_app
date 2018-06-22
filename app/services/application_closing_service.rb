@@ -14,7 +14,8 @@ class ApplicationClosingService
   def store_application_fields_in_profile_fields
     ActiveRecord::Base.transaction do
       @application_form.form_fields.without_uploads.each do |application_field|
-        unless profile_field = ProfileField.find_by(form_field_id: application_field.id)
+        unless profile_field = ProfileField.find_by(label: application_field.label(:en),
+            form_cd: application_field.form_cd)
           profile_field = create_profile_field_from(application_field)
         end
         person_profile_field = profile_field.persons_profile_fields.build(
@@ -32,8 +33,7 @@ class ApplicationClosingService
       field_attrs = application_field.attributes.symbolize_keys.slice(
         :form_cd, :optional, :options)
       profile_field = ProfileField.new(field_attrs.merge({
-        label: application_field.label(:en),
-        form_field_id: application_field.id
+        label: application_field.label(:en)
       }))
       if profile_field.save
         profile_field

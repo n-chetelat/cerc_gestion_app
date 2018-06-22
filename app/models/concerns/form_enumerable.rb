@@ -1,7 +1,14 @@
 module FormEnumerable
   extend ActiveSupport::Concern
+  include ::StartingDates
+
+  NEED_CHOICES = [5, 6, 7]
+  HAS_DEFAULT_CHOICES = [8, 9]
+  UPLOADS = [2, 3]
 
   included do
+    store_accessor :options, :choices, :locale_choices
+
     as_enum :form, {
       text: 0,
       textarea: 1,
@@ -17,12 +24,6 @@ module FormEnumerable
 
     validates :form_cd, presence: true
 
-    NEED_CHOICES = [5, 6, 7]
-
-    HAS_DEFAULT_CHOICES = [8, 9]
-
-    UPLOADS = [2, 3]
-
     scope :without_uploads, -> { where.not(form_cd: UPLOADS) }
   end
 
@@ -32,6 +33,21 @@ module FormEnumerable
 
   def has_default_choices?
     HAS_DEFAULT_CHOICES.include?(self.form_cd)
+  end
+
+  def choices_with_locale(locale = I18n.locale)
+    if self.needs_choices?
+      self.locale_choices.map {|id, line| {id: id, label: line[locale.to_s]} }
+    elsif self.has_default_choices?
+      self.default_choices
+    else
+      nil
+    end
+  end
+
+  def default_choices
+    return nil unless self.has_default_choices?
+    self.class.generate_starting_dates(self.form)
   end
 
   module ClassMethods

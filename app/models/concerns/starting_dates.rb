@@ -1,11 +1,12 @@
 module StartingDates
   extend ActiveSupport::Concern
 
+  SEMESTERS_MONTHS = {winter: 1, summer: 6, autumn: 9}
+
   included do
 
-    SEMESTERS_MONTHS = {winter: 1, summer: 6, autumn: 9}
-
   end
+
 
   module ClassMethods
 

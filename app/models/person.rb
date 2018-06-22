@@ -17,6 +17,9 @@ class Person < ApplicationRecord
   has_many :persons_profile_fields, class_name: "PersonProfileField", foreign_key: "person_id", dependent: :destroy
 
   scope :not_in_phase, -> { where.not(id: joins(:persons_phases).select(:person_id)) }
+  scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
+  scope :rejected, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = FALSE") }
+  scope :active, -> { accepted.where(finished_at: nil) }
   delegate :starting_date, to: :application
 
   def create_email_address

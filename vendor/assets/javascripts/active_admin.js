@@ -5,10 +5,12 @@
 //= require tinymce
 //= require position
 //= require board
+//= require profile_field
 //= require jquery.minicolors
 
 $(document)
 .ready(function() {
+
   $(".filter_form_field.filter_select select").each(function() {
     $(this).select2({
       width: '100%',

@@ -5,7 +5,7 @@ $(document)
     setInitialAcceptingVisibility(inputEl)
   })
 
-  $(document).bind("change", ".is-final", function(event){
+  $(document).bind("change", function(event){
     setAcceptingVisibility(event.target)
   })
 

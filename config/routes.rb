@@ -45,6 +45,9 @@ Rails.application.routes.draw do
         resources :threads, only: [:create, :update]
       end
 
+      resources :profiles, only: [:index]
+      resources :profile_fields, only: [:index]
+
       get "/keywords", to: "applications/keywords#autocomplete"
     end
 

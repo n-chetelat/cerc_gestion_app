@@ -7,6 +7,7 @@ import store from './../store'
 
 import RecruitmentForm from "./../components/recruitment-form.vue"
 import Board from "./../components/board.vue"
+import Profiles from "./../components/profiles.vue"
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     name: "board",
     component: Board,
     props:  (route) => ({ boardSlug: route.params.boardSlug })
+  },
+  {
+    path: "/admin/profiles",
+    name:"profiles",
+    component: Profiles,
   }
 ]
 
