@@ -27,6 +27,17 @@ ActiveAdmin.register_page "Dashboard" do
 
     columns do
       column do
+        panel "Links to Current Profiles" do
+          ul do
+            li link_to("See and Edit Profiles", "/#/admin/profiles", target: "_blank")
+            li link_to("Timeline", "/#/admin/timeline", target: "_blank")
+          end
+        end
+      end
+    end
+
+    columns do
+      column do
         panel "Links" do
           ul do
             li link_to("Recruitment form", root_path, target: "_blank")

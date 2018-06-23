@@ -15,8 +15,14 @@ const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   profileFieldsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PROFILE_FIELDS_URL}`,
   profiles: state => state.all,
-  profilesByPersonId: state => keyBy(state.all, "id"),
   fields: state => state.fields,
+  profileFieldValuesByProfileId: (state) => {
+    const map = {}
+    for (const profile of state.all) {
+      map[profile.id] = keyBy(profile.profile_fields, "profile_field_id")
+    }
+    return map
+  },
 }
 
 // actions

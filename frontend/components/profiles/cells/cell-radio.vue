@@ -1,7 +1,10 @@
 <script>
 
+import CellFieldMixin from "mixins/cell-field-mixin"
+
 export default {
-  name: "CellMonth",
+  name: "CellRadio",
+  mixins: [CellFieldMixin],
   computed: {
     calculatedValue() {
       return this.choicesById &&
@@ -13,8 +16,8 @@ export default {
 </script>
 
 <template lang="pug">
-div.cell-month
-  span {{calculatedValue}}
+  div.cell-radio
+    span {{calculatedValue}}
 
 </template>
 

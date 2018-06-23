@@ -1,7 +1,10 @@
 <script>
 
+import CellFieldMixin from "mixins/cell-field-mixin"
+
 export default {
-  name: "CellMonth",
+  name: "CellSelect",
+  mixins: [CellFieldMixin],
   computed: {
     calculatedValue() {
       return this.choicesById &&
@@ -13,7 +16,7 @@ export default {
 </script>
 
 <template lang="pug">
-div.cell-month
+div.cell-select
   span {{calculatedValue}}
 
 </template>

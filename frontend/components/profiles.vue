@@ -2,7 +2,11 @@
 import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 
+import { keyBy } from "lodash-es"
+
 import { mapGetters, mapActions } from "vuex"
+
+import Field from "components/profiles/field.vue"
 
   export default {
     name: "Profiles",
@@ -29,56 +33,59 @@ import { mapGetters, mapActions } from "vuex"
       },
     },
     components: {
+      Field
     }
   }
   </script>
 
   <template lang="pug">
     div.profiles
+      table.profiles-table
+        thead
+          tr
+            th Name
+            th Lastname
+            th Position
+            th Email
+            th Starting Date
+            th(v-for="field in fields") {{field.label}}
+        tbody
+          tr(v-for="profile in profiles")
+            td {{profile.name}}
+            td {{profile.lastname}}
+            td {{profile.position}}
+            td {{profile.email}}
+            td {{profile.starting_date}}
+            td(v-for="field in fields")
+              field(:profile="profile", :field="field")
 
-      ul
-        li(v-for="profile in profiles") {{profile.full_name}}
-      hr
-      ul
-        li(v-for="field in fields") {{field.label}}
 
 
   </template>
 
   <style>
 
-  body {
-    overflow-x: hidden;
-  }
-
-  .boards {
-    display: flex;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
-  }
-
-  .phases-wrapper {
-    overflow-x: auto;
-    overflow-y: auto;
-    padding: 1em;
-    height: 100%;
-  }
-
-  .phases {
+  .profiles {
     display: flex;
     flex-wrap: nowrap;
-    transition: transform 1s;
+    overflow-x: auto;
     height: 100%;
-    overflow-y: auto;
-  }
 
-  .phase {
-    height: 95%;
-  }
+    & table, th, td {
+      border: 1px solid;
+      border-collapse: collapse;
+    }
 
-  .sidebar {
-    width: 350px;
+    & th, td {
+      min-width: 100px;
+      text-align: center;
+      vertical-align: baseline;
+      padding: 10px;
+    }
+
+    & .profiles-table {
+      margin: 10px;
+    }
   }
 
   </style>
