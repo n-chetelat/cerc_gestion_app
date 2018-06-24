@@ -31,6 +31,9 @@ import Field from "components/profiles/field.vue"
       openModalByName(modalName, data) {
         this.openModal(modalName)
       },
+      getProfileStaticField(profile, attr) {
+        return {value: profile[attr], form: 'text'}
+      }
     },
     components: {
       Field
@@ -51,11 +54,16 @@ import Field from "components/profiles/field.vue"
             th(v-for="field in fields") {{field.label}}
         tbody
           tr(v-for="profile in profiles")
-            td {{profile.name}}
-            td {{profile.lastname}}
-            td {{profile.position}}
-            td {{profile.email}}
-            td {{profile.starting_date}}
+            td
+              field(:profile="profile", :field="getProfileStaticField(profile, 'name')")
+            td
+              field(:profile="profile", :field="getProfileStaticField(profile, 'lastname')")
+            td
+              field(:profile="profile", :field="getProfileStaticField(profile, 'position')")
+            td
+              field(:profile="profile", :field="getProfileStaticField(profile, 'email')")
+            td
+              field(:profile="profile", :field="getProfileStaticField(profile, 'starting_date')")
             td(v-for="field in fields")
               field(:profile="profile", :field="field")
 
@@ -64,6 +72,8 @@ import Field from "components/profiles/field.vue"
   </template>
 
   <style>
+
+  @import "../init/variables.css";
 
   .profiles {
     display: flex;
@@ -77,10 +87,8 @@ import Field from "components/profiles/field.vue"
     }
 
     & th, td {
-      min-width: 100px;
-      text-align: center;
-      vertical-align: baseline;
       padding: 10px;
+      font-family: var(--textFamily);
     }
 
     & .profiles-table {

@@ -9,8 +9,7 @@ export default {
 </script>
 
 <template lang="pug">
-  div.cell-textarea
-    span {{field.value}}
+  span.cell-textarea {{field.value}}
 
 </template>
 
@@ -19,13 +18,13 @@ export default {
 @import "../../../init/variables.css";
 
   .cell-textarea {
-    & span {
-      font-family: var(--textFamily);
-      font-size: .9em;
-      line-height: 1.3em;
-      display: inline-block;
-      width: 30em;
-    }
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: var(--textFamily);
+    font-size: .9em;
+    line-height: 1.3em;
+    display: inline-block;
+    width: 20em;
   }
 
 </style>

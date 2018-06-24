@@ -47,13 +47,24 @@ export default {
 
 <template lang="pug">
   span.field
-    component(:is="`cell-${field.form}`", :field="fieldDataWithMetadata")
+    component.field-cell(contenteditable, :is="`cell-${field.form}`", :field="fieldDataWithMetadata")
 
 
 
 </template>
 
 <style>
-
+  .field {
+    display: flex;
+    min-width: 130px;
+    height: 100%;
+    text-align: center;
+    overflow-y: hidden;
+    & .field-cell {
+      height: 100%;
+      max-height: 80px;
+      margin: 0 auto;
+    }
+  }
 
 </style>

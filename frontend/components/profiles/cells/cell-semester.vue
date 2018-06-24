@@ -16,8 +16,7 @@ export default {
 </script>
 
 <template lang="pug">
-div.cell-semester
-  span {{calculatedValue}}
+  span.cell-semester {{calculatedValue}}
 
 </template>
 

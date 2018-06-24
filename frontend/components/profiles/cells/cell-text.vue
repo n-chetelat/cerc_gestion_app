@@ -9,8 +9,7 @@ export default {
 </script>
 
 <template lang="pug">
-  div.cell-text
-    span {{field.value}}
+  span.cell-text {{field.value}}
 
 </template>
 

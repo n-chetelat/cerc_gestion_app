@@ -16,8 +16,7 @@ export default {
 </script>
 
 <template lang="pug">
-  div.cell-date
-    span {{formattedDate}}
+  span.cell-date {{formattedDate}}
 
 </template>
 

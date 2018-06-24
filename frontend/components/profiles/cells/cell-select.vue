@@ -16,8 +16,7 @@ export default {
 </script>
 
 <template lang="pug">
-div.cell-select
-  span {{calculatedValue}}
+  span.cell-select {{calculatedValue}}
 
 </template>
 

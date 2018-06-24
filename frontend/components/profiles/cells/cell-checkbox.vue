@@ -17,12 +17,18 @@ export default {
 </script>
 
 <template lang="pug">
-  div.cell-checkbox
+  span.cell-checkbox
     ul
       li.value(v-for="val in field.value") {{calculatedValue(val)}}
 
 </template>
 
 <style scoped>
+
+  .cell-checkbox {
+    & ul {
+      display: inline-block;
+    }
+  }
 
 </style>

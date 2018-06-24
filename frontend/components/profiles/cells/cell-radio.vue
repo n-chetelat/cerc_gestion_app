@@ -16,8 +16,7 @@ export default {
 </script>
 
 <template lang="pug">
-  div.cell-radio
-    span {{calculatedValue}}
+  span.cell-radio {{calculatedValue}}
 
 </template>
 
