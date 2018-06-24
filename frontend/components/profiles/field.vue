@@ -54,16 +54,13 @@ export default {
 </template>
 
 <style>
+
+  @import "../../init/variables.css";
+
   .field {
-    display: flex;
-    min-width: 130px;
-    height: 100%;
-    text-align: center;
-    overflow-y: hidden;
+    @apply --field-style;
     & .field-cell {
-      height: 100%;
-      max-height: 80px;
-      margin: 0 auto;
+      @apply --field-cell-style
     }
   }
 

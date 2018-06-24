@@ -23,7 +23,9 @@ class Person < ApplicationRecord
   delegate :starting_date, to: :application
 
   def create_email_address
-    self.email_addresses.build(address: self.email)
+    unless self.email_addresses.exists?(address: self.email)
+      self.email_addresses.build(address: self.email)
+    end
   end
 
   def validate_email_format

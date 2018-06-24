@@ -12,6 +12,7 @@ const state = {
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   allPositions: state => state.all,
+  allPositionsById: state => keyBy(state.all, 'id'),
   positionForms: state => state.forms,
   positionFormsById: (state, getters) => keyBy(getters.positionForms, 'position_id')
 }

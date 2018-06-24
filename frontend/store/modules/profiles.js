@@ -4,6 +4,7 @@ import { keyBy } from "lodash-es"
 
 const BASE_URL = `api/profiles`
 const PROFILE_FIELDS_URL = `api/profile_fields`
+const PERSONS_URL = `api/persons`
 
 const state = {
   all: [],
@@ -14,6 +15,7 @@ const state = {
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   profileFieldsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PROFILE_FIELDS_URL}`,
+  personsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSONS_URL}`,
   profiles: state => state.all,
   fields: state => state.fields,
   profileFieldValuesByProfileId: (state) => {
@@ -37,6 +39,13 @@ const actions = {
       commit("setProfileFields", data)
     })
   },
+  updatePersonData({ commit, getters }, { personId, field, newValue }) {
+    const params = {}
+    params[field] = newValue
+    return axios.put(`${getters.personsEndpoint}/${personId}`, {...params, profile: true}).then(({ data }) => {
+      commit("setPersonProfileField", data)
+    })
+  },
   updateProfileData({ commit, getters }, { personProfileFieldId, newValue }) {
     return axios.put(`${getters.endpoint}/${personProfileFieldId}`, {data: newValue}).then(({ data }) => {
       commit("setPersonProfileField", data)
@@ -53,7 +62,7 @@ const mutations = {
     state.fields = fields
   },
   setPersonProfileField(state, profile) {
-    const person_profile_index = state.all.indexOf(p => p.id === profile.id)
+    const person_profile_index = state.all.findIndex((p) => p.id === profile.id)
     if (person_profile_index < 0) {
       state.all.push(profile)
     } else {

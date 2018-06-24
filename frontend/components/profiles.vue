@@ -7,6 +7,7 @@ import { keyBy } from "lodash-es"
 import { mapGetters, mapActions } from "vuex"
 
 import Field from "components/profiles/field.vue"
+import StaticField from "components/profiles/static-field.vue"
 
   export default {
     name: "Profiles",
@@ -15,6 +16,7 @@ import Field from "components/profiles/field.vue"
       try {
         await this.fetchProfileFields()
         await this.fetchProfiles()
+        await this.getAllPositions()
       } catch (err) {
         this.openModal("server-error", {})
       }
@@ -28,6 +30,7 @@ import Field from "components/profiles/field.vue"
     },
     methods: {
       ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
+      ...mapActions("positions", ["getAllPositions"]),
       openModalByName(modalName, data) {
         this.openModal(modalName)
       },
@@ -36,7 +39,8 @@ import Field from "components/profiles/field.vue"
       }
     },
     components: {
-      Field
+      Field,
+      StaticField
     }
   }
   </script>
@@ -55,15 +59,15 @@ import Field from "components/profiles/field.vue"
         tbody
           tr(v-for="profile in profiles")
             td
-              field(:profile="profile", :field="getProfileStaticField(profile, 'name')")
+              static-field(:profile="profile", :field-name="'name'")
             td
-              field(:profile="profile", :field="getProfileStaticField(profile, 'lastname')")
+              static-field(:profile="profile", :field-name="'lastname'")
             td
-              field(:profile="profile", :field="getProfileStaticField(profile, 'position')")
+              static-field(:profile="profile", :field-name="'position_id'")
             td
-              field(:profile="profile", :field="getProfileStaticField(profile, 'email')")
+              static-field(:profile="profile", :field-name="'email'")
             td
-              field(:profile="profile", :field="getProfileStaticField(profile, 'starting_date')")
+              static-field(:profile="profile", :field-name="'starting_date'")
             td(v-for="field in fields")
               field(:profile="profile", :field="field")
 
@@ -94,6 +98,7 @@ import Field from "components/profiles/field.vue"
     & .profiles-table {
       margin: 10px;
     }
+
   }
 
   </style>

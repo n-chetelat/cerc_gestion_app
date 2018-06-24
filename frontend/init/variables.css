@@ -9,4 +9,17 @@
   --cardBg: #fafafa;
   --navHeight: 8;
   --headerColor: #292929;
+
+  --field-style: {
+    display: flex;
+    min-width: 130px;
+    height: 100%;
+    text-align: center;
+    overflow-y: hidden;
+  }
+  --field-cell-style: {
+    height: 100%;
+    max-height: 80px;
+    margin: 0 auto;
+  }
 }

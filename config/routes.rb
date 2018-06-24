@@ -29,7 +29,7 @@ Rails.application.routes.draw do
           resource :keywords, only: [:show, :update, :destroy]
         end
       end
-      resources :persons, only: [:index, :show, :destroy] do
+      resources :persons, only: [:index, :show, :update, :destroy] do
         scope module: "persons" do
           resource :email, only: [:show]
         end
@@ -45,7 +45,7 @@ Rails.application.routes.draw do
         resources :threads, only: [:create, :update]
       end
 
-      resources :profiles, only: [:index, :create, :update]
+      resources :profiles, only: [:index, :show, :create, :update]
       resources :profile_fields, only: [:index]
 
       get "/keywords", to: "applications/keywords#autocomplete"

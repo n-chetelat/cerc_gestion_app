@@ -17,6 +17,15 @@ module Api
     def show
     end
 
+    def update
+      @resource.update(permitted_params)
+      if params[:profile]
+        render partial: "api/profiles/profile", locals: {person: @resource}
+      else
+        render :show
+      end
+    end
+
     def destroy
       @resource.destroy!
       render :show
@@ -26,7 +35,10 @@ module Api
 
       def set_resource
         @resource = Person.find_by(uuid: params[:id])
-        @scopes = params[:scopes].try(:values) || []
+      end
+
+      def permitted_params
+        params.permit(:name, :lastname, :email, :finished_at)
       end
 
   end

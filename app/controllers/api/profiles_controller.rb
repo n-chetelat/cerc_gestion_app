@@ -12,6 +12,9 @@ module Api
       @resources = Person.active
     end
 
+    def show
+    end
+
     def update
       field = PersonProfileField.find_by(id: params[:id])
       field.data = params[:data]
