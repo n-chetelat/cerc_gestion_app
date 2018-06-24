@@ -36,6 +36,11 @@ const actions = {
     return axios.get(getters.profileFieldsEndpoint).then(({ data }) => {
       commit("setProfileFields", data)
     })
+  },
+  updateProfileData({ commit, getters }, { personProfileFieldId, newValue }) {
+    return axios.put(`${getters.endpoint}/${personProfileFieldId}`, {data: newValue}).then(({ data }) => {
+      commit("setPersonProfileField", data)
+    })
   }
 }
 
@@ -47,6 +52,14 @@ const mutations = {
   setProfileFields(state, fields) {
     state.fields = fields
   },
+  setPersonProfileField(state, profile) {
+    const person_profile_index = state.all.indexOf(p => p.id === profile.id)
+    if (person_profile_index < 0) {
+      state.all.push(profile)
+    } else {
+      state.all[person_profile_index] = profile
+    }
+  }
 }
 
 export default {

@@ -73,7 +73,7 @@ export default {
         })
         Vue.delete(this.editingComments, comment.id)
       } catch(err) {
-        this.$emit("console.error();")
+        this.$emit("error")
       }
     },
   },

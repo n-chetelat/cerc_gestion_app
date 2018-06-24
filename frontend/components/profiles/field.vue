@@ -29,7 +29,7 @@ export default {
     },
     fieldDataWithMetadata() {
       const value = this.profileFieldValuesByProfileId[this.profile.id][this.field.id]
-      return { ...value, ...this.field }
+      return { ...value, ...this.field, id: (value ? value.id : null) }
     }
   },
   components: {
@@ -47,7 +47,7 @@ export default {
 
 <template lang="pug">
   span.field
-    component.field-cell(contenteditable, :is="`cell-${field.form}`", :field="fieldDataWithMetadata")
+    component.field-cell(:is="`cell-${field.form}`", :field="fieldDataWithMetadata")
 
 
 

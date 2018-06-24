@@ -1,5 +1,7 @@
 import { keyBy } from "lodash-es"
 
+import { mapActions } from "vuex"
+
 export default {
   props: {
     field: {
@@ -13,5 +15,8 @@ export default {
       }
       return null
     }
+  },
+  methods: {
+    ...mapActions("profiles", ["updateProfileData"]),
   }
 }
