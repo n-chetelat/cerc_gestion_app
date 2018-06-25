@@ -18,7 +18,9 @@ module Api
     end
 
     def update
-      @resource.update(permitted_params)
+      unless @resource.update(permitted_params)
+        raise "Could not update person's information"
+      end
       if params[:profile]
         render partial: "api/profiles/profile", locals: {person: @resource}
       else

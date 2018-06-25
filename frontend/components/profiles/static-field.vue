@@ -28,14 +28,18 @@ export default {
     },
     isEditable() {
       return !["position_id", "starting_date"].includes(this.fieldName)
-    }
+    },
   },
   methods: {
     ...mapActions("profiles", ["updatePersonData"]),
     async updateValue(event) {
-      if (event.target.innerText === this.value) {
+      if (!this.inputIsValid(event.target.innerText)) {
+        this.$emit("valid", event, false)
         return
       }
+      this.$emit("valid", event, true)
+      if (event.target.innerText === this.value) return
+
       const payload = {
         personId: this.profile.uuid,
         field: this.fieldName,
@@ -47,7 +51,13 @@ export default {
         this.$emit("error")
       }
     },
-
+    inputIsValid(input) {
+      if (this.fieldName === "email") {
+        return !!(input && input.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/))
+      } else {
+        return !!input
+      }
+    }
   }
 }
 </script>
@@ -65,7 +75,9 @@ export default {
   .static-field {
     @apply --field-style;
     & .field-cell {
-      @apply --field-cell-style
+      @apply --field-cell-style;
+      width: 100%;
+      text-align: center;
     }
   }
 

@@ -9,6 +9,7 @@
   --cardBg: #fafafa;
   --navHeight: 8;
   --headerColor: #292929;
+  --errorColor: #ff6a6a;
 
   --field-style: {
     display: flex;

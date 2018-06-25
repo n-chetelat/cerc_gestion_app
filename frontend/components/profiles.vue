@@ -8,6 +8,7 @@ import { mapGetters, mapActions } from "vuex"
 
 import Field from "components/profiles/field.vue"
 import StaticField from "components/profiles/static-field.vue"
+import ServerErrorModal from "./boards/modals/server-error.vue"
 
   export default {
     name: "Profiles",
@@ -31,6 +32,15 @@ import StaticField from "components/profiles/static-field.vue"
     },
     computed: {
       ...mapGetters("profiles", ["profiles", "fields"]),
+      staticFields() {
+        return {
+          name: "Name",
+          lastname: "Lastname",
+          position_id: "Position",
+          email: "Email",
+          starting_date: "Starting Date"
+        }
+      },
     },
     methods: {
       ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
@@ -41,40 +51,42 @@ import StaticField from "components/profiles/static-field.vue"
       },
       getProfileStaticField(profile, attr) {
         return {value: profile[attr], form: 'text'}
+      },
+      openModalByName(modalName, data={}) {
+        this.openModal(modalName)
+      },
+      signalFieldValidity(event, value) {
+        const cell = event.target.closest("td")
+        if (!cell) return
+        if (value) {
+          cell.classList.remove("--invalid")
+        } else {
+          cell.classList.add("--invalid")
+        }
       }
     },
     components: {
       Field,
-      StaticField
+      StaticField,
+      ServerErrorModal
     }
   }
   </script>
 
   <template lang="pug">
     div.profiles
+      server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
       table.profiles-table
         thead
           tr
-            th.static Name
-            th.static Lastname
-            th.static Position
-            th.static Email
-            th.static Starting Date
+            th.static(v-for="(label, key) in staticFields") {{label}}
             th(v-for="field in fields") {{field.label}}
         tbody
           tr(v-for="profile in profiles")
-            td.static
-              static-field(:profile="profile", :field-name="'name'")
-            td.static
-              static-field(:profile="profile", :field-name="'lastname'")
-            td.static
-              static-field(:profile="profile", :field-name="'position_id'")
-            td.static
-              static-field(:profile="profile", :field-name="'email'")
-            td.static
-              static-field(:profile="profile", :field-name="'starting_date'")
+            td.static(v-for="(label, key) in staticFields")
+              static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
             td(v-for="field in fields")
-              field(:profile="profile", :field="field")
+              field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
 
 
@@ -104,7 +116,13 @@ import StaticField from "components/profiles/static-field.vue"
       font-family: var(--textFamily);
 
       &.static {
-        border: 2px solid var(--themeColor);
+        border: 1px solid var(--themeColor);
+      }
+    }
+
+    & td {
+      &.--invalid {
+        background-color: var(--errorColor);
       }
     }
 
