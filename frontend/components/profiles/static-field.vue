@@ -10,7 +10,6 @@ export default {
   },
   data() {
     return {
-      editingField: false,
       fieldChoice: this.profile[this.fieldName],
     }
   },
@@ -53,12 +52,12 @@ export default {
         return
       }
       this.$emit("valid", event, true)
-      if (event.target.innerText === this.value) return
+      if (this.valueNotChanged(event.target.innerText)) return
 
       const payload = {
         personId: this.profile.uuid,
         field: this.fieldName,
-        newValue: event.target.innerText || this.fieldChoice
+        newValue: (this.choices.length ? this.fieldChoice : event.target.innerText)
       }
       try {
         await this.updatePersonData(payload)
@@ -66,7 +65,14 @@ export default {
         this.$emit("error")
       }
     },
-    inputIsValid(input) {
+    valueNotChanged(input="") {
+      if (this.choices.length) {
+        return (this.fieldChoice === this.value)
+      } else {
+        return (input === this.value)
+      }
+    },
+    inputIsValid(input="") {
       if (this.choices.length) {
         return this.choices.map(ch => ch.id).includes(this.fieldChoice)
       } else if (this.fieldName === "email") {
@@ -97,13 +103,6 @@ export default {
     @apply --field-style;
     & .field-cell {
       @apply --field-cell-style;
-      width: 100%;
-      text-align: center;
-
-      & select {
-        min-width: 100%;
-        width: 15em;
-      }
     }
   }
 

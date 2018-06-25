@@ -46,6 +46,11 @@ const actions = {
       commit("setPersonProfileField", data)
     })
   },
+  createProfileData({ commit, getters }, { personId, profileFieldId, newValue }) {
+    return axios.post(getters.endpoint, {person_id: personId, profile_field_id: profileFieldId, data: newValue}).then(({ data }) => {
+      commit("setPersonProfileField", data)
+    })
+  },
   updateProfileData({ commit, getters }, { personProfileFieldId, newValue }) {
     return axios.put(`${getters.endpoint}/${personProfileFieldId}`, {data: newValue}).then(({ data }) => {
       commit("setPersonProfileField", data)

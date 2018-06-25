@@ -29,7 +29,12 @@ export default {
     },
     fieldDataWithMetadata() {
       const value = this.profileFieldValuesByProfileId[this.profile.id][this.field.id]
-      return { ...value, ...this.field, id: (value ? value.id : null) }
+      return { ...value, ...this.field, id: (value ? value.id : null), profile_field_id: this.field.id }
+    }
+  },
+  methods: {
+    emitValid(event, value) {
+      this.$emit("valid", event, value)
     }
   },
   components: {
@@ -47,7 +52,7 @@ export default {
 
 <template lang="pug">
   span.field
-    component.field-cell(:is="`cell-${field.form}`", :field="fieldDataWithMetadata")
+    component.field-cell(:is="`cell-${field.form}`", :profile="profile", :field="fieldDataWithMetadata", @error="$emit('error')", @valid="emitValid")
 
 
 

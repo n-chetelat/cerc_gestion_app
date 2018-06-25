@@ -16,7 +16,7 @@ ActiveAdmin.register ProfileField do
       row :label
       row(:form_cd) { te(resource, :form) }
       row :optional
-      row(:choices) { resource.choices_with_locale(:en).map {|ch| ch[:label] }.to_sentence }
+      row(:choices) { (resource.choices_with_locale(:en) || []).map {|ch| ch[:label] }.to_sentence }
     end
   end
 
