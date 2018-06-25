@@ -6,6 +6,8 @@ json.position_id person.position.id
 application = person.application
 
 json.starting_date application.starting_date
+json.starting_date_label application.starting_date_to_s
+json.starting_date_type application.position.time_interval
 json.applied_at application.created_at.to_formatted_s(:short)
 json.closed_at application.closed_at.to_formatted_s(:short)
 

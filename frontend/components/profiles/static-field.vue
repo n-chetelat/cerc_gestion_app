@@ -14,6 +14,7 @@ export default {
   },
   computed: {
     ...mapGetters("positions", ["allPositionsById"]),
+    ...mapGetters("dates", ["semesters", "months"]),
     value() {
       return this.profile[this.fieldName]
     },
@@ -21,9 +22,9 @@ export default {
       if (this.fieldName === "position_id") {
         return this.allPositionsById[this.value] ?
           this.allPositionsById[this.value].title : null
-      }
-      else if (this.fieldName === "starting_date") return this.value
-      else return this.value
+      } else if (this.fieldName === "starting_date") {
+        return this.profile.starting_date_label
+      } else return this.value
     },
     isEditable() {
       return !["position_id", "starting_date"].includes(this.fieldName)
@@ -57,7 +58,7 @@ export default {
 
 </template>
 
-<style>
+<style scoped>
 
   @import "../../init/variables.css";
 

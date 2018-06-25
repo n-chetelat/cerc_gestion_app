@@ -16,7 +16,11 @@ import StaticField from "components/profiles/static-field.vue"
       try {
         await this.fetchProfileFields()
         await this.fetchProfiles()
-        await this.getAllPositions()
+        await Promise.all([
+          this.getAllPositions(),
+          this.fetchSemesters(),
+          this.fetchMonths(),
+        ])
       } catch (err) {
         this.openModal("server-error", {})
       }
@@ -31,6 +35,7 @@ import StaticField from "components/profiles/static-field.vue"
     methods: {
       ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
       ...mapActions("positions", ["getAllPositions"]),
+      ...mapActions("dates", ["fetchSemesters", "fetchMonths"]),
       openModalByName(modalName, data) {
         this.openModal(modalName)
       },
@@ -50,23 +55,23 @@ import StaticField from "components/profiles/static-field.vue"
       table.profiles-table
         thead
           tr
-            th Name
-            th Lastname
-            th Position
-            th Email
-            th Starting Date
+            th.static Name
+            th.static Lastname
+            th.static Position
+            th.static Email
+            th.static Starting Date
             th(v-for="field in fields") {{field.label}}
         tbody
           tr(v-for="profile in profiles")
-            td
+            td.static
               static-field(:profile="profile", :field-name="'name'")
-            td
+            td.static
               static-field(:profile="profile", :field-name="'lastname'")
-            td
+            td.static
               static-field(:profile="profile", :field-name="'position_id'")
-            td
+            td.static
               static-field(:profile="profile", :field-name="'email'")
-            td
+            td.static
               static-field(:profile="profile", :field-name="'starting_date'")
             td(v-for="field in fields")
               field(:profile="profile", :field="field")
@@ -78,6 +83,10 @@ import StaticField from "components/profiles/static-field.vue"
   <style>
 
   @import "../init/variables.css";
+
+  :root {
+    --cellWidth: 130;
+  }
 
   .profiles {
     display: flex;
@@ -93,6 +102,10 @@ import StaticField from "components/profiles/static-field.vue"
     & th, td {
       padding: 10px;
       font-family: var(--textFamily);
+
+      &.static {
+        border: 2px solid var(--themeColor);
+      }
     }
 
     & .profiles-table {

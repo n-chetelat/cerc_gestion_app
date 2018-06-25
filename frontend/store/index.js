@@ -9,6 +9,7 @@ import email from './modules/email'
 import comments from './modules/comments'
 import keywords from './modules/keywords'
 import profiles from './modules/profiles'
+import dates from './modules/dates'
 
 const adminStore = {
   getters: {
@@ -26,6 +27,7 @@ const adminStore = {
     comments,
     keywords,
     profiles,
+    dates,
   },
 }
 
