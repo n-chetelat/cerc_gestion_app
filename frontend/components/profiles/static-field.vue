@@ -10,10 +10,12 @@ export default {
   },
   data() {
     return {
+      editingField: false,
+      fieldChoice: this.profile[this.fieldName],
     }
   },
   computed: {
-    ...mapGetters("positions", ["allPositionsById"]),
+    ...mapGetters("positions", ["allPositions", "allPositionsById"]),
     ...mapGetters("dates", ["semesters", "months"]),
     value() {
       return this.profile[this.fieldName]
@@ -29,6 +31,19 @@ export default {
     isEditable() {
       return !["position_id", "starting_date"].includes(this.fieldName)
     },
+    choices() {
+      if (this.fieldName === "position_id") {
+        return this.allPositions
+      } else if (this.fieldName === "starting_date") {
+        let collection = []
+        if (this.profile.starting_date_type === "semester") collection = this.semesters
+        if (this.profile.starting_date_type === "month") collection = this.months
+        if (collection.findIndex(c => c.id === this.profile.starting_date) < 0) {
+          collection = [{id: this.profile.starting_date, label: this.profile.starting_date_label}, ...collection]
+        }
+        return collection
+      } else return []
+    }
   },
   methods: {
     ...mapActions("profiles", ["updatePersonData"]),
@@ -43,7 +58,7 @@ export default {
       const payload = {
         personId: this.profile.uuid,
         field: this.fieldName,
-        newValue: event.target.innerText
+        newValue: event.target.innerText || this.fieldChoice
       }
       try {
         await this.updatePersonData(payload)
@@ -52,7 +67,9 @@ export default {
       }
     },
     inputIsValid(input) {
-      if (this.fieldName === "email") {
+      if (this.choices.length) {
+        return this.choices.map(ch => ch.id).includes(this.fieldChoice)
+      } else if (this.fieldName === "email") {
         return !!(input && input.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/))
       } else {
         return !!input
@@ -64,7 +81,11 @@ export default {
 
 <template lang="pug">
   span.static-field
-    span.field-cell(:contenteditable="isEditable", @blur="updateValue($event)") {{displayValue}}
+    span.field-cell(v-if="isEditable", contenteditable, @blur="updateValue($event)") {{displayValue}}
+
+    span.field-cell(v-else)
+      select(v-model="fieldChoice", @change="updateValue($event)")
+        option(v-for="choice in choices", :value="choice.id") {{choice.label || choice.title}}
 
 </template>
 
@@ -78,6 +99,11 @@ export default {
       @apply --field-cell-style;
       width: 100%;
       text-align: center;
+
+      & select {
+        min-width: 100%;
+        width: 15em;
+      }
     }
   }
 

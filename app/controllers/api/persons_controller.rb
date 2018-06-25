@@ -18,7 +18,16 @@ module Api
     end
 
     def update
-      unless @resource.update(permitted_params)
+      if params[:position_id] || params[:starting_date]
+        @resource.application.position_id = params[:position_id] if params[:position_id]
+        @resource.application.starting_date = params[:starting_date] if params[:starting_date]
+        @resource.application.save
+      end
+
+      if permitted_params.to_h.any?
+        @resource.assign_attributes(permitted_params)
+      end
+      unless @resource.save
         raise "Could not update person's information"
       end
       if params[:profile]
