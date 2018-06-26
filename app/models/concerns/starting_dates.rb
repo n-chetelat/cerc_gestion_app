@@ -22,6 +22,7 @@ module StartingDates
     end
 
     def month_to_s(date)
+      date = Date.parse(date) if date.is_a?(String)
       month_index = date.month
        "#{ActionController::Base.helpers.t("date.month_names")[month_index]} #{date.year}"
     end

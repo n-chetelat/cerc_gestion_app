@@ -22,11 +22,11 @@ export default {
 </script>
 
 <template lang="pug">
-  span.cell-checkbox(:class="{'--editing': editing}",)
+  span.cell-checkbox(:class="{'--editing': editing}")
     ul.cell-display(v-if="!editing", @dblclick="editing = true")
       li.value(v-for="val in field.value") {{displayValue(val)}}
     select(v-else, multiple, v-model="fieldChoices", @change="updateValue($event, fieldChoices)", v-on-clickaway="closeEditing")
-      option(:value="null") --
+      option(:value="null", v-if="field.optional") --
       option(v-for="choice in field.choices", :value="choice.id") {{choice.label}}
 
 </template>
