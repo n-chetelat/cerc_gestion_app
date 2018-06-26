@@ -65,8 +65,22 @@ export default {
   .field {
     @apply --field-style;
     & .field-cell {
-      @apply --field-cell-style
+      @apply --field-cell-style;
+
+      &.cell-textarea {
+        overflow: hidden;
+        font-family: var(--textFamily);
+        font-size: .9em;
+        line-height: 1.3em;
+        display: inline-block;
+        min-height: 1.5em;
+
+        &.--editing {
+          max-height: 100%;
+        }
+      }
     }
+
   }
 
 </style>

@@ -79,12 +79,12 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       table.profiles-table
         thead
           tr
-            th.static(v-for="(label, key) in staticFields") {{label}}
+            //- th.static(v-for="(label, key) in staticFields") {{label}}
             th(v-for="field in fields") {{field.label}}
         tbody
           tr(v-for="profile in profiles")
-            td.static(v-for="(label, key) in staticFields")
-              static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+            //- td.static(v-for="(label, key) in staticFields")
+            //-   static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
             td(v-for="field in fields")
               field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 

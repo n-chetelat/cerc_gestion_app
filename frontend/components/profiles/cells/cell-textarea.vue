@@ -1,46 +1,39 @@
 <script>
 
 import CellFieldMixin from "mixins/cell-field-mixin"
+import { mixin as clickaway } from 'vue-clickaway'
 
 export default {
   name: "CellTextarea",
-  mixins: [CellFieldMixin],
+  mixins: [CellFieldMixin, clickaway],
+  data() {
+    return {
+      editing: false
+    }
+  },
+  computed: {
+  },
   methods: {
-    async updateValue(event) {
-      if (event.target.innerText === this.field.value) {
-        return
-      }
-      const payload = {
-        personProfileFieldId: this.field.id,
-        newValue: event.target.innerText
-      }
-      try {
-        await this.updateProfileData(payload)
-      } catch(err) {
-        this.$emit("error")
-      }
+    setNewValue(event) {
+      this.updateValue(event, event.target.innerText)
+    },
+    closeEditing() {
+      this.editing = false
     },
   }
 }
 </script>
 
 <template lang="pug">
-  span.cell-textarea(contenteditable, @blur="updateValue($event)") {{field.value}}
+  span.cell-textarea(
+    @dblclick="editing = true",
+    :contenteditable="editing",
+    :class="{'--editing': editing}",
+    v-on-clickaway="closeEditing",
+    @blur="setNewValue($event)") {{field.value}}
 
 </template>
 
 <style>
-
-@import "../../../init/variables.css";
-
-  .cell-textarea {
-    overflow-y: auto;
-    overflow-x: hidden;
-    font-family: var(--textFamily);
-    font-size: .9em;
-    line-height: 1.3em;
-    display: inline-block;
-    width: 20em;
-  }
 
 </style>
