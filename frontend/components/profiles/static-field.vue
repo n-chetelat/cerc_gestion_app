@@ -2,8 +2,11 @@
 
 import { mapGetters, mapActions } from "vuex"
 
+import { mixin as clickaway } from 'vue-clickaway'
+
 export default {
   name: "StaticField",
+  mixins: [clickaway],
   props: {
     profile: {required: true},
     fieldName: {required: true},
@@ -11,6 +14,7 @@ export default {
   data() {
     return {
       fieldChoice: this.profile[this.fieldName],
+      editing: false,
     }
   },
   computed: {
@@ -80,6 +84,9 @@ export default {
       } else {
         return !!input
       }
+    },
+    closeEditing() {
+      this.editing = false
     }
   }
 }
@@ -90,7 +97,8 @@ export default {
     span.field-cell(v-if="isEditable", contenteditable, @blur="updateValue($event)") {{displayValue}}
 
     span.field-cell(v-else)
-      select(v-model="fieldChoice", @change="updateValue($event)")
+      span(v-if="!editing", @dblclick="editing = true") {{displayValue}}
+      select(v-else, v-model="fieldChoice", @change="updateValue($event)", v-on-clickaway="closeEditing")
         option(v-for="choice in choices", :value="choice.id") {{choice.label || choice.title}}
 
 </template>
@@ -103,6 +111,7 @@ export default {
     @apply --field-style;
     & .field-cell {
       @apply --field-cell-style;
+      z-index: 10;
     }
   }
 

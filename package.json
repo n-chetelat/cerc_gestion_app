@@ -13,6 +13,7 @@
     "qs": "^6.5.1",
     "v-tooltip": "^2.0.0-rc.31",
     "vue": "^2.5.16",
+    "vue-clickaway": "^2.2.2",
     "vue-focus": "^2.1.0",
     "vue-loader": "^14.2.1",
     "vue-router": "^3.0.1",
