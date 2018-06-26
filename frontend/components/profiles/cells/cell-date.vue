@@ -5,6 +5,11 @@ import CellFieldMixin from "mixins/cell-field-mixin"
 export default {
   name: "CellDate",
   mixins: [CellFieldMixin],
+  data() {
+    return {
+      dateChosen: this.field.value
+    }
+  },
   computed: {
     formattedDate() {
       let date =  moment(this.field.value).format("D MMMM YYYY")
@@ -16,7 +21,9 @@ export default {
 </script>
 
 <template lang="pug">
-  span.cell-date {{formattedDate}}
+  span.cell-date
+    span.cell-display(v-if="!editing", @dblclick="editing = true") {{formattedDate}}
+    input(v-else, type="date", v-model="dateChosen", @change="updateValue($event, dateChosen)", v-on-clickaway="closeEditing")
 
 </template>
 
