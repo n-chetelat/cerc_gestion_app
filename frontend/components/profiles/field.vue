@@ -78,9 +78,9 @@ export default {
         line-height: 1.3em;
         display: inline-block;
 
-        &.--editing {
-          max-height: 100%;
-        }
+      }
+      &.--editing {
+        max-height: 100%;
       }
     }
 
