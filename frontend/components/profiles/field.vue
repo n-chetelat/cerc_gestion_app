@@ -67,13 +67,16 @@ export default {
     & .field-cell {
       @apply --field-cell-style;
 
+      & .cell-display {
+        @apply --field-cell-display;
+      }
+
       &.cell-textarea {
         overflow: hidden;
         font-family: var(--textFamily);
         font-size: .9em;
         line-height: 1.3em;
         display: inline-block;
-        min-height: 1.5em;
 
         &.--editing {
           max-height: 100%;

@@ -2,13 +2,21 @@ import { keyBy } from "lodash-es"
 
 import { mapActions } from "vuex"
 
+import { mixin as clickaway } from 'vue-clickaway'
+
 export default {
+  mixins: [clickaway],
   props: {
     field: {
       required: true
     },
     profile: {
       required: true
+    }
+  },
+  data() {
+    return {
+      editing: false,
     }
   },
   computed: {
@@ -46,5 +54,8 @@ export default {
         this.$emit("server-error")
       }
     },
+    closeEditing() {
+      this.editing = false
+    }
   }
 }

@@ -2,11 +2,8 @@
 
 import { mapGetters, mapActions } from "vuex"
 
-import { mixin as clickaway } from 'vue-clickaway'
-
 export default {
   name: "StaticField",
-  mixins: [clickaway],
   props: {
     profile: {required: true},
     fieldName: {required: true},
@@ -14,7 +11,6 @@ export default {
   data() {
     return {
       fieldChoice: this.profile[this.fieldName],
-      editing: false,
     }
   },
   computed: {
@@ -86,9 +82,6 @@ export default {
         return !!input
       }
     },
-    closeEditing() {
-      this.editing = false
-    }
   }
 }
 </script>
