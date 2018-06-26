@@ -12,6 +12,9 @@ export default {
     }
   },
   computed: {
+    displayValue() {
+      return this.editing ? this.field.value : `${this.field.value.substring(0, 40)}...`
+    }
   },
   methods: {
     setNewValue(event) {
@@ -26,11 +29,12 @@ export default {
 
 <template lang="pug">
   span.cell-textarea(
+    v-if="field.value",
     @dblclick="editing = true",
     :contenteditable="editing",
     :class="{'--editing': editing}",
     v-on-clickaway="closeEditing",
-    @blur="setNewValue($event)") {{field.value}}
+    @blur="setNewValue($event)") {{displayValue}}
 
 </template>
 
