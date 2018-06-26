@@ -28,7 +28,8 @@ export default {
         return this.allPositionsById[this.value] ?
           this.allPositionsById[this.value].title : null
       } else if (this.fieldName === "starting_date") {
-        return this.profile.starting_date_label
+        const choice = this.choices.find(ch => ch.id === this.profile.starting_date)
+        return choice && choice.label
       } else return this.value
     },
     isEditable() {

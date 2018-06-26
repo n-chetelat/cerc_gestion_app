@@ -43,17 +43,17 @@ const actions = {
     const params = {}
     params[field] = newValue
     return axios.put(`${getters.personsEndpoint}/${personId}`, {...params, profile: true}).then(({ data }) => {
-      commit("setPersonProfileField", data)
+      commit("setPersonProfile", data)
     })
   },
   createProfileData({ commit, getters }, { personId, profileFieldId, newValue }) {
     return axios.post(getters.endpoint, {person_id: personId, profile_field_id: profileFieldId, data: newValue}).then(({ data }) => {
-      commit("setPersonProfileField", data)
+      commit("setPersonProfile", data)
     })
   },
   updateProfileData({ commit, getters }, { personProfileFieldId, newValue }) {
     return axios.put(`${getters.endpoint}/${personProfileFieldId}`, {data: newValue}).then(({ data }) => {
-      commit("setPersonProfileField", data)
+      commit("setPersonProfile", data)
     })
   }
 }
@@ -66,12 +66,12 @@ const mutations = {
   setProfileFields(state, fields) {
     state.fields = fields
   },
-  setPersonProfileField(state, profile) {
+  setPersonProfile(state, profile) {
     const person_profile_index = state.all.findIndex((p) => p.id === profile.id)
     if (person_profile_index < 0) {
-      state.all.push(profile)
+      state.all = [...state.all, profile]
     } else {
-      state.all[person_profile_index] = profile
+      state.all.splice(person_profile_index, 1, profile)
     }
   }
 }
