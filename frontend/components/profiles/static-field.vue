@@ -57,11 +57,11 @@ export default {
       }
     },
     emitValid(event, value) {
-      let isValid = value
-      if (this.fieldName === "email") {
-        isValid = value && event.target.innerText.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/)
-      }
-      this.$emit("valid", event, isValid)
+      // let isValid = value
+      // if (this.fieldName === "email") {
+      //   isValid = value && event.target.innerText.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/)
+      // }
+      this.$emit("valid", event, value)
     }
   },
   components: {
@@ -75,14 +75,12 @@ export default {
 
 <template lang="pug">
   span.static-field
-    cell-text.field-cell(v-if="fieldName === 'name'", :profile="profile", :field="calculatedFieldDataFor('name')", @error="$emit('error')", @valid="emitValid")
-    cell-text.field-cell(v-if="fieldName === 'lastname'", :profile="profile", :field="calculatedFieldDataFor('lastname')", @error="$emit('error')", @valid="emitValid")
-    cell-select.field-cell(v-if="fieldName === 'position_id'", :profile="profile", :field="calculatedFieldDataFor('position_id')", @error="$emit('error')", @valid="emitValid")
-    cell-text.field-cell(v-if="fieldName === 'email'", :profile="profile", :field="calculatedFieldDataFor('email')", @error="$emit('error')", @valid="emitValid")
 
     component.field-cell(v-if="fieldName === 'starting_date'", :is="`cell-${profile.starting_date_type}`",
       :profile="profile", :field="calculatedFieldDataFor('starting_date')", @error="$emit('error')", @valid="emitValid")
 
+    component.field-cell(v-else, :is="`cell-${calculatedFieldDataFor(fieldName).form}`",
+      :profile="profile", :field="calculatedFieldDataFor(fieldName)", @error="$emit('error')", @valid="emitValid")
 
 </template>
 

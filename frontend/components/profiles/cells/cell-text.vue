@@ -15,6 +15,10 @@ export default {
       return this.field.value
     },
     isValid() {
+      if (this.field.fieldName === "email") {
+        return !!(this.textValue && this.textValue.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/))
+      }
+
       if (!this.field.optional) {
         return !!(this.textValue && this.textValue.length)
       }
