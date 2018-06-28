@@ -2,6 +2,8 @@
 
 import CellFieldMixin from "mixins/cell-field-mixin"
 
+import { compact } from "lodash-es"
+
 
 export default {
   name: "CellCheckbox",
@@ -10,6 +12,15 @@ export default {
     return {
       fieldChoices: this.field.value || [],
     }
+  },
+  computed: {
+    isValid() {
+      const choiceIds = this.field.choices.map(s => s.id)
+      const allInChoices = this.fieldChoices.every(fc =>  choiceIds.includes(fc))
+      const valuesEmpty = !(compact(this.fieldChoices).length)
+      if (this.field.optional) return valuesEmpty || allInChoices
+      else return !valuesEmpty && allInChoices
+    },
   },
   methods: {
     displayValue(val) {

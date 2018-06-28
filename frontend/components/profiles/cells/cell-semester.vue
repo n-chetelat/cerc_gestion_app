@@ -16,6 +16,11 @@ export default {
   },
   computed: {
     ...mapGetters("dates", ["semesters"]),
+    isValid() {
+      const inChoices = this.semesters.map(s => s.id).includes(this.fieldChoice)
+      if (this.field.optional) return !this.fieldChoice || inChoices
+      else return this.fieldChoice && inChoices
+    },
     choicesById() {
       if (!this.semesters.length) return {}
       return keyBy(this.semesters, "id")

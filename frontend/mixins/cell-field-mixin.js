@@ -26,9 +26,6 @@ export default {
       }
       return null
     },
-    isValid() {
-      return true
-    }
   },
   methods: {
     ...mapActions("profiles", ["createProfileData", "updateProfileData", "updatePersonData"]),

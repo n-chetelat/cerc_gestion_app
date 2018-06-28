@@ -7,9 +7,16 @@ export default {
   mixins: [CellFieldMixin],
   data() {
     return {
+      textValue: null,
     }
   },
   computed: {
+    isValid() {
+      if (!this.field.optional) {
+        return !!(this.textValue && this.textValue.length)
+      }
+      return true
+    },
     displayValue() {
       if (this.field.value) {
         const truncated = `${this.field.value.substring(0, 40)}${this.field.value.length > 40 ? '...' : ''}`
@@ -19,11 +26,9 @@ export default {
   },
   methods: {
     setNewValue(event) {
+      this.textValue = event.target.innerText.trim()
       this.closeEditing()
-      this.updateValue(event, event.target.innerText).then(() => {
-        //Set text value manually due to bug that duplicates text
-        event.target.innerText = this.displayValue
-      })
+      this.updateValue(event, this.textValue)
     },
   }
 }

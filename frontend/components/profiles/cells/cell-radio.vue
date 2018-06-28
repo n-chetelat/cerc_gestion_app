@@ -11,6 +11,11 @@ export default {
     }
   },
   computed: {
+    isValid() {
+      const inChoices = this.field.choices.map(s => s.id).includes(this.fieldChoice)
+      if (this.field.optional) return !this.fieldChoice || inChoices
+      else return this.fieldChoice && inChoices
+    },
     displayValue() {
       return this.choicesById &&
         this.choicesById[this.field.value] &&

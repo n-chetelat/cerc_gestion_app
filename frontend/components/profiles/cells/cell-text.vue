@@ -5,20 +5,26 @@ import CellFieldMixin from "mixins/cell-field-mixin"
 export default {
   name: "CellText",
   mixins: [CellFieldMixin],
+  data() {
+    return {
+      textValue: null
+    }
+  },
   computed: {
-    isValid() {
-      return true
-    },
     displayValue() {
       return this.field.value
     },
+    isValid() {
+      if (!this.field.optional) {
+        return !!(this.textValue && this.textValue.length)
+      }
+      return true
+    }
   },
   methods: {
     setNewValue(event) {
-      this.updateValue(event, event.target.innerText).then(() => {
-        //Set text value manually due to bug that duplicates text
-        event.target.innerText = this.displayValue
-      })
+      this.textValue = event.target.innerText.trim()
+      this.updateValue(event, this.textValue)
     }
   }
 }

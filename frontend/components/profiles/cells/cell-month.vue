@@ -16,6 +16,11 @@ export default {
   },
   computed: {
     ...mapGetters("dates", ["months"]),
+    isValid() {
+      const inChoices = this.months.map(m => m.id).includes(this.fieldChoice)
+      if (this.field.optional) return !this.fieldChoice || inChoices
+      else return this.fieldChoice && inChoices
+    },
     choicesById() {
       if (!this.months.length) return {}
       return keyBy(this.months, "id")

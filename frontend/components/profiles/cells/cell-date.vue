@@ -11,6 +11,12 @@ export default {
     }
   },
   computed: {
+    isValid() {
+      if (!this.field.optional) {
+        return !!this.dateChosen
+      }
+      return true
+    },
     formattedDate() {
       let date =  moment(this.field.value).format("D MMMM YYYY")
       if (date === "Invalid date") { date = null }
