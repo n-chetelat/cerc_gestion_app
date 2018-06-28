@@ -12,14 +12,18 @@ export default {
   computed: {
     displayValue() {
       if (this.field.value) {
-        return this.editing ? this.field.value : `${this.field.value.substring(0, 40)}...`
+        const truncated = `${this.field.value.substring(0, 40)}${this.field.value.length > 40 ? '...' : ''}`
+        return this.editing ? this.field.value : truncated
       }
     }
   },
   methods: {
     setNewValue(event) {
       this.closeEditing()
-      this.updateValue(event, event.target.innerText)
+      this.updateValue(event, event.target.innerText).then(() => {
+        //Set text value manually due to bug that duplicates text
+        event.target.innerText = this.displayValue
+      })
     },
   }
 }
