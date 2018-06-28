@@ -86,7 +86,7 @@ export default {
 
 </template>
 
-<style scoped>
+<style>
 
   @import "../../init/variables.css";
 
@@ -95,6 +95,7 @@ export default {
     & .field-cell {
       @apply --field-cell-style;
       z-index: 10;
+
     }
   }
 
