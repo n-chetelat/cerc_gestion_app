@@ -24,7 +24,7 @@ export default {
       return {
         name: {form: "text", optional: false, value: this.profile.name, fieldName: "name"},
         lastname: {form: "text", optional: false, value: this.profile.lastname, fieldName: "lastname"},
-        position_id: {form: "select", optional: false, value: this.profile.position_id, fieldName: "position",
+        position_id: {form: "select", optional: false, value: this.profile.position_id, fieldName: "position_id",
           choices: this.allPositions.map(p => { p.label = p.title; return p })},
         email: {form: "text", optional: false, value: this.profile.email, fieldName: "email"},
         starting_date: {form: this.profile.starting_date_type, optional: false, fieldName: "starting_date",
