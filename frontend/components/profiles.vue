@@ -32,10 +32,14 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     },
     computed: {
       ...mapGetters("profiles", ["profiles", "fields"]),
-      staticFields() {
+      nameFields() {
         return {
           name: "Name",
-          lastname: "Lastname",
+          lastname: "Lastname"
+        }
+      },
+      staticFields() {
+        return {
           position_id: "Position",
           email: "Email",
           starting_date: "Starting Date"
@@ -76,14 +80,24 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
   <template lang="pug">
     div.profiles
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
-      table.profiles-table
+
+      table.table.names-table
         thead
           tr
-            th.static(v-for="(label, key) in staticFields") {{label}}
+            th(v-for="(label, key) in nameFields") {{label}}
+        tbody
+          tr(v-for="profile in profiles")
+            td(v-for="(label, key) in nameFields")
+              static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+
+      table.table.profiles-table
+        thead
+          tr
+            th(v-for="(label, key) in staticFields") {{label}}
             th(v-for="field in fields") {{field.label}}
         tbody
           tr(v-for="profile in profiles")
-            td.static(v-for="(label, key) in staticFields")
+            td(v-for="(label, key) in staticFields")
               static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
             td(v-for="field in fields")
               field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
@@ -97,7 +111,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
   @import "../init/variables.css";
 
   :root {
-    --cellWidth: 130;
+    --nameCellWidth: 12;
   }
 
   .profiles {
@@ -114,10 +128,6 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     & th, td {
       padding: 10px;
       font-family: var(--textFamily);
-
-      &.static {
-        border: 1px solid var(--themeColor);
-      }
     }
 
     & td {
@@ -126,8 +136,40 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       }
     }
 
+    & .table {
+      margin: 10px 0;
+    }
+
+    & .names-table {
+      position: fixed;
+      background-color: white;
+      z-index: 4;
+
+      & tr:first-of-type {
+        & th {
+          border-top: 1px solid black;
+        }
+      }
+
+      & tr:last-of-type {
+        & td {
+          border-bottom: 1px solid black;
+        }
+      }
+
+      & th, td {
+        border: 1px solid white;
+        background-color: color(var(--themeColor) tint(40%));
+      }
+
+      & td .cell-display {
+        width: var(--nameCellWidth)em;
+      }
+    }
+
     & .profiles-table {
-      margin: 10px;
+      transform: translate(calc(var(--nameCellWidth)*2+2)em, 0);
+      margin-left: 10px;
     }
 
   }

@@ -10,6 +10,7 @@
   --navHeight: 8;
   --headerColor: #292929;
   --errorColor: #ff6a6a;
+  --cellWidth: 15;
 
   --field-style: {
     display: flex;
@@ -26,12 +27,12 @@
     text-align: center;
     & .cell-display {
       min-height: 1.5em;
-      width: 15em;
+      width: var(--cellWidth)em;
       display: inline-block;
     }
     & select {
       min-width: 100%;
-      width: 15em;
+      width: var(--cellWidth)em;
     }
   }
 }

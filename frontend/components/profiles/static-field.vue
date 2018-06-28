@@ -37,30 +37,7 @@ export default {
     calculatedFieldDataFor(fieldName) {
       return this.calculatedFieldData[fieldName]
     },
-    async updateValue(event, newValue) {
-      if (!this.inputIsValid(event.target.innerText)) {
-        this.emitValid(event, false)
-        return
-      }
-      this.emitValid(event, true)
-      if (this.valueNotChanged(event.target.innerText)) return
-
-      const payload = {
-        personId: this.profile.uuid,
-        field: this.fieldName,
-        newValue: (this.choices.length ? this.fieldChoice : event.target.innerText)
-      }
-      try {
-        await this.updatePersonData(payload)
-      } catch(err) {
-        this.$emit("error")
-      }
-    },
     emitValid(event, value) {
-      // let isValid = value
-      // if (this.fieldName === "email") {
-      //   isValid = value && event.target.innerText.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/)
-      // }
       this.$emit("valid", event, value)
     }
   },
