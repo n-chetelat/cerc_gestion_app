@@ -31,7 +31,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("profiles", ["createProfileData", "updateProfileData"]),
+    ...mapActions("profiles", ["createProfileData", "updateProfileData", "updatePersonData"]),
     async updateValue(event, newValue) {
       if (!this.isValid) {
         this.$emit("valid", event, false)
@@ -41,7 +41,13 @@ export default {
       if (newValue === this.field.value) return
 
       try {
-        if (this.field.id) {
+        if (!this.field.profile_field_id) {
+          await this.updatePersonData({ personId: this.profile.uuid,
+            field: this.field.fieldName,
+            newValue
+          })
+        }
+        else if (this.field.id) {
           await this.updateProfileData({ personProfileFieldId: this.field.id, newValue })
         } else {
           await this.createProfileData({

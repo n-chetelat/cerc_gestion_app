@@ -3,6 +3,7 @@ class Application < ApplicationRecord
   include Taggable
 
   before_save :clean_up_unused_fields, unless: :new_record?
+  before_save :reassign_starting_date_on_position_change, if: Proc.new {|application| application.changes["position_id"] }
 
   store_accessor :fields
 
@@ -60,6 +61,14 @@ class Application < ApplicationRecord
       unless self.position.recruitment_form.form_fields.exists?(id: form_field_id)
         self.fields.delete(key)
       end
+    end
+  end
+
+  def reassign_starting_date_on_position_change
+    return unless changes = self.changes["position_id"]
+    old_position = Position.find_by(id: changes[0])
+    if old_position.time_interval != self.time_interval
+      self.starting_date = self.class.generate_starting_dates(self.time_interval).first[:id]
     end
   end
 

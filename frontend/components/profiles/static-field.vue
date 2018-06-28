@@ -2,6 +2,11 @@
 
 import { mapGetters, mapActions } from "vuex"
 
+import CellText from "components/profiles/cells/cell-text.vue"
+import CellMonth from "components/profiles/cells/cell-month.vue"
+import CellSemester from "components/profiles/cells/cell-semester.vue"
+import CellSelect from "components/profiles/cells/cell-select.vue"
+
 export default {
   name: "StaticField",
   props: {
@@ -14,45 +19,30 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("positions", ["allPositions", "allPositionsById"]),
-    ...mapGetters("dates", ["semesters", "months"]),
-    value() {
-      return this.profile[this.fieldName]
+    ...mapGetters("positions", ["allPositions"]),
+    calculatedFieldData() {
+      return {
+        name: {form: "text", optional: false, value: this.profile.name, fieldName: "name"},
+        lastname: {form: "text", optional: false, value: this.profile.lastname, fieldName: "lastname"},
+        position_id: {form: "select", optional: false, value: this.profile.position_id, fieldName: "position",
+          choices: this.allPositions.map(p => { p.label = p.title; return p })},
+        email: {form: "text", optional: false, value: this.profile.email, fieldName: "email"},
+        starting_date: {form: this.profile.starting_date_type, optional: false, fieldName: "starting_date",
+          value: this.profile.starting_date, starting_date_label: this.profile.starting_date_label},
+      }
     },
-    displayValue() {
-      if (this.fieldName === "position_id") {
-        return this.allPositionsById[this.value] ?
-          this.allPositionsById[this.value].title : null
-      } else if (this.fieldName === "starting_date") {
-        const choice = this.choices.find(ch => ch.id === this.profile.starting_date)
-        return choice && choice.label
-      } else return this.value
-    },
-    isEditable() {
-      return !["position_id", "starting_date"].includes(this.fieldName)
-    },
-    choices() {
-      if (this.fieldName === "position_id") {
-        return this.allPositions
-      } else if (this.fieldName === "starting_date") {
-        let collection = []
-        if (this.profile.starting_date_type === "semester") collection = this.semesters
-        if (this.profile.starting_date_type === "month") collection = this.months
-        if (collection.findIndex(c => c.id === this.profile.starting_date) < 0) {
-          collection = [{id: this.profile.starting_date, label: this.profile.starting_date_label}, ...collection]
-        }
-        return collection
-      } else return []
-    }
   },
   methods: {
     ...mapActions("profiles", ["updatePersonData"]),
-    async updateValue(event) {
+    calculatedFieldDataFor(fieldName) {
+      return this.calculatedFieldData[fieldName]
+    },
+    async updateValue(event, newValue) {
       if (!this.inputIsValid(event.target.innerText)) {
-        this.$emit("valid", event, false)
+        this.emitValid(event, false)
         return
       }
-      this.$emit("valid", event, true)
+      this.emitValid(event, true)
       if (this.valueNotChanged(event.target.innerText)) return
 
       const payload = {
@@ -66,34 +56,33 @@ export default {
         this.$emit("error")
       }
     },
-    valueNotChanged(input="") {
-      if (this.choices.length) {
-        return (this.fieldChoice === this.value)
-      } else {
-        return (input === this.value)
+    emitValid(event, value) {
+      let isValid = value
+      if (this.fieldName === "email") {
+        isValid = value && event.target.innerText.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/)
       }
-    },
-    inputIsValid(input="") {
-      if (this.choices.length) {
-        return this.choices.map(ch => ch.id).includes(this.fieldChoice)
-      } else if (this.fieldName === "email") {
-        return !!(input && input.match(/\w[\w.-]+@[\w.-]+\.[\w.-]+\w$/))
-      } else {
-        return !!input
-      }
-    },
+      this.$emit("valid", event, isValid)
+    }
+  },
+  components: {
+    CellText,
+    CellMonth,
+    CellSemester,
+    CellSelect,
   }
 }
 </script>
 
 <template lang="pug">
   span.static-field
-    span.field-cell(v-if="isEditable", contenteditable, @blur="updateValue($event)") {{displayValue}}
+    cell-text.field-cell(v-if="fieldName === 'name'", :profile="profile", :field="calculatedFieldDataFor('name')", @error="$emit('error')", @valid="emitValid")
+    cell-text.field-cell(v-if="fieldName === 'lastname'", :profile="profile", :field="calculatedFieldDataFor('lastname')", @error="$emit('error')", @valid="emitValid")
+    cell-select.field-cell(v-if="fieldName === 'position_id'", :profile="profile", :field="calculatedFieldDataFor('position_id')", @error="$emit('error')", @valid="emitValid")
+    cell-text.field-cell(v-if="fieldName === 'email'", :profile="profile", :field="calculatedFieldDataFor('email')", @error="$emit('error')", @valid="emitValid")
 
-    span.field-cell(v-else)
-      span(v-if="!editing", @dblclick="editing = true") {{displayValue}}
-      select(v-else, v-model="fieldChoice", @change="updateValue($event)", v-on-clickaway="closeEditing")
-        option(v-for="choice in choices", :value="choice.id") {{choice.label || choice.title}}
+    component.field-cell(v-if="fieldName === 'starting_date'", :is="`cell-${profile.starting_date_type}`",
+      :profile="profile", :field="calculatedFieldDataFor('starting_date')", @error="$emit('error')", @valid="emitValid")
+
 
 </template>
 

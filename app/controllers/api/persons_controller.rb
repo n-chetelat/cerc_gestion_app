@@ -18,11 +18,14 @@ module Api
     end
 
     def update
-      if params[:position_id] || params[:starting_date]
+      if params[:position_id]
         @resource.application.position_id = params[:position_id] if params[:position_id]
-        @resource.application.starting_date = params[:starting_date] if params[:starting_date]
-        @resource.application.save
       end
+      if params[:starting_date]
+        @resource.application.starting_date = params[:starting_date] if params[:starting_date]
+      end
+
+      @resource.application.save if @resource.application.changed?
 
       if permitted_params.to_h.any?
         @resource.assign_attributes(permitted_params)
