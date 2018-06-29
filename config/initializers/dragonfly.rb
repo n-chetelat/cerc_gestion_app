@@ -10,6 +10,7 @@ Dragonfly.app.configure do
   url_format "/media/:job/:name"
 
   keyfile_path = "tmp/google-cloud-credentials.json"
+  Dir.mkdir("tmp") unless Dir.exists?("tmp")
   keyfile = File.new(keyfile_path, "w+")
   keyfile << {
     "type": "service_account",
