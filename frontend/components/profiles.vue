@@ -50,9 +50,6 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
       ...mapActions("positions", ["getAllPositions"]),
       ...mapActions("dates", ["fetchSemesters", "fetchMonths"]),
-      openModalByName(modalName, data) {
-        this.openModal(modalName)
-      },
       getProfileStaticField(profile, attr) {
         return {value: profile[attr], form: 'text'}
       },
@@ -81,26 +78,30 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     div.profiles
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
 
-      table.table.names-table
-        thead
-          tr
-            th(v-for="(label, key) in nameFields") {{label}}
-        tbody
-          tr(v-for="profile in profiles")
-            td(v-for="(label, key) in nameFields")
-              static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+      div.tables
+        table.table.names-table
+          thead
+            tr
+              th(v-for="(label, key) in nameFields") {{label}}
+          tbody
+            tr(v-for="profile in profiles")
+              td(v-for="(label, key) in nameFields")
+                static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
-      table.table.profiles-table
-        thead
-          tr
-            th(v-for="(label, key) in staticFields") {{label}}
-            th(v-for="field in fields") {{field.label}}
-        tbody
-          tr(v-for="profile in profiles")
-            td(v-for="(label, key) in staticFields")
-              static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
-            td(v-for="field in fields")
-              field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+        table.table.profiles-table
+          thead
+            tr
+              th(v-for="(label, key) in staticFields") {{label}}
+              th(v-for="field in fields") {{field.label}}
+          tbody
+            tr(v-for="profile in profiles")
+              td(v-for="(label, key) in staticFields")
+                static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+              td(v-for="field in fields")
+                field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+
+        //- aside.sidebar
+
 
 
 
@@ -112,13 +113,35 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
   :root {
     --nameCellWidth: 12;
+    --sidebarOffset: 12;
+    --sidebarWidth: calc(var(--sidebarOffset)+3)
   }
 
   .profiles {
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto;
     height: 100%;
+
+    & .tables {
+      width: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      height: 100%;
+    }
+
+    .sidebar {
+      position: fixed;
+      right: calc(var(--sidebarOffset)*-1)em;
+      height: 100%;
+      background-color: red;
+      width: var(--sidebarWidth)em;
+      transition: transform .5s;
+
+      &:hover {
+        transform: translateX(calc(var(--sidebarOffset)*-1)em);
+      }
+    }
 
     & table, th, td {
       border: 1px solid;
