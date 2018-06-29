@@ -100,7 +100,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
               td(v-for="field in fields")
                 field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
-        //- aside.sidebar
+        aside.sidebar
 
 
 
