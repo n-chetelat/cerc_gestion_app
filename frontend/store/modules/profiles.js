@@ -2,7 +2,7 @@ import axios from "axios"
 
 import { keyBy } from "lodash-es"
 
-const BASE_URL = `api/profiles`
+const PROFILE_URL = `api/profiles`
 const PROFILE_FIELDS_URL = `api/profile_fields`
 const PERSONS_URL = `api/persons`
 
@@ -13,7 +13,7 @@ const state = {
 
 // getters
 const getters = {
-  endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
+  endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PROFILE_URL}`,
   profileFieldsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PROFILE_FIELDS_URL}`,
   personsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSONS_URL}`,
   profiles: state => state.all,
@@ -39,20 +39,25 @@ const actions = {
       commit("setProfileFields", data)
     })
   },
+  createProfile({ commit, getters }, params) {
+    return axios.post(`${getters.endpoint}`, params).then(({ data }) => {
+      commit("setPersonProfile", data)
+    })
+  },
   updatePersonData({ commit, getters }, { personId, field, newValue }) {
     const params = {}
     params[field] = newValue
-    return axios.put(`${getters.personsEndpoint}/${personId}`, {...params, profile: true}).then(({ data }) => {
+    return axios.put(`${getters.endpoint}/${personId}`, params).then(({ data }) => {
       commit("setPersonProfile", data)
     })
   },
   createProfileData({ commit, getters }, { personId, profileFieldId, newValue }) {
-    return axios.post(getters.endpoint, {person_id: personId, profile_field_id: profileFieldId, data: newValue}).then(({ data }) => {
+    return axios.post(`${getters.personsEndpoint}/${personId}/profile_fields`, {profile_field_id: profileFieldId, data: newValue}).then(({ data }) => {
       commit("setPersonProfile", data)
     })
   },
-  updateProfileData({ commit, getters }, { personProfileFieldId, newValue }) {
-    return axios.put(`${getters.endpoint}/${personProfileFieldId}`, {data: newValue}).then(({ data }) => {
+  updateProfileData({ commit, getters }, { personId, personProfileFieldId, newValue }) {
+    return axios.put(`${getters.personsEndpoint}/${personId}/profile_fields/${personProfileFieldId}`, {data: newValue}).then(({ data }) => {
       commit("setPersonProfile", data)
     })
   }

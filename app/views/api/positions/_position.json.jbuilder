@@ -1,1 +1,1 @@
-json.extract! position, :id, :title
+json.extract! position, :id, :title, :time_interval

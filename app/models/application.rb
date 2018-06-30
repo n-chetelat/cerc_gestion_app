@@ -3,7 +3,7 @@ class Application < ApplicationRecord
   include Taggable
 
   before_save :clean_up_unused_fields, unless: :new_record?
-  before_save :reassign_starting_date_on_position_change, if: Proc.new {|application| application.changes["position_id"] }
+  before_save :reassign_starting_date_on_position_change, if: Proc.new {|application| !application.new_record? && application.changes["position_id"] }
 
   store_accessor :fields
 
@@ -16,6 +16,7 @@ class Application < ApplicationRecord
 
   validates :starting_date, presence: true
   validate :only_accepted_when_closed
+  validate :starting_date_in_range, on: :create
 
   def attachments
     @attachments ||= begin
@@ -67,7 +68,7 @@ class Application < ApplicationRecord
   def reassign_starting_date_on_position_change
     return unless changes = self.changes["position_id"]
     old_position = Position.find_by(id: changes[0])
-    if old_position.time_interval != self.time_interval
+    if old_position.try(:time_interval) != self.time_interval
       self.starting_date = self.class.generate_starting_dates(self.time_interval).first[:id]
     end
   end
@@ -77,6 +78,13 @@ class Application < ApplicationRecord
     def only_accepted_when_closed
       if !self.closed_at && self.accepted
         errors.add(:accepted, "Application cannot be accepted if not closed.")
+      end
+    end
+
+    def starting_date_in_range
+      date_choices = self.class.generate_starting_dates(self.time_interval).map {|d| d[:id].to_s }
+      unless (date_choices.include?(self.starting_date.try(:to_s)))
+        errors.add(:starting_date, "The date #{self.starting_date} is invalid for the interval type #{self.time_interval}")
       end
     end
 

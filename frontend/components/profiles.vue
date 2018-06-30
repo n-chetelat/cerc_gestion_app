@@ -8,6 +8,7 @@ import { mapGetters, mapActions } from "vuex"
 
 import Field from "components/profiles/field.vue"
 import StaticField from "components/profiles/static-field.vue"
+import NewProfileModal from "components/profiles/modals/new-profile.vue"
 import ServerErrorModal from "./boards/modals/server-error.vue"
 
   export default {
@@ -28,6 +29,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     },
     data() {
       return {
+        sidebarOpen: false,
       }
     },
     computed: {
@@ -64,11 +66,12 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         } else {
           cell.classList.add("--invalid")
         }
-      }
+      },
     },
     components: {
       Field,
       StaticField,
+      NewProfileModal,
       ServerErrorModal
     }
   }
@@ -77,6 +80,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
   <template lang="pug">
     div.profiles
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
+      new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
 
       div.tables
         table.table.names-table
@@ -100,10 +104,10 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
               td(v-for="field in fields")
                 field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
-        aside.sidebar
-
-
-
+        aside.sidebar(:class="{'--open': sidebarOpen}")
+          button.toggle-menu(@click="sidebarOpen = !sidebarOpen") M
+          div.actions
+            button(type="button", @click="openModalByName('new-profile')") New Profile
 
   </template>
 
@@ -138,8 +142,24 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       width: var(--sidebarWidth)em;
       transition: transform .5s;
 
-      &:hover {
+      display: flex;
+      flex-direction: column;
+
+      &.--open {
         transform: translateX(calc(var(--sidebarOffset)*-1)em);
+      }
+
+      & .toggle-menu {
+        width: 3em;
+        height: 3em;
+        /* background: url("../../static/icons/x-charcoal.svg") center center no-repeat; */
+        margin: 10px;
+        margin-right: auto;
+      }
+
+      & .actions {
+        display: flex;
+        margin: 0 auto;
       }
     }
 

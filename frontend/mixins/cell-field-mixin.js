@@ -45,7 +45,8 @@ export default {
           })
         }
         else if (this.field.id) {
-          await this.updateProfileData({ personProfileFieldId: this.field.id, newValue })
+          await this.updateProfileData({ personId: this.profile.uuid,
+            personProfileFieldId: this.field.id, newValue })
         } else {
           await this.createProfileData({
             personId: this.profile.uuid,
