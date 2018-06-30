@@ -105,9 +105,21 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
                 field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
         aside.sidebar(:class="{'--open': sidebarOpen}")
-          button.toggle-menu(@click="sidebarOpen = !sidebarOpen") M
+          div.menu-icons
+            button.toggle-menu(@click="sidebarOpen = !sidebarOpen", :class="{'--open': sidebarOpen}")
           div.actions
             button(type="button", @click="openModalByName('new-profile')") New Profile
+            div.visible-columns
+              div.column-line
+                input(type="checkbox")
+                label Select all columns
+              div.column-line
+                input(type="checkbox")
+                label Hide all columns
+              hr
+              div.column-line(v-for="field in fields")
+                input(type="checkbox", :value="field.id")
+                label {{field.label}}
 
   </template>
 
@@ -117,8 +129,9 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
   :root {
     --nameCellWidth: 12;
-    --sidebarOffset: 12;
-    --sidebarWidth: calc(var(--sidebarOffset)+3)
+    --sidebarOffset: 16;
+    --menuSpace: 3;
+    --sidebarWidth: calc(var(--sidebarOffset)+var(--menuSpace));
   }
 
   .profiles {
@@ -138,28 +151,51 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       position: fixed;
       right: calc(var(--sidebarOffset)*-1)em;
       height: 100%;
-      background-color: red;
+      background-color: var(--themeColor);
       width: var(--sidebarWidth)em;
       transition: transform .5s;
 
       display: flex;
-      flex-direction: column;
 
       &.--open {
         transform: translateX(calc(var(--sidebarOffset)*-1)em);
       }
 
-      & .toggle-menu {
+      & .menu-icons {
         width: 3em;
-        height: 3em;
-        /* background: url("../../static/icons/x-charcoal.svg") center center no-repeat; */
-        margin: 10px;
-        margin-right: auto;
+        text-align: center;
       }
 
       & .actions {
+        width: var(--sidebarOffset)em;
         display: flex;
-        margin: 0 auto;
+        flex-direction: column;
+        margin: 3em auto;
+        padding: 1em;
+      }
+
+      & .visible-columns {
+        background-color: white;
+        padding: 1em;
+        margin-top: 1em;
+        & .column-line {
+          display: flex;
+          padding-bottom: 5px;
+          & input {
+            width: 15%;
+          }
+        }
+      }
+
+      & .toggle-menu {
+        width: var(--menuSpace)em;
+        height: 3em;
+        background: url("../static/icons/menu.svg") center center no-repeat;
+        margin: 0;
+        padding: 0;
+        &.--open {
+          background: url("../static/icons/x-charcoal.svg") center center no-repeat;
+        }
       }
     }
 
