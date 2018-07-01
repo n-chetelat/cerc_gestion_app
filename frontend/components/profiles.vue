@@ -8,6 +8,7 @@ import { mapGetters, mapActions } from "vuex"
 
 import Field from "components/profiles/field.vue"
 import StaticField from "components/profiles/static-field.vue"
+import ProfilesSidebar from "components/profiles/profiles-sidebar.vue"
 import NewProfileModal from "components/profiles/modals/new-profile.vue"
 import ServerErrorModal from "./boards/modals/server-error.vue"
 
@@ -23,6 +24,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           this.fetchSemesters(),
           this.fetchMonths(),
         ])
+        this.selectedFields = this.fields.map(f => f.id)
       } catch (err) {
         this.openModal("server-error", {})
       }
@@ -30,6 +32,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     data() {
       return {
         sidebarOpen: false,
+        selectedFields: [],
       }
     },
     computed: {
@@ -46,6 +49,9 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           email: "Email",
           starting_date: "Starting Date"
         }
+      },
+      filteredFields() {
+        return this.fields.filter(f => this.selectedFields.includes(f.id))
       },
     },
     methods: {
@@ -67,10 +73,17 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           cell.classList.add("--invalid")
         }
       },
+      toggleSidebarOpen(isOpen) {
+        this.sidebarOpen = isOpen
+      },
+      filterFields(filteredFieldIds) {
+        this.selectedFields = [...filteredFieldIds]
+      }
     },
     components: {
       Field,
       StaticField,
+      ProfilesSidebar,
       NewProfileModal,
       ServerErrorModal
     }
@@ -96,30 +109,15 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           thead
             tr
               th(v-for="(label, key) in staticFields") {{label}}
-              th(v-for="field in fields") {{field.label}}
+              th(v-for="field in filteredFields") {{field.label}}
           tbody
             tr(v-for="profile in profiles")
               td(v-for="(label, key) in staticFields")
                 static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
-              td(v-for="field in fields")
+              td(v-for="field in filteredFields")
                 field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
-        aside.sidebar(:class="{'--open': sidebarOpen}")
-          div.menu-icons
-            button.toggle-menu(@click="sidebarOpen = !sidebarOpen", :class="{'--open': sidebarOpen}")
-          div.actions
-            button(type="button", @click="openModalByName('new-profile')") New Profile
-            div.visible-columns
-              div.column-line
-                input(type="checkbox")
-                label Select all columns
-              div.column-line
-                input(type="checkbox")
-                label Hide all columns
-              hr
-              div.column-line(v-for="field in fields")
-                input(type="checkbox", :value="field.id")
-                label {{field.label}}
+      profiles-sidebar.sidebar(@toggle="toggleSidebarOpen", :class="{'--open': sidebarOpen}", @modal="openModalByName", @filter="filterFields")
 
   </template>
 
@@ -127,76 +125,29 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
   @import "../init/variables.css";
 
-  :root {
-    --nameCellWidth: 12;
-    --sidebarOffset: 16;
-    --menuSpace: 3;
-    --sidebarWidth: calc(var(--sidebarOffset)+var(--menuSpace));
-  }
-
   .profiles {
     display: flex;
     flex-wrap: nowrap;
     height: 100%;
 
+    .sidebar {
+      position: fixed;
+      right: calc(var(--profilesSidebarOffset)*-1)em;
+      height: 100%;
+      width: var(--profilesSidebarWidth)em;
+      transition: transform .5s;
+
+      &.--open {
+        transform: translateX(calc(var(--profilesSidebarOffset)*-1)em);
+      }
+    }
+
     & .tables {
-      width: 100%;
+      width: 96%;
       display: flex;
       flex-wrap: nowrap;
       overflow-x: auto;
       height: 100%;
-    }
-
-    .sidebar {
-      position: fixed;
-      right: calc(var(--sidebarOffset)*-1)em;
-      height: 100%;
-      background-color: var(--themeColor);
-      width: var(--sidebarWidth)em;
-      transition: transform .5s;
-
-      display: flex;
-
-      &.--open {
-        transform: translateX(calc(var(--sidebarOffset)*-1)em);
-      }
-
-      & .menu-icons {
-        width: 3em;
-        text-align: center;
-      }
-
-      & .actions {
-        width: var(--sidebarOffset)em;
-        display: flex;
-        flex-direction: column;
-        margin: 3em auto;
-        padding: 1em;
-      }
-
-      & .visible-columns {
-        background-color: white;
-        padding: 1em;
-        margin-top: 1em;
-        & .column-line {
-          display: flex;
-          padding-bottom: 5px;
-          & input {
-            width: 15%;
-          }
-        }
-      }
-
-      & .toggle-menu {
-        width: var(--menuSpace)em;
-        height: 3em;
-        background: url("../static/icons/menu.svg") center center no-repeat;
-        margin: 0;
-        padding: 0;
-        &.--open {
-          background: url("../static/icons/x-charcoal.svg") center center no-repeat;
-        }
-      }
     }
 
     & table, th, td {

@@ -13,7 +13,8 @@ export default {
       newProfile: {
         name: null, lastname: null, email: null,
         position_id: null, starting_date: null
-      }
+      },
+      sent: false,
     }
   },
   computed: {
@@ -42,7 +43,11 @@ export default {
     async saveNewProfile() {
       if (this.formIsValid) {
         try {
-          await this.createProfile(this.newProfile)
+          this.loading = true
+          await this.createProfile(this.newProfile).then(() => {
+            this.sent = true
+            this.loading = false
+          })
         } catch(err) {
           this.$emit("error")
         }
@@ -52,38 +57,40 @@ export default {
     },
   },
   components: {
-    Modal
+    Modal,
   }
 }
 </script>
 
 <template lang="pug">
   modal(@close="$emit('close')")
-    h1(slot="header")
+    h1.new-profile-header(slot="header")
       span Create New Profile
-
     div.new-profile(slot="body")
-      span.form-line
-        label Name
-        input(type="text", v-model="newProfile.name")
-      span.form-line
-        label Lastname
-        input(type="text", v-model="newProfile.lastname")
-      span.form-line
-        label Email
-        input(type="text", v-model="newProfile.email")
+      div.msg-sent(v-if="sent")
+        p The new profile has been created.
+      div(v-else)
+        span.form-line
+          label Name
+          input(type="text", v-model="newProfile.name")
+        span.form-line
+          label Lastname
+          input(type="text", v-model="newProfile.lastname")
+        span.form-line
+          label Email
+          input(type="text", v-model="newProfile.email")
 
-      span.form-line
-        label Position
-        select(v-model="newProfile.position_id")
-          option(v-for="position in allPositions", :value="position.id") {{position.title}}
+        span.form-line
+          label Position
+          select(v-model="newProfile.position_id")
+            option(v-for="position in allPositions", :value="position.id") {{position.title}}
 
-      span.form-line
-        label Starting Date
-        select(v-model="newProfile.starting_date", :disabled="!newProfile.position_id")
-          option(v-for="date in dateCollection", :value="date.id") {{date.label}}
+        span.form-line
+          label Starting Date
+          select(v-model="newProfile.starting_date", :disabled="!newProfile.position_id")
+            option(v-for="date in dateCollection", :value="date.id") {{date.label}}
 
-      button.submit(type="button", @click="saveNewProfile", :class="{'--disabled': !formIsValid}") Save
+        button.submit(type="button", @click="saveNewProfile", :class="{'--disabled': !formIsValid}") Save
 
 </template>
 
@@ -92,6 +99,10 @@ export default {
   .new-profile {
     padding: 10px;
     padding-bottom: 20px;
+
+    & .msg-sent {
+      text-align: center;
+    }
 
     & .form-line {
       display: flex;
