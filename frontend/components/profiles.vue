@@ -2,7 +2,7 @@
 import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 
-import { keyBy } from "lodash-es"
+import { keyBy, pick } from "lodash-es"
 
 import { mapGetters, mapActions } from "vuex"
 
@@ -24,7 +24,9 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           this.fetchSemesters(),
           this.fetchMonths(),
         ])
-        this.selectedFields = this.fields.map(f => f.id)
+        const dynamicFields = this.fields.map(f => f.id)
+        const staticFields = Object.keys(this.staticFields)
+        this.selectedFields = [...staticFields, ...dynamicFields]
       } catch (err) {
         this.openModal("server-error", {})
       }
@@ -49,6 +51,9 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           email: "Email",
           starting_date: "Starting Date"
         }
+      },
+      filteredStaticFields() {
+        return pick(this.staticFields, this.selectedFields)
       },
       filteredFields() {
         return this.fields.filter(f => this.selectedFields.includes(f.id))
@@ -108,16 +113,16 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         table.table.profiles-table
           thead
             tr
-              th(v-for="(label, key) in staticFields") {{label}}
+              th(v-for="(label, key) in filteredStaticFields") {{label}}
               th(v-for="field in filteredFields") {{field.label}}
           tbody
             tr(v-for="profile in profiles")
-              td(v-for="(label, key) in staticFields")
+              td(v-for="(label, key) in filteredStaticFields")
                 static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
               td(v-for="field in filteredFields")
                 field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
-      profiles-sidebar.sidebar(@toggle="toggleSidebarOpen", :class="{'--open': sidebarOpen}", @modal="openModalByName", @filter="filterFields")
+      profiles-sidebar.sidebar(@toggle="toggleSidebarOpen", :static-fields="staticFields", :class="{'--open': sidebarOpen}", @modal="openModalByName", @filter="filterFields")
 
   </template>
 

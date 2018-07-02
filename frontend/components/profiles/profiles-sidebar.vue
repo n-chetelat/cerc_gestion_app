@@ -5,6 +5,9 @@ import { mapGetters } from "vuex"
 export default {
   name: "ProfilesSidebar",
   props: {
+    staticFields: {
+      required: true, default: {}
+    }
   },
   data() {
     return {
@@ -22,10 +25,15 @@ export default {
     },
     toggleFieldVisibility(value) {
       if (value === "selectAll") {
-        this.selectedFields = this.fields.map(f => f.id )
+        this.addAllColumns()
       } else if (value === "hideAll") {
         this.selectedFields = []
       }
+    },
+    addAllColumns() {
+      const dynamicFields = this.fields.map(f => f.id)
+      const staticFields = Object.keys(this.staticFields)
+      this.selectedFields = [...staticFields, ...dynamicFields]
     },
     applyFieldFilter() {
       this.$emit("filter", this.selectedFields)
@@ -37,7 +45,7 @@ export default {
     fields: function(val, oldVal) {
       if (oldVal.length) return // Trigger only on transition from empty array to full
       if (val.length) {
-        this.selectedFields = val.map(f => f.id)
+        this.addAllColumns()
       }
     }
   }
@@ -59,6 +67,10 @@ export default {
           button(type="button", @click="toggleFieldVisibility('hideAll')") Hide all columns
         hr
         div.field-columns
+          div.column-line(v-for="(label, key) in staticFields")
+            input(type="checkbox", :value="key", v-model="selectedFields")
+            label {{label}}
+
           div.column-line(v-for="field in fields")
             input(type="checkbox", :value="field.id", v-model="selectedFields")
             label {{field.label}}
