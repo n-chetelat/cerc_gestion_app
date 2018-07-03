@@ -122,7 +122,9 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
               td(v-for="field in filteredFields")
                 field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
-      profiles-sidebar.sidebar(@toggle="toggleSidebarOpen", :static-fields="staticFields", :class="{'--open': sidebarOpen}", @modal="openModalByName", @filter="filterFields")
+      profiles-sidebar.sidebar(v-if="selectedFields && selectedFields.length", @toggle="toggleSidebarOpen",
+        :static-fields="staticFields", :dynamic-fields="fields",
+        :class="{'--open': sidebarOpen}", @modal="openModalByName", @filter="filterFields")
 
   </template>
 

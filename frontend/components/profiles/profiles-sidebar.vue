@@ -7,6 +7,9 @@ export default {
   props: {
     staticFields: {
       required: true, default: {}
+    },
+    dynamicFields: { // use this instead of getting fields from vuex to avoid fields not being loaded yet.
+      required: true, default: []
     }
   },
   data() {
@@ -15,8 +18,8 @@ export default {
       selectedFields: [],
     }
   },
-  computed: {
-    ...mapGetters("profiles", ["fields"]),
+  mounted() {
+    this.addAllColumns()
   },
   methods: {
     toggleSidebarOpen() {
@@ -31,9 +34,9 @@ export default {
       }
     },
     addAllColumns() {
-      const dynamicFields = this.fields.map(f => f.id)
-      const staticFields = Object.keys(this.staticFields)
-      this.selectedFields = [...staticFields, ...dynamicFields]
+      const dynamicFieldIds = this.dynamicFields.map(f => f.id)
+      const staticFieldIds = Object.keys(this.staticFields)
+      this.selectedFields = [...staticFieldIds, ...dynamicFieldIds]
     },
     applyFieldFilter() {
       this.$emit("filter", this.selectedFields)
@@ -41,14 +44,6 @@ export default {
   },
   components: {
   },
-  watch: {
-    fields: function(val, oldVal) {
-      if (oldVal.length) return // Trigger only on transition from empty array to full
-      if (val.length) {
-        this.addAllColumns()
-      }
-    }
-  }
 }
 </script>
 
@@ -71,7 +66,7 @@ export default {
             input(type="checkbox", :value="key", v-model="selectedFields")
             label {{label}}
 
-          div.column-line(v-for="field in fields")
+          div.column-line(v-for="field in dynamicFields")
             input(type="checkbox", :value="field.id", v-model="selectedFields")
             label {{field.label}}
         button.apply-filter-btn(type="button", @click="applyFieldFilter") Apply
