@@ -8,6 +8,7 @@ import store from './../store'
 import RecruitmentForm from "./../components/recruitment-form.vue"
 import Board from "./../components/board.vue"
 import Profiles from "./../components/profiles.vue"
+import Timeline from "./../components/timeline.vue"
 
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     path: "/admin/profiles",
     name:"profiles",
     component: Profiles,
+  },
+  {
+    path: "/admin/timeline",
+    name:"timeline",
+    component: Timeline,
   }
 ]
 
