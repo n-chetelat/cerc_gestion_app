@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180621162757) do
+ActiveRecord::Schema.define(version: 20180703202419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -176,6 +176,16 @@ ActiveRecord::Schema.define(version: 20180621162757) do
     t.index ["phase_id"], name: "index_persons_phases_on_phase_id"
   end
 
+  create_table "persons_positions_milestones", force: :cascade do |t|
+    t.bigint "person_id"
+    t.bigint "positions_milestone_id"
+    t.datetime "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_persons_positions_milestones_on_person_id"
+    t.index ["positions_milestone_id"], name: "index_persons_positions_milestones_on_positions_milestone_id"
+  end
+
   create_table "persons_profile_fields", force: :cascade do |t|
     t.bigint "person_id"
     t.bigint "profile_field_id"
@@ -252,6 +262,16 @@ ActiveRecord::Schema.define(version: 20180621162757) do
     t.integer "form_cd"
     t.boolean "optional", default: false
     t.index ["recruitment_form_id"], name: "index_positions_form_fields_on_recruitment_form_id"
+  end
+
+  create_table "positions_milestones", force: :cascade do |t|
+    t.bigint "position_id"
+    t.string "title"
+    t.text "description"
+    t.integer "time_interval_ordinality"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position_id"], name: "index_positions_milestones_on_position_id"
   end
 
   create_table "positions_recruitment_forms", force: :cascade do |t|
@@ -339,6 +359,8 @@ ActiveRecord::Schema.define(version: 20180621162757) do
   add_foreign_key "email_persons_threads", "persons"
   add_foreign_key "persons_phases", "persons"
   add_foreign_key "persons_phases", "phases"
+  add_foreign_key "persons_positions_milestones", "persons"
+  add_foreign_key "persons_positions_milestones", "positions_milestones"
   add_foreign_key "persons_profile_fields", "persons"
   add_foreign_key "persons_profile_fields", "profile_fields"
   add_foreign_key "phases_callbacks", "phases"

@@ -27,6 +27,10 @@ class ApplicationClosingService
     end
   end
 
+  def create_person_position_milestones
+    
+  end
+
   private
 
     def create_profile_field_from(application_field)

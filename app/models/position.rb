@@ -10,7 +10,10 @@ class Position < ApplicationRecord
   has_one :recruitment_form, class_name: "Positions::RecruitmentForm", dependent: :destroy
   has_many :applications, foreign_key: "position_id"
 
+  has_many :milestones, class_name: "Positions::Milestone", foreign_key: "position_id", dependent: :destroy
+
   accepts_nested_attributes_for :recruitment_form
+  accepts_nested_attributes_for :milestones, allow_destroy: true
 
   scope :visible, -> { where(hidden: false) }
   scope :hidden, -> { where(hidden: true) }

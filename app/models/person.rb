@@ -16,6 +16,9 @@ class Person < ApplicationRecord
 
   has_many :persons_profile_fields, class_name: "PersonProfileField", foreign_key: "person_id", dependent: :destroy
 
+  has_many :persons_positions_milestones, class_name: "::PersonPositionsMilestone",  dependent: :destroy
+  has_many :positions_milestones, through: :persons_positions_milestones
+
   scope :not_in_phase, -> { where.not(id: joins(:persons_phases).select(:person_id)) }
   scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
   scope :rejected, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = FALSE") }
