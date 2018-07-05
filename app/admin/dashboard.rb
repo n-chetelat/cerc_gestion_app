@@ -30,7 +30,7 @@ ActiveAdmin.register_page "Dashboard" do
         panel "Links to Current Profiles" do
           ul do
             li link_to("See and Edit Profiles", "/#/admin/profiles", target: "_blank")
-            # li link_to("Timeline", "/#/admin/timeline", target: "_blank")
+            li link_to("Timeline", "/#/admin/timeline", target: "_blank")
           end
         end
       end

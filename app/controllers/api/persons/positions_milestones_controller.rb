@@ -11,7 +11,7 @@ module Api
       end
 
       def index
-        @resources = @person.positions_milestones
+        @resources = @person.persons_positions_milestones
       end
 
       private

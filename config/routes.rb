@@ -50,6 +50,8 @@ Rails.application.routes.draw do
       resources :profiles, only: [:index, :show, :create, :update]
       resources :profile_fields, only: [:index]
 
+      resources :milestones, only: [:index]
+
       get "/semesters", to: "starting_dates#semesters"
       get "/months", to: "starting_dates#months"
 

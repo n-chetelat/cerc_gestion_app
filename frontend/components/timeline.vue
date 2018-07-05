@@ -11,6 +11,9 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     mixins: [SceneMixin, ModalMixin],
     async created() {
       try {
+        await Promise.all([
+          this.fetchMilestones(), this.fetchProfiles()
+        ])
       } catch (err) {
         this.openModal("server-error", {})
       }
@@ -20,8 +23,12 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       }
     },
     computed: {
+      ...mapGetters("milestones", ["milestonesById"]),
+      ...mapGetters("profiles", ["profiles", "fields"]),
     },
     methods: {
+      ...mapActions("milestones", ["fetchMilestones"]),
+      ...mapActions("profiles", ["fetchProfiles"]),
       openModalByName(modalName, data={}) {
         this.openModal(modalName)
       },

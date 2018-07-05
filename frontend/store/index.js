@@ -10,6 +10,7 @@ import comments from './modules/comments'
 import keywords from './modules/keywords'
 import profiles from './modules/profiles'
 import dates from './modules/dates'
+import milestones from './modules/milestones'
 
 const adminStore = {
   getters: {
@@ -28,6 +29,7 @@ const adminStore = {
     keywords,
     profiles,
     dates,
+    milestones,
   },
 }
 
