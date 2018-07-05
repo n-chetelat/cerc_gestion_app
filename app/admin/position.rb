@@ -65,7 +65,10 @@ ActiveAdmin.register Position do
       table_for resource.milestones.order(time_interval_ordinality: :asc) do
         column :title
         column :description
-        column :time_interval_ordinality
+        column(:time_interval_ordinality) { |milestone|
+          ord = milestone.time_interval_ordinality
+          "#{ord}#{ord.ordinal} #{resource.time_interval}"
+        }
       end
     end
   end

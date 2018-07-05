@@ -4,7 +4,7 @@ class PersonPositionsMilestone < ApplicationRecord
 
   # before_save :calculate_date_for_milestone, if: :new_record?
 
-  belongs_to :positions_milestone, class_name: "Positions::Milestone"
+  belongs_to :positions_milestone, class_name: "Positions::Milestone", foreign_key: "positions_milestone_id"
   belongs_to :person
 
   delegate :time_interval_ordinality, to: :positions_milestone

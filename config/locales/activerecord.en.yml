@@ -47,3 +47,5 @@ en:
         positions_fr: French label for position selection
         terms_en: English label for terms and conditions
         terms_fr: French label for terms and conditions
+      positions/milestone:
+        time_interval_ordinality: On which semester/month
