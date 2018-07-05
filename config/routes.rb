@@ -33,6 +33,7 @@ Rails.application.routes.draw do
         scope module: "persons" do
           resource :email, only: [:show]
           resources :profile_fields, only: [:show, :create, :update]
+          resources :positions_milestones, only: [:index]
         end
       end
       resources :boards, only: [:show]

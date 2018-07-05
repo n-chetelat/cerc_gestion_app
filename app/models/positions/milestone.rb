@@ -10,5 +10,9 @@ module Positions
     validates :title, :time_interval_ordinality, presence: true
 
     acts_as_list column: :time_interval_ordinality, scope: :position
+
+    delegate :time_interval, to: :position
+
+    default_scope { order(time_interval_ordinality: :asc) }
   end
 end

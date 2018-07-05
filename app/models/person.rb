@@ -60,4 +60,8 @@ class Person < ApplicationRecord
     end
   end
 
+  def accepted?
+    self.class.accepted.exists?(id: self.id)
+  end
+
 end

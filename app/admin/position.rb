@@ -63,7 +63,6 @@ ActiveAdmin.register Position do
     end
     panel "Milestones" do
       table_for resource.milestones.order(time_interval_ordinality: :asc) do
-        orderable_handle_column url: :sort_admin_positions_milestone_path
         column :title
         column :description
         column :time_interval_ordinality
@@ -104,7 +103,7 @@ ActiveAdmin.register Position do
 
           # Milestones
           f.inputs do
-            f.has_many :milestones, sortable: :time_interval_ordinality, sortable_start: 1, heading: "", allow_destroy: true, new_record: "Add a Milestone" do |a|
+            f.has_many :milestones, heading: "", allow_destroy: true, new_record: "Add a Milestone" do |a|
               a.input :title
               a.input :description, input_html: {class: "small-textbox"}
               a.input :time_interval_ordinality, hint: "On which semester/month the milestone needs to be completed."
