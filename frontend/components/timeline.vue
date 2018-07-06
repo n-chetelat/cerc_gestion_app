@@ -52,7 +52,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         table.table.names-table
           thead
             tr
-              th -
+              th
+                div.header-content -
             tr
               th Name
           tbody
@@ -61,10 +62,11 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
         table.table.dynamic-table.timeline-table
           thead
-            tr(v-for="date in timelineDates")
-              th(:colspan="date.months.length") {{date.label}}
-            tr(v-for="date in timelineDates")
-              th(v-for="month in date.months") {{month.label}}
+            tr
+              th(v-for="date in timelineDates", :colspan="date.months.length")
+                div.header-content
+                  p {{date.label}}
+                  p.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
           tbody
             tr(v-for="profile in profiles")
               td hi
@@ -87,6 +89,16 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     & .timeline-table {
       transform: translate(var(--nameCellWidth)em, 0);
     }
+
+    & .header-content {
+      height: 100px;
+    }
+
+    & .months-label {
+      display: inline-block;
+      font-size: .7em;
+    }
+
   }
 
   </style>
