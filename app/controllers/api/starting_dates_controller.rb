@@ -3,11 +3,11 @@ module Api
     before_action :authenticate_admin_user!
 
     def semesters
-      render json: ProfileField.generate_starting_dates(:semester)
+      render json: ::DatesService.generate_starting_dates(:semester)
     end
 
     def months
-      render json: ProfileField.generate_starting_dates(:month)
+      render json: ::DatesService.generate_starting_dates(:month)
     end
 
     def timeline
@@ -15,7 +15,10 @@ module Api
         .minimum("applications.starting_date")
       max_date = Person.joins(:persons_positions_milestones)
         .maximum("persons_positions_milestones.date").try(:to_date)
-      render json: {min: min_date, max: max_date}
+      dates = ::DatesService.generate_semester_and_month_structure(
+        min_date, max_date
+      )
+      render json: dates
     end
 
   end

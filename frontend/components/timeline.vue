@@ -11,7 +11,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     mixins: [SceneMixin, ModalMixin],
     async created() {
       try {
-        await this.fetchActiveProfileInterval()
+        await this.fetchActiveProfileTimelineDates()
         await Promise.all([
           this.fetchMilestones(), this.fetchProfiles()
         ])
@@ -27,12 +27,12 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     computed: {
       ...mapGetters("milestones", ["milestonesById"]),
       ...mapGetters("profiles", ["profiles", "fields"]),
-      ...mapGetters("dates", ["interval"]),
+      ...mapGetters("dates", ["timelineDates"]),
     },
     methods: {
       ...mapActions("milestones", ["fetchMilestones"]),
       ...mapActions("profiles", ["fetchProfiles"]),
-      ...mapActions("dates", ["fetchActiveProfileInterval"]),
+      ...mapActions("dates", ["fetchActiveProfileTimelineDates"]),
       openModalByName(modalName, data={}) {
         this.openModal(modalName)
       },
@@ -52,6 +52,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         table.table.names-table
           thead
             tr
+              th -
+            tr
               th Name
           tbody
             tr(v-for="profile in profiles")
@@ -59,11 +61,16 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
         table.table.dynamic-table.timeline-table
           thead
-            tr
-              th HI label
+            tr(v-for="date in timelineDates")
+              th(:colspan="date.months.length") {{date.label}}
+            tr(v-for="date in timelineDates")
+              th(v-for="month in date.months") {{month.label}}
           tbody
             tr(v-for="profile in profiles")
               td hi
+              td there
+              td all
+              td 5
 
 
   </template>

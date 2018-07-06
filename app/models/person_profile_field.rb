@@ -10,9 +10,9 @@ class PersonProfileField < ApplicationRecord
   def starting_date_to_s
     case self.form
     when :semester
-      self.profile_field.class.semester_to_s(self.data)
+      ::DatesService.semester_to_s(self.data)
     when :month
-      self.profile_field.class.month_to_s(self.data)
+      ::DatesService.month_to_s(self.data)
     else
       nil
     end

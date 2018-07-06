@@ -2,8 +2,6 @@ class PersonPositionsMilestone < ApplicationRecord
 
   self.table_name = "persons_positions_milestones"
 
-  # before_save :calculate_date_for_milestone, if: :new_record?
-
   belongs_to :positions_milestone, class_name: "Positions::Milestone", foreign_key: "positions_milestone_id"
   belongs_to :person
 
@@ -19,7 +17,7 @@ class PersonPositionsMilestone < ApplicationRecord
     time_interval = self.positions_milestone.time_interval
     starting_date = self.person.starting_date
     if time_interval == :semester
-      semesters = [1,6,9]
+      semesters = ::DatesService::SEMESTERS_MONTHS.values
       index = semesters.find_index(starting_date.month)
       raise "invalid starting date for interval type" unless index
       # put starting date month number at beginning of array

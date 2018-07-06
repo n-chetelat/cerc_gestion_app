@@ -1,6 +1,5 @@
 module Positions
   class RecruitmentForm < ApplicationRecord
-    include StartingDates
 
     self.table_name = "positions_recruitment_forms"
 
@@ -17,7 +16,7 @@ module Positions
         fields << {
           id: "starting_date",
           label: ActionController::Base.helpers.t("activerecord.attributes.positions/recruitment_form.starting_date"),
-          options: { choices: self.class.generate_starting_dates(self.position.time_interval) },
+          options: { choices: ::DatesService.generate_starting_dates(self.position.time_interval) },
           type: "input-select"
         }
     end

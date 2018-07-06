@@ -1,6 +1,5 @@
 module FormEnumerable
   extend ActiveSupport::Concern
-  include ::StartingDates
 
   NEED_CHOICES = [5, 6, 7]
   HAS_DEFAULT_CHOICES = [8, 9]
@@ -47,7 +46,7 @@ module FormEnumerable
 
   def default_choices
     return nil unless self.has_default_choices?
-    self.class.generate_starting_dates(self.form)
+    ::DatesService.generate_starting_dates(self.form)
   end
 
   module ClassMethods

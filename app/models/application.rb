@@ -1,5 +1,4 @@
 class Application < ApplicationRecord
-  include StartingDates
   include Taggable
 
   before_save :clean_up_unused_fields, unless: :new_record?
@@ -40,9 +39,9 @@ class Application < ApplicationRecord
   def starting_date_to_s
     case self.time_interval
     when :semester
-      self.class.semester_to_s(self.starting_date)
+      ::DatesService.semester_to_s(self.starting_date)
     when :month
-      self.class.month_to_s(self.starting_date)
+      ::DatesService.month_to_s(self.starting_date)
     else
       ""
     end
@@ -69,7 +68,7 @@ class Application < ApplicationRecord
     return unless changes = self.changes["position_id"]
     old_position = Position.find_by(id: changes[0])
     if old_position.try(:time_interval) != self.time_interval
-      self.starting_date = self.class.generate_starting_dates(self.time_interval).first[:id]
+      self.starting_date = ::DatesService.generate_starting_dates(self.time_interval).first[:id]
     end
   end
 
@@ -82,7 +81,7 @@ class Application < ApplicationRecord
     end
 
     def starting_date_in_range
-      date_choices = self.class.generate_starting_dates(self.time_interval).map {|d| d[:id].to_s }
+      date_choices = ::DatesService.generate_starting_dates(self.time_interval).map {|d| d[:id].to_s }
       unless (date_choices.include?(self.starting_date.try(:to_s)))
         errors.add(:starting_date, "The date #{self.starting_date} is invalid for the interval type #{self.time_interval}")
       end

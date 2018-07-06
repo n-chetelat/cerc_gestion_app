@@ -7,7 +7,7 @@ const BASE_URL = `api`
 const state = {
   semesters: [],
   months: [],
-  interval: {min: null, max: null},
+  timeline: [],
 }
 
 // getters
@@ -15,7 +15,7 @@ const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   semesters: state => state.semesters,
   months: state => state.months,
-  interval: state => state.interval
+  timelineDates: state => state.timeline
 }
 
 // actions
@@ -31,9 +31,9 @@ const actions = {
     })
   },
   // The earlies and latest dates to show on the timeline
-  fetchActiveProfileInterval({ commit, getters }) {
+  fetchActiveProfileTimelineDates({ commit, getters }) {
     return axios.get(`${getters.endpoint}/timeline`).then(({ data }) => {
-      commit("setInterval", data)
+      commit("setTimeline", data)
     })
   }
 }
@@ -46,8 +46,8 @@ const mutations = {
   setMonths(state, months) {
     state.months = months
   },
-  setInterval(state, interval) {
-    state.interval = interval
+  setTimeline(state, timeline) {
+    state.timeline = timeline
   }
 }
 
