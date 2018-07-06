@@ -2,6 +2,7 @@ import "babel-polyfill"
 
 import "./index.css";
 import "./recruitment-info.css";
+import "./tables.css";
 import "./tooltip.css";
 
 import Vue from 'vue'

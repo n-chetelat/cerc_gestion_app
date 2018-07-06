@@ -54,6 +54,7 @@ Rails.application.routes.draw do
 
       get "/semesters", to: "starting_dates#semesters"
       get "/months", to: "starting_dates#months"
+      get "/timeline", to: "starting_dates#timeline"
 
       get "/keywords", to: "applications/keywords#autocomplete"
     end

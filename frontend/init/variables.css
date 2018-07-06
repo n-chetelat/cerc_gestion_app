@@ -14,6 +14,8 @@
 
   /* profiles */
   --cellWidth: 15;
+  --cellMinHeight: 40;
+  --cellPadding: 10;
   --nameCellWidth: 12;
   --profilesSidebarOffset: 16;
   --menuSpace: 3;
@@ -22,13 +24,13 @@
   --field-style: {
     display: flex;
     min-width: 130px;
-    min-height: 40px;
+    min-height: var(--cellMinHeight)px;
     overflow-y: auto;
   }
   --field-cell-style: {
     height: 100%;
     min-height: 1.5em;
-    max-height: 40px;
+    max-height: var(--cellMinHeight)px;
     margin: 0 auto;
     width: 100%;
     text-align: center;

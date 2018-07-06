@@ -33,6 +33,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     },
     data() {
       return {
+        cellHeight: 62,
         sidebarOpen: false,
         selectedFields: [],
       }
@@ -101,26 +102,29 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
 
       div.tables
-        table.table.names-table
-          thead
-            tr
-              th(v-for="(label, key) in nameFields") {{label}}
-          tbody
-            tr(v-for="profile in profiles")
-              td(v-for="(label, key) in nameFields")
-                static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+        div.table.names-table
+          table
+            thead
+              tr
+                th(v-for="(label, key) in nameFields") {{label}}
+            tbody
+              tr(v-for="profile in profiles")
+                td(v-for="(label, key) in nameFields")
+                  static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
-        table.table.profiles-table
-          thead
-            tr
-              th(v-for="(label, key) in filteredStaticFields") {{label}}
-              th(v-for="field in filteredFields") {{field.label}}
-          tbody
-            tr(v-for="profile in profiles")
-              td(v-for="(label, key) in filteredStaticFields")
-                static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
-              td(v-for="field in filteredFields")
-                field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+
+        div.table.dynamic-table.profiles-table
+          table
+            thead
+              tr
+                th(v-for="(label, key) in filteredStaticFields") {{label}}
+                th(v-for="field in filteredFields") {{field.label}}
+            tbody
+              tr(v-for="profile in profiles")
+                td(v-for="(label, key) in filteredStaticFields")
+                  static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+                td(v-for="field in filteredFields")
+                  field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
       profiles-sidebar.sidebar(v-if="selectedFields && selectedFields.length", @toggle="toggleSidebarOpen",
         :static-fields="staticFields", :dynamic-fields="fields",
@@ -137,7 +141,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     flex-wrap: nowrap;
     height: 100%;
 
-    .sidebar {
+    & .sidebar {
       position: fixed;
       right: calc(var(--profilesSidebarOffset)*-1)em;
       height: 100%;
@@ -149,64 +153,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       }
     }
 
-    & .tables {
-      width: 96%;
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      height: 100%;
-    }
-
-    & table, th, td {
-      border: 1px solid;
-      border-collapse: collapse;
-    }
-
-    & th, td {
-      padding: 10px;
-      font-family: var(--textFamily);
-    }
-
-    & td {
-      &.--invalid {
-        background-color: var(--errorColor);
-      }
-    }
-
-    & .table {
-      margin: 10px 0;
-    }
-
-    & .names-table {
-      position: fixed;
-      background-color: white;
-      z-index: 4;
-
-      & tr:first-of-type {
-        & th {
-          border-top: 1px solid black;
-        }
-      }
-
-      & tr:last-of-type {
-        & td {
-          border-bottom: 1px solid black;
-        }
-      }
-
-      & th, td {
-        border: 1px solid white;
-        background-color: color(var(--themeColor) tint(40%));
-      }
-
-      & td .cell-display {
-        width: var(--nameCellWidth)em;
-      }
-    }
-
     & .profiles-table {
       transform: translate(calc(var(--nameCellWidth)*2+2)em, 0);
-      margin-left: 10px;
     }
 
   }

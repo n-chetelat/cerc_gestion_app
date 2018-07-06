@@ -1,0 +1,66 @@
+@import "./variables.css";
+
+.tables {
+  position: relative;
+  width: 96%;
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+  overflow-x: hidden;
+
+  table {
+    margin: 10px 0;
+  }
+  & table, th, td {
+    border: 1px solid;
+    border-collapse: collapse;
+  }
+
+  & th, td {
+    padding: var(--cellPadding)px;
+    font-family: var(--textFamily);
+  }
+
+  & td {
+    &.--invalid {
+      background-color: var(--errorColor);
+    }
+  }
+
+  & .names-table {
+    position: absolute;
+    background-color: white;
+    z-index: 4;
+
+    & tr:first-of-type {
+      & th {
+        border-top: 1px solid black;
+      }
+    }
+
+    & tr:last-of-type {
+      & td {
+        border-bottom: 1px solid black;
+      }
+    }
+
+    & th, td {
+      border: 1px solid white;
+      background-color: color(var(--themeColor) tint(40%));
+    }
+
+    & td .cell-display {
+      width: var(--nameCellWidth)em;
+    }
+  }
+
+  & .table {
+    min-height: calc(var(--cellMinHeight) * var(--cellPadding) * 2)px;
+  }
+
+  & .dynamic-table {
+    margin-left: 10px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+}

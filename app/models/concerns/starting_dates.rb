@@ -27,12 +27,16 @@ module StartingDates
        "#{ActionController::Base.helpers.t("date.month_names")[month_index]} #{date.year}"
     end
 
-    def generate_starting_dates(interval_type)
+    def generate_starting_dates(interval_type, options={})
+      months = options[:months] || 12
+      years = options[:years] || 2
       choices = []
       current_year = Date.today.year
       case interval_type
       when :semester
-        [current_year, current_year + 1].each do |year|
+
+        years.times do |i|
+          year = current_year + i
           SEMESTERS_MONTHS.each do |season, month|
             date = Date.parse("#{year}-#{month}-1")
             choices << { id: "#{date}", label: self.semester_to_s(date) }
@@ -41,7 +45,7 @@ module StartingDates
       when :month
         current_month = Date.today.month
         date = Date.parse("#{current_year}-#{current_month}-1")
-        12.times do
+        months.times do
           choices << { id: date, label: self.month_to_s(date) }
           date = date.next_month
         end

@@ -11,6 +11,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     mixins: [SceneMixin, ModalMixin],
     async created() {
       try {
+        await this.fetchActiveProfileInterval()
         await Promise.all([
           this.fetchMilestones(), this.fetchProfiles()
         ])
@@ -20,15 +21,18 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     },
     data() {
       return {
+
       }
     },
     computed: {
       ...mapGetters("milestones", ["milestonesById"]),
       ...mapGetters("profiles", ["profiles", "fields"]),
+      ...mapGetters("dates", ["interval"]),
     },
     methods: {
       ...mapActions("milestones", ["fetchMilestones"]),
       ...mapActions("profiles", ["fetchProfiles"]),
+      ...mapActions("dates", ["fetchActiveProfileInterval"]),
       openModalByName(modalName, data={}) {
         this.openModal(modalName)
       },
@@ -42,6 +46,26 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
   <template lang="pug">
     div.timeline
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
+      new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
+
+      div.tables
+        table.table.names-table
+          thead
+            tr
+              th Name
+          tbody
+            tr(v-for="profile in profiles")
+              td {{profile.full_name}}
+
+        table.table.dynamic-table.timeline-table
+          thead
+            tr
+              th HI label
+          tbody
+            tr(v-for="profile in profiles")
+              td hi
+
+
   </template>
 
   <style>
@@ -53,6 +77,9 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     flex-wrap: nowrap;
     height: 100%;
 
+    & .timeline-table {
+      transform: translate(var(--nameCellWidth)em, 0);
+    }
   }
 
   </style>
