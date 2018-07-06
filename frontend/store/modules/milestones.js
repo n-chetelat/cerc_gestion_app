@@ -1,22 +1,22 @@
 import axios from "axios"
 
-import { keyBy } from "lodash-es"
+import { keyBy, groupBy } from "lodash-es"
 
 const MILESTONES_URL = `api/milestones`
-const PERSONS_URL = `api/persons`
+const PERSON_MILESTONE_URL = `api/persons_positions_milestones`
 
 const state = {
   milestones: [],
-  byPersonId: {},
+  milestonesByPersonId: {},
 }
 
 // getters
 const getters = {
   milestonesEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${MILESTONES_URL}`,
-  personsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSONS_URL}`,
+  personsMilestonesEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSON_MILESTONE_URL}`,
   milestones: state => state.milestones,
   milestonesById: state => keyBy(state.milestones, "id"),
-  milestonesByPersonId: state => state.byPersonId,
+  milestonesByPersonId: state => state.milestonesByPersonId,
 }
 
 // actions
@@ -26,8 +26,8 @@ const actions = {
       commit("setMilestones", data)
     })
   },
-  fetchPersonMilestones({ commit, getters }, personId) {
-    return axios.get(`${getters.personsEndpoint}/${personId}/positions_milestones`).then(({ data }) => {
+  fetchPersonMilestones({ commit, getters }) {
+    return axios.get(`${getters.personsMilestonesEndpoint}`).then(({ data }) => {
       commit("setPersonMilestones", data)
     })
   }
@@ -39,7 +39,7 @@ const mutations = {
     state.milestones = milestones
   },
   setPersonMilestones(state, personMilestones) {
-    state.byPersonId[personMilestones.person_id] = personMilestones
+    state.milestonesByPersonId = groupBy(personMilestones, "person_id")
   },
 }
 

@@ -7,6 +7,7 @@ class PersonPositionsMilestone < ApplicationRecord
 
   delegate :time_interval_ordinality, to: :positions_milestone
 
+  validates :date, presence: true
   validate :milestone_belongs_to_person_position
 
   alias_method :milestone, :positions_milestone

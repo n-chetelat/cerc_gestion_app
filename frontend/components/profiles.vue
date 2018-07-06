@@ -33,7 +33,6 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     },
     data() {
       return {
-        cellHeight: 62,
         sidebarOpen: false,
         selectedFields: [],
       }
@@ -59,6 +58,10 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       filteredFields() {
         return this.fields.filter(f => this.selectedFields.includes(f.id))
       },
+      profilesTableMinHeight() {
+        const cellHeight = 62
+        return (this.profiles.length + 1) * cellHeight
+      }
     },
     methods: {
       ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
@@ -113,7 +116,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
                   static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
 
-        div.table.dynamic-table.profiles-table
+        div.table.dynamic-table.profiles-table(:style="{minHeight: `${profilesTableMinHeight}px`}")
           table
             thead
               tr

@@ -3,8 +3,10 @@ import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
+import { groupBy } from "lodash-es"
 
 import ServerErrorModal from "./boards/modals/server-error.vue"
+import MilestoneCell from "./timeline/milestone-cell.vue"
 
   export default {
     name: "Timeline",
@@ -15,6 +17,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         await Promise.all([
           this.fetchMilestones(), this.fetchProfiles()
         ])
+        await this.fetchPersonMilestones()
       } catch (err) {
         this.openModal("server-error", {})
       }
@@ -25,20 +28,37 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       }
     },
     computed: {
-      ...mapGetters("milestones", ["milestonesById"]),
+      ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
       ...mapGetters("profiles", ["profiles", "fields"]),
       ...mapGetters("dates", ["timelineDates"]),
+      milestonesBySemester() {
+        const structure = {}
+        this.profiles.forEach((profile) => {
+          structure[profile.uuid] = groupBy(this.milestonesByPersonId[profile.uuid], (m) => m.date)
+        })
+        return structure
+      },
+      timelineTableMinHeight() {
+        const cellHeight = 62
+        const headerHeight = 122
+        return this.profiles.length * cellHeight + headerHeight
+      }
     },
     methods: {
-      ...mapActions("milestones", ["fetchMilestones"]),
+      ...mapActions("milestones", ["fetchMilestones", "fetchPersonMilestones"]),
       ...mapActions("profiles", ["fetchProfiles"]),
       ...mapActions("dates", ["fetchActiveProfileTimelineDates"]),
       openModalByName(modalName, data={}) {
         this.openModal(modalName)
       },
+      milestonesForSemester(profile, semester) {
+        if (!this.milestonesBySemester[profile.uuid]) return null
+        return this.milestonesBySemester[profile.uuid][semester.id]
+      },
     },
     components: {
-      ServerErrorModal
+      ServerErrorModal,
+      MilestoneCell
     }
   }
   </script>
@@ -46,34 +66,31 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
   <template lang="pug">
     div.timeline
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
-      new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
 
       div.tables
-        table.table.names-table
-          thead
-            tr
-              th
-                div.header-content -
-            tr
-              th Name
-          tbody
-            tr(v-for="profile in profiles")
-              td {{profile.full_name}}
+        div.table.names-table
+          table
+            thead
+              tr
+                th
+                  div.header-content Name
+            tbody
+              tr(v-for="profile in profiles")
+                td
+                  div.cell-content {{profile.full_name}}
 
-        table.table.dynamic-table.timeline-table
-          thead
-            tr
-              th(v-for="date in timelineDates", :colspan="date.months.length")
-                div.header-content
-                  p {{date.label}}
-                  p.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
-          tbody
-            tr(v-for="profile in profiles")
-              td hi
-              td there
-              td all
-              td 5
-
+        div.table.dynamic-table.timeline-table(:style="{minHeight: `${timelineTableMinHeight}px`}")
+          table
+            thead
+              tr
+                th(v-for="date in timelineDates")
+                  div.header-content
+                    p {{date.label}}
+                    span.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
+            tbody
+              tr(v-for="profile in profiles")
+                td(v-for="semester in timelineDates")
+                  milestone-cell.cell-content(:person-milestones="milestonesForSemester(profile, semester)", :semester="semester")
 
   </template>
 
@@ -86,13 +103,25 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     flex-wrap: nowrap;
     height: 100%;
 
+    & .tables {
+      width: 100%;
+    }
+
     & .timeline-table {
-      transform: translate(var(--nameCellWidth)em, 0);
+      transform: translate(var(--cellWidth)em, 0);
+    }
+
+    & .cell-content, .header-content {
+      min-width: var(--cellWidth)em;
+      max-width: var(--cellWidth)em;
+      min-height: var(--cellMinHeight)px;
     }
 
     & .header-content {
       height: 100px;
+      overflow: hidden;
     }
+
 
     & .months-label {
       display: inline-block;
