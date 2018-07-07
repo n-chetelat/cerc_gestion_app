@@ -23,7 +23,7 @@ Rails.application.routes.draw do
       end
       resource :recruitment_info, only: [:show]
       resources :applications, only: [:index, :show, :create, :update] do
-        put :deletion, on: :member
+        put :close, on: :member
         scope module: "applications" do
           resources :comments, only: [:index, :show, :create, :update, :destroy]
           resource :keywords, only: [:show, :update, :destroy]

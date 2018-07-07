@@ -29,14 +29,18 @@ class ApplicationClosingService
 
   def create_person_position_milestones
     milestones = @application.position.milestones
-    milestones.order(time_interval_ordinality: :asc).each do |milestone|
-      person_milestone = PersonPositionsMilestone.find_or_initialize_by(
-        person_id: @person.id,
-        positions_milestone_id: milestone.id
-      )
-      person_milestone.calculate_date_for_milestone! if person_milestone.date.nil?
-      person_milestone.save
-    end
+    # ActiveRecord::Base.transaction do
+      milestones.order(time_interval_ordinality: :asc).each do |milestone|
+        person_milestone = PersonPositionsMilestone.find_or_initialize_by(
+          person_id: @person.id,
+          positions_milestone_id: milestone.id
+        )
+        if person_milestone.new_record?
+          person_milestone.calculate_date_for_milestone!
+          person_milestone.save
+        end
+      end
+    # end
   end
 
   private

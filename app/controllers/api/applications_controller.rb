@@ -1,11 +1,12 @@
 module Api
   class ApplicationsController < ApiController
-    before_action :authenticate_admin_user!, only: [:index, :show, :update, :deletion]
+    before_action :authenticate_admin_user!, only: [:index, :show, :update, :close]
     before_action :authorize_gmail, only: [:create]
-    before_action :set_resource, only: [:show, :update, :deletion]
+    before_action :set_resource, only: [:show, :update, :close]
 
     after_action :broadcast_changes, only: [:create, :update, :destroy]
     after_action :email_application_materials, only: [:create]
+    after_action :set_up_closed_application_profile, only: [:close]
 
     attr_reader :partial_path, :resource_name
 
@@ -41,8 +42,9 @@ module Api
       end
     end
 
-    # Mark application for cleanup of materials in rake task
-    def deletion
+    # Mark application for cleanup of materials (files and emails only) in rake task
+    # Application is not destroyed
+    def close
       @resource.closed_at = DateTime.now
       @resource.accepted = true if params[:accepted]
       if @resource.save
@@ -65,6 +67,12 @@ module Api
 
       def email_application_materials
         ApplicationService.email_application_materials(@resource, request) if @resource
+      end
+
+      def set_up_closed_application_profile
+        service = ::ApplicationClosingService.new(@resource)
+        service.store_application_fields_in_profile_fields
+        service.create_person_position_milestones if @resource.accepted
       end
 
   end

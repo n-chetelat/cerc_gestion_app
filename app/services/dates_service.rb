@@ -10,7 +10,7 @@ class DatesService
   def self.get_semesters_in_interval(min_date, max_date)
     raise "Invalid date interval" if min_date > max_date
     min_year = min_date.year
-    year_count = max_date.year - min_year
+    year_count = max_date.year - min_year + 1
     year_count = 1 if year_count < 1
     dates = []
 

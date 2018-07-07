@@ -44,7 +44,7 @@ const actions = {
     return axios.get(`${getters.endpoint}/${applicationId}`)
   },
   markApplicationForDeletion({ commit, getters }, {applicationId, accepted}) {
-    return axios.put(`${getters.endpoint}/${applicationId}/deletion`, { accepted })
+    return axios.put(`${getters.endpoint}/${applicationId}/close`, { accepted })
   }
 }
 
