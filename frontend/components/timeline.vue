@@ -39,9 +39,9 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
         return structure
       },
       timelineTableMinHeight() {
-        const cellHeight = 62
+        const cellMaxHeight = 62
         const headerHeight = 122
-        return this.profiles.length * cellHeight + headerHeight
+        return this.profiles.length * cellMaxHeight + headerHeight
       }
     },
     methods: {
@@ -98,6 +98,10 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
 
   @import "../init/variables.css";
 
+  :root {
+    --cellMaxHeight: 62;
+  }
+
   .timeline {
     display: flex;
     flex-wrap: nowrap;
@@ -109,17 +113,20 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
 
     & .timeline-table {
       transform: translate(var(--cellWidth)em, 0);
+      width: calc(100% - var(--cellWidth)em);
     }
 
     & .cell-content, .header-content {
       min-width: var(--cellWidth)em;
       max-width: var(--cellWidth)em;
       min-height: var(--cellMinHeight)px;
+      max-height: var(--cellMaxHeight)px;
     }
 
     & .header-content {
       height: 100px;
       overflow: hidden;
+      max-height: 100%;
     }
 
 

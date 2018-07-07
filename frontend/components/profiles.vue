@@ -139,6 +139,10 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
   @import "../init/variables.css";
 
+  :root {
+    --profilesTableOffset: calc(var(--nameCellWidth)*2+2);
+  }
+
   .profiles {
     display: flex;
     flex-wrap: nowrap;
@@ -156,8 +160,13 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       }
     }
 
+    & .tables {
+      width: 96%;
+    }
+
     & .profiles-table {
-      transform: translate(calc(var(--nameCellWidth)*2+2)em, 0);
+      transform: translate(var(--profilesTableOffset)em, 0);
+      width: calc(100% - var(--profilesTableOffset)em);
     }
 
   }

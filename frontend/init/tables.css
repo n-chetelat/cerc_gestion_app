@@ -2,7 +2,6 @@
 
 .tables {
   position: relative;
-  width: 96%;
   display: flex;
   flex-wrap: nowrap;
   height: 100%;
