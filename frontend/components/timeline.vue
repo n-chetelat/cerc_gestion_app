@@ -68,7 +68,7 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
 
       div.tables
-        div.table.names-table
+        div.names-table
           table
             thead
               tr
@@ -79,7 +79,7 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
                 td
                   div.cell-content {{profile.full_name}}
 
-        div.table.dynamic-table.timeline-table(:style="{minHeight: `${timelineTableMinHeight}px`}")
+        div.dynamic-table.timeline-table(:style="{minHeight: `${timelineTableMinHeight}px`}")
           table
             thead
               tr

@@ -54,10 +54,6 @@
     }
   }
 
-  /* & .table {
-    min-height: calc(var(--cellMinHeight) + var(--cellPadding) * 2)px;
-  } */
-
   & .dynamic-table {
     margin-left: 10px;
     overflow-x: scroll;

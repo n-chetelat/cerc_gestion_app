@@ -105,7 +105,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
 
       div.tables
-        div.table.names-table
+        div.names-table
           table
             thead
               tr
@@ -116,7 +116,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
                   static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
 
-        div.table.dynamic-table.profiles-table(:style="{minHeight: `${profilesTableMinHeight}px`}")
+        div.dynamic-table.profiles-table(:style="{minHeight: `${profilesTableMinHeight}px`}")
           table
             thead
               tr
