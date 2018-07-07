@@ -22,15 +22,28 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
         this.openModal("server-error", {})
       }
     },
+    updated() {
+      const timelineTable = document.querySelector(".timeline-table")
+      const currentHeader = document.querySelector("th.--current")
+      if (timelineTable && currentHeader) {
+        timelineTable.scrollBy(-(timelineTable.scrollWidth), 0)
+        timelineTable.scrollBy(currentHeader.offsetLeft, 0)
+      }
+    },
     data() {
       return {
-
       }
     },
     computed: {
       ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
       ...mapGetters("profiles", ["profiles", "fields"]),
       ...mapGetters("dates", ["timelineDates"]),
+      currentDate() {
+        const today = new Date
+        const month = `${today.getMonth() + 1}`.padStart(2, "0")
+        const date = `${today.getFullYear()}-${month}-01`
+        return date
+      },
       milestonesBySemester() {
         const structure = {}
         this.profiles.forEach((profile) => {
@@ -41,7 +54,7 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
       timelineTableMinHeight() {
         const cellMaxHeight = 62
         const headerHeight = 122
-        return this.profiles.length * cellMaxHeight + headerHeight
+        return (this.profiles.length + 1) * cellMaxHeight + headerHeight
       }
     },
     methods: {
@@ -50,6 +63,10 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
       ...mapActions("dates", ["fetchActiveProfileTimelineDates"]),
       openModalByName(modalName, data={}) {
         this.openModal(modalName)
+      },
+      isCurrentSemester(semester) {
+        const dates = [semester.id, ...semester.months.map(m => m.id)]
+        return dates.includes(this.currentDate)
       },
       milestonesForSemester(profile, semester) {
         if (!this.milestonesBySemester[profile.uuid]) return null
@@ -83,13 +100,13 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
           table
             thead
               tr
-                th(v-for="date in timelineDates")
+                th(v-for="date in timelineDates", :class="{'--current': isCurrentSemester(date)}")
                   div.header-content
                     p {{date.label}}
                     span.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
             tbody
               tr(v-for="profile in profiles")
-                td(v-for="semester in timelineDates")
+                td(v-for="semester in timelineDates", :class="{'--current': isCurrentSemester(semester)}")
                   milestone-cell.cell-content(:person-milestones="milestonesForSemester(profile, semester)", :semester="semester")
 
   </template>
@@ -114,6 +131,10 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
     & .timeline-table {
       transform: translate(var(--cellWidth)em, 0);
       width: calc(100% - var(--cellWidth)em);
+
+      & th.--current, td.--current {
+        background-color: color(var(--themeColor) alpha(20%));
+      }
     }
 
     & .cell-content, .header-content {

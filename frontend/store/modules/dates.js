@@ -15,7 +15,10 @@ const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   semesters: state => state.semesters,
   months: state => state.months,
-  timelineDates: state => state.timeline
+  timelineDates: state => state.timeline,
+  monthDatesBySemester: state => {
+    
+  }
 }
 
 // actions
