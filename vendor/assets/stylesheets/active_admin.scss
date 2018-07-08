@@ -20,8 +20,8 @@
 //
 //   .status_tag { background: #6090DB; }
 
-.hideable {
-  display: none
+.hideable, .positions-hideable {
+  display: none;
 }
 
 p.inline-hints {

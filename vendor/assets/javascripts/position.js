@@ -9,16 +9,16 @@ $(document)
     setChoiceVisibility(event.target)
   })
 
-})
-
 function setChoiceVisibility(inputEl) {
   const need_choices = ["5", "6", "7"]
   const needs_choices = need_choices.some((value) => value === $(inputEl).val())
   const parent_li = $(inputEl).parent("li")[0]
-  const hideable = $(parent_li).siblings(".hideable")[0]
+  const hideable = $(parent_li).siblings(".positions-hideable")[0]
   if (needs_choices) {
     $(hideable).css("display", "block")
   } else {
     $(hideable).css("display", "none")
   }
 }
+
+})

@@ -9,8 +9,6 @@ $(document)
     setChoiceVisibility(event.target)
   })
 
-})
-
 function setChoiceVisibility(inputEl) {
   const need_choices = ["5", "6", "7"]
   const needs_choices = need_choices.some((value) => value === $(inputEl).val())
@@ -22,3 +20,5 @@ function setChoiceVisibility(inputEl) {
     $(hideable).css("display", "none")
   }
 }
+
+})
