@@ -17,7 +17,8 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         await this.fetchActiveProfileTimelineDates()
         await Promise.all([
           this.fetchMilestones(), this.fetchProfiles(),
-          this.getAllPositions(), this.fetchProfileFields()
+          this.getAllPositions(), this.fetchProfileFields(),
+          this.fetchMonths(), this.fetchSemesters()
         ])
         await this.fetchPersonMilestones()
       } catch (err) {
@@ -64,7 +65,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
     methods: {
       ...mapActions("milestones", ["fetchMilestones", "fetchPersonMilestones"]),
       ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
-      ...mapActions("dates", ["fetchActiveProfileTimelineDates"]),
+      ...mapActions("dates", ["fetchSemesters", "fetchMonths", "fetchActiveProfileTimelineDates"]),
       ...mapActions("positions", ["getAllPositions"]),
       openModalByName(modalName, data={}) {
         if (modalName === "profile-milestones") {

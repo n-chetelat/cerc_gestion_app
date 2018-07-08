@@ -131,23 +131,6 @@ export default {
     padding: 2em 2em;
     padding-top: 0;
 
-    & .nav-tab {
-      cursor: pointer;
-      display: inline-block;
-      padding: 5px;
-      margin: auto 2px;
-      background-color: color(var(--navColor) alpha(50%));
-      border-radius: 2px 2px 0 0;
-      border-bottom: 2px solid transparent;
-      font-weight: bold;
-      transition: background-color .5s ease;
-      &.--selected {
-        background-color: var(--navColor);
-        padding-top: 7px;
-        border-bottom: 2px solid black;
-      }
-    }
-
     & .action-menu {
       width: 100%;
       height: 32px;
@@ -171,18 +154,6 @@ export default {
       padding-top: 0;
       margin: .5em;
 
-      & label {
-        background-color: gray(200);
-        border-radius: 3px;
-        display: inline-block;
-        vertical-align: top;
-        font-weight: bold;
-        margin-right: 2em;
-        width: 12em;
-        padding: 2px 0;
-        padding-right: .5em;
-        text-align: right;
-      }
       & ul {
         display: inline-block;
         list-style: none;

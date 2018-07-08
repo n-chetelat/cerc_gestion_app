@@ -96,6 +96,36 @@ button {
   }
 }
 
+li.nav-tab {
+  cursor: pointer;
+  display: inline-block;
+  padding: 5px;
+  margin: auto 2px;
+  background-color: color(var(--navColor) alpha(50%));
+  border-radius: 2px 2px 0 0;
+  border-bottom: 2px solid transparent;
+  font-weight: bold;
+  transition: background-color .5s ease;
+  &.--selected {
+    background-color: var(--navColor);
+    padding-top: 7px;
+    border-bottom: 2px solid black;
+  }
+}
+
+.field-row label, .field-row .field-label {
+  background-color: gray(200);
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: top;
+  font-weight: bold;
+  margin-right: 2em;
+  width: 12em;
+  padding: 2px 0;
+  padding-right: .5em;
+  text-align: right;
+}
+
 input {
   padding: .5em;
 }
