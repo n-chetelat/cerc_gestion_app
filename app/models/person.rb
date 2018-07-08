@@ -1,15 +1,12 @@
 class Person < ApplicationRecord
   include Uuid
 
-  before_save :create_email_address
-
   validates :name, :lastname, :email, presence: true
   validate :validate_email_format
 
   has_one :application, foreign_key: "person_id", dependent: :destroy
 
   has_many :persons_phases, class_name: "PersonPhase", foreign_key: "person_id", dependent: :destroy
-  has_many :email_addresses, class_name: "Persons::EmailAddress", foreign_key: "person_id", dependent: :destroy
 
   has_many :persons_threads, class_name: "Email::PersonThread", foreign_key: "person_id", dependent: :destroy, inverse_of: :person
   has_many :threads, through: :persons_threads
@@ -23,13 +20,8 @@ class Person < ApplicationRecord
   scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
   scope :rejected, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = FALSE") }
   scope :active, -> { accepted.where(finished_at: nil) }
-  delegate :starting_date, to: :application
 
-  def create_email_address
-    unless self.email_addresses.exists?(address: self.email)
-      self.email_addresses.build(address: self.email)
-    end
-  end
+  delegate :starting_date, to: :application
 
   def validate_email_format
     unless email =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i

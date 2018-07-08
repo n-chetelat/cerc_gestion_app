@@ -115,9 +115,8 @@ class EmailService
     gmail_service.get_user_thread(USER_ID, gmail_thread_object_id) do |result, error|
       raise error if error
       addresses = extract_thread_participants(result).uniq
-      persons = Person.where(id: Persons::EmailAddress
-        .where(address: addresses).select(:person_id)
-      )
+      persons = Person.where(email: addresses)
+
       persons.each do |person|
         association = thread.persons_threads.find_or_initialize_by(person_id: person.id)
         if association.save
