@@ -18,6 +18,7 @@ const getters = {
   personsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSONS_URL}`,
   profiles: state => state.all,
   fields: state => state.fields,
+  fieldsById: state => keyBy(state.fields, "id"),
   profileFieldValuesByProfileId: (state) => {
     const map = {}
     for (const profile of state.all) {

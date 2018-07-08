@@ -87,7 +87,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       },
       filterFields(filteredFieldIds) {
         this.selectedFields = [...filteredFieldIds]
-      }
+      },
     },
     components: {
       Field,

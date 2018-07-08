@@ -7,6 +7,7 @@ import { groupBy } from "lodash-es"
 
 import ServerErrorModal from "./boards/modals/server-error.vue"
 import MilestoneCell from "./timeline/milestone-cell.vue"
+import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   export default {
     name: "Timeline",
@@ -15,7 +16,8 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
       try {
         await this.fetchActiveProfileTimelineDates()
         await Promise.all([
-          this.fetchMilestones(), this.fetchProfiles()
+          this.fetchMilestones(), this.fetchProfiles(),
+          this.getAllPositions(), this.fetchProfileFields()
         ])
         await this.fetchPersonMilestones()
       } catch (err) {
@@ -32,12 +34,14 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
     },
     data() {
       return {
+        currentProfileInModal: null
       }
     },
     computed: {
       ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
-      ...mapGetters("profiles", ["profiles", "fields"]),
+      ...mapGetters("profiles", ["profiles"]),
       ...mapGetters("dates", ["timelineDates"]),
+      ...mapGetters("positions", ["allPositionsById"]),
       currentDate() {
         const today = new Date
         const month = `${today.getMonth() + 1}`.padStart(2, "0")
@@ -59,10 +63,19 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
     },
     methods: {
       ...mapActions("milestones", ["fetchMilestones", "fetchPersonMilestones"]),
-      ...mapActions("profiles", ["fetchProfiles"]),
+      ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
       ...mapActions("dates", ["fetchActiveProfileTimelineDates"]),
+      ...mapActions("positions", ["getAllPositions"]),
       openModalByName(modalName, data={}) {
+        if (modalName === "profile-milestones") {
+          this.currentProfileInModal = data.profile
+        }
         this.openModal(modalName)
+      },
+      closeModal() {
+        this.modalVisible = false
+        this.modalName = null
+        if (this.currentProfileInModal) this.currentProfileInModal = null
       },
       isCurrentSemester(semester) {
         const dates = [semester.id, ...semester.months.map(m => m.id)]
@@ -75,7 +88,8 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
     },
     components: {
       ServerErrorModal,
-      MilestoneCell
+      MilestoneCell,
+      ProfileMilestonesModal
     }
   }
   </script>
@@ -83,6 +97,7 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
   <template lang="pug">
     div.timeline
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
+      profile-milestones-modal(@close="closeModal", v-if="modalVisible && modalName === 'profile-milestones'", :profile="currentProfileInModal")
 
       div.tables
         div.names-table
@@ -94,7 +109,8 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
             tbody
               tr(v-for="profile in profiles")
                 td
-                  div.cell-content {{profile.full_name}}
+                  div.cell-content(@click="openModalByName('profile-milestones', { profile })") {{profile.full_name}}
+                    div.person-position-label {{allPositionsById[profile.position_id].title}}
 
         div.dynamic-table.timeline-table(:style="{minHeight: `${timelineTableMinHeight}px`}")
           table
@@ -142,6 +158,10 @@ import MilestoneCell from "./timeline/milestone-cell.vue"
       max-width: var(--cellWidth)em;
       min-height: var(--cellMinHeight)px;
       max-height: var(--cellMaxHeight)px;
+
+      & .person-position-label {
+        font-size: .8em;
+      }
     }
 
     & .header-content {
