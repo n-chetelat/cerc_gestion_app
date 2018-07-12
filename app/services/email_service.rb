@@ -99,7 +99,7 @@ class EmailService
         associate_thread_with_persons!(thread, thread_object.id)
         thread.google_history_id = thread_object.history_id.to_s
         thread.save! if thread.persons.any? && thread.changed?
-        thread.reload
+        thread.reload if thread.persisted?
 
       end
       response = result
@@ -171,7 +171,7 @@ class EmailService
         message.payload.headers.map.find {|header| header.name == "To" }.value
       end.flatten
       mail = Mail.new { to value_to; from value_from }
-      mail.from_addrs + mail.to_addrs
+      mail.from_addrs + mail.to_addrs - [USER_ID]
     end
 
     def extract_thread_message_details(thread, gmail_thread_object)
