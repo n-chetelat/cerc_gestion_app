@@ -39,7 +39,7 @@ const actions = {
     })
   },
   updatePersonMilestone({ commit, getters }, params) {
-    return axios.post(`${getters.personsMilestonesEndpoint}`, params).then(({ data }) => {
+    return axios.put(`${getters.personsMilestonesEndpoint}/${params.id}`, params).then(({ data }) => {
       commit("setPersonMilestone", data)
     })
   },

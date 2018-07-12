@@ -39,8 +39,17 @@ export default {
   },
   methods: {
     ...mapActions("milestones", ["createPersonMilestone", "updatePersonMilestone"]),
-    async createNewMilestone() {
+    async createNewPersonMilestone() {
       await this.createPersonMilestone(this.newMilestone)
+    },
+    async savePersonMilestone(personMilestone) {
+      const params = {
+        id: personMilestone.id,
+        person_id: this.profile_id,
+        positions_milestone_id: personMilestone.positions_milestone_id,
+        date: personMilestone.date
+      }
+      await this.updatePersonMilestone(params)
     }
   },
   components: {
@@ -66,14 +75,16 @@ export default {
               field.field(:profile="profile", :field="fieldsById[personField.profile_field_id]")
       div.tab-section.milestones(v-if="currentTab === 'milestones'")
         ul
-          li(v-for="personMilestone in milestonesByPersonId[profile.uuid]") {{milestonesById[personMilestone.positions_milestone_id].title}}
-            span Date: {{personMilestone.date}}
+          li(v-for="personMilestone in milestonesByPersonId[profile.uuid]")
+            label {{milestonesById[personMilestone.positions_milestone_id].title}}
+            select(v-model="personMilestone.date", @blur="savePersonMilestone(personMilestone)")
+              option(v-for="date in positionDates", :value="date.id") {{date.label}}
           div(v-if="milestonesByPosition[profile.position_id] && milestonesByPosition[profile.position_id].length")
             select(v-model="newMilestone.positions_milestone_id")
               option(v-for="milestone in milestonesByPosition[profile.position_id]", :value="milestone.id") {{milestone.title}}
             select(v-model="newMilestone.date")
               option(v-for="date in positionDates", :value="date.id") {{date.label}}
-            button(type="button", @click="createNewMilestone") save
+            button(type="button", @click="createNewPersonMilestone") save
           div(v-else)
             p There are no milestones for this person's position
 
