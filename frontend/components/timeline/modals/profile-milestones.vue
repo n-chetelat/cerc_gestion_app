@@ -16,15 +16,32 @@ export default {
     return {
       currentTab: "information",
       tabs: ["information", "milestones"],
+      newMilestone: {
+        person_id: this.profile.id,
+        positions_milestone_id: null,
+        date: null
+      }
     }
   },
   computed: {
-    ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
+    ...mapGetters("milestones", ["milestonesById", "milestonesByPosition", "milestonesByPersonId"]),
     ...mapGetters("dates", ["semesters", "months"]),
     ...mapGetters("positions", ["allPositionsById"]),
     ...mapGetters("profiles", ["fieldsById", "profileFieldValuesByProfileId"]),
+    positionDates() {
+      const position = this.allPositionsById[this.profile.position_id]
+      if (position.time_interval === "semester") {
+        return this.semesters
+      } else if (position.time_interval === "month") {
+        return this.months
+      } else return []
+    }
   },
   methods: {
+    ...mapActions("milestones", ["createPersonMilestone", "updatePersonMilestone"]),
+    async createNewMilestone() {
+      await this.createPersonMilestone(this.newMilestone)
+    }
   },
   components: {
     Modal,
@@ -51,8 +68,14 @@ export default {
         ul
           li(v-for="personMilestone in milestonesByPersonId[profile.uuid]") {{milestonesById[personMilestone.positions_milestone_id].title}}
             span Date: {{personMilestone.date}}
-
-
+          div(v-if="milestonesByPosition[profile.position_id] && milestonesByPosition[profile.position_id].length")
+            select(v-model="newMilestone.positions_milestone_id")
+              option(v-for="milestone in milestonesByPosition[profile.position_id]", :value="milestone.id") {{milestone.title}}
+            select(v-model="newMilestone.date")
+              option(v-for="date in positionDates", :value="date.id") {{date.label}}
+            button(type="button", @click="createNewMilestone") save
+          div(v-else)
+            p There are no milestones for this person's position
 
 </template>
 

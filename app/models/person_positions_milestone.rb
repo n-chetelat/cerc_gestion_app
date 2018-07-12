@@ -9,6 +9,8 @@ class PersonPositionsMilestone < ApplicationRecord
 
   validates :date, presence: true
   validate :milestone_belongs_to_person_position
+  validate :person_is_active
+  validates :positions_milestone_id, uniqueness: { scope: :person_id }
 
   alias_method :milestone, :positions_milestone
 
@@ -40,6 +42,12 @@ class PersonPositionsMilestone < ApplicationRecord
       if self.person.position.id != self.positions_milestone.position_id
         errors.add(:position,
           "Milestone '#{self.positions_milestone.title}' cannot be assigned to person with Position '#{self.person.position.title}'.")
+      end
+    end
+
+    def person_is_active
+      unless Person.find_by(id: self.person_id).try(:active?)
+        errors.add(:person_id, "The person with id #{self.person_id} does not have an active profile.")
       end
     end
 end

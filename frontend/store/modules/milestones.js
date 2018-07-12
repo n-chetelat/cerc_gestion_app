@@ -1,4 +1,5 @@
 import axios from "axios"
+import Vue from "vue"
 
 import { keyBy, groupBy } from "lodash-es"
 
@@ -16,6 +17,7 @@ const getters = {
   personsMilestonesEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSON_MILESTONE_URL}`,
   milestones: state => state.milestones,
   milestonesById: state => keyBy(state.milestones, "id"),
+  milestonesByPosition: state => groupBy(state.milestones, "position_id"),
   milestonesByPersonId: state => state.milestonesByPersonId,
 }
 
@@ -30,7 +32,17 @@ const actions = {
     return axios.get(`${getters.personsMilestonesEndpoint}`).then(({ data }) => {
       commit("setPersonMilestones", data)
     })
-  }
+  },
+  createPersonMilestone({ commit, getters }, params) {
+    return axios.post(`${getters.personsMilestonesEndpoint}`, params).then(({ data }) => {
+      commit("addPersonMilestone", data)
+    })
+  },
+  updatePersonMilestone({ commit, getters }, params) {
+    return axios.post(`${getters.personsMilestonesEndpoint}`, params).then(({ data }) => {
+      commit("setPersonMilestone", data)
+    })
+  },
 }
 
 // mutations
@@ -41,6 +53,17 @@ const mutations = {
   setPersonMilestones(state, personMilestones) {
     state.milestonesByPersonId = groupBy(personMilestones, "person_id")
   },
+  addPersonMilestone(state, personMilestone) {
+    const personMilestones = state.milestonesByPersonId[personMilestone.person_id] || []
+    const newMilestonesByPersonId = { ...state.milestonesByPersonId }
+    newMilestonesByPersonId[personMilestone.person_id] = [...personMilestones, personMilestone]
+    state.milestonesByPersonId = newMilestonesByPersonId
+  },
+  setPersonMilestone(state, personMilestone) {
+    const personMilestones = state.milestonesByPersonId[personMilestone.person_id]
+    const index = personMilestones.findIndex(pm => pm.id === personMilestone.id)
+    state.milestonesByPersonId[personMilestone.person_id].splice(index, 1, personMilestone)
+  }
 }
 
 export default {

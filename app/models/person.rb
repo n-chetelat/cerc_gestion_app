@@ -56,4 +56,8 @@ class Person < ApplicationRecord
     self.class.accepted.exists?(id: self.id)
   end
 
+  def active?
+    self.class.active.exists?(id: self.id)
+  end
+
 end
