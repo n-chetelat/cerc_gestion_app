@@ -4,6 +4,7 @@ import { mapGetters, mapActions } from "vuex"
 
 import Modal from "components/shared/modal.vue"
 import Field from "components/profiles/field.vue"
+import MilestonesForm from "./milestones-form.vue"
 
 import { values } from "lodash-es"
 
@@ -16,15 +17,10 @@ export default {
     return {
       currentTab: "information",
       tabs: ["information", "milestones"],
-      newMilestone: {
-        person_id: this.profile.id,
-        positions_milestone_id: null,
-        date: null
-      }
     }
   },
   computed: {
-    ...mapGetters("milestones", ["milestonesById", "milestonesByPosition", "milestonesByPersonId"]),
+    ...mapGetters("milestones", ["milestonesByPosition", "milestonesByPersonId"]),
     ...mapGetters("dates", ["semesters", "months"]),
     ...mapGetters("positions", ["allPositionsById"]),
     ...mapGetters("profiles", ["fieldsById", "profileFieldValuesByProfileId"]),
@@ -38,23 +34,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions("milestones", ["createPersonMilestone", "updatePersonMilestone"]),
-    async createNewPersonMilestone() {
-      await this.createPersonMilestone(this.newMilestone)
-    },
-    async savePersonMilestone(personMilestone) {
-      const params = {
-        id: personMilestone.id,
-        person_id: this.profile_id,
-        positions_milestone_id: personMilestone.positions_milestone_id,
-        date: personMilestone.date
-      }
-      await this.updatePersonMilestone(params)
-    }
   },
   components: {
     Modal,
     Field,
+    MilestonesForm
   }
 }
 </script>
@@ -73,20 +57,13 @@ export default {
           li.field-row(v-for="personField in profileFieldValuesByProfileId[profile.id]", v-if="personField && personField.value")
               span.field-label {{fieldsById[personField.profile_field_id].label}} &nbsp;
               field.field(:profile="profile", :field="fieldsById[personField.profile_field_id]")
+
       div.tab-section.milestones(v-if="currentTab === 'milestones'")
-        ul
-          li(v-for="personMilestone in milestonesByPersonId[profile.uuid]")
-            label {{milestonesById[personMilestone.positions_milestone_id].title}}
-            select(v-model="personMilestone.date", @blur="savePersonMilestone(personMilestone)")
-              option(v-for="date in positionDates", :value="date.id") {{date.label}}
-          div(v-if="milestonesByPosition[profile.position_id] && milestonesByPosition[profile.position_id].length")
-            select(v-model="newMilestone.positions_milestone_id")
-              option(v-for="milestone in milestonesByPosition[profile.position_id]", :value="milestone.id") {{milestone.title}}
-            select(v-model="newMilestone.date")
-              option(v-for="date in positionDates", :value="date.id") {{date.label}}
-            button(type="button", @click="createNewPersonMilestone") save
-          div(v-else)
-            p There are no milestones for this person's position
+        milestones-form(
+        :profile="profile",
+        :personMilestones="milestonesByPersonId[profile.uuid]",
+        :position-milestones="milestonesByPosition[profile.position_id]",
+        :position-dates="positionDates")
 
 </template>
 

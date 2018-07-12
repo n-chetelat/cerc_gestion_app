@@ -43,6 +43,11 @@ const actions = {
       commit("setPersonMilestone", data)
     })
   },
+  destroyPersonMilestone({ commit, getters }, personMilestoneId) {
+    return axios.delete(`${getters.personsMilestonesEndpoint}/${personMilestoneId}`).then(({ data }) => {
+      commit("removePersonMilestone", data)
+    })
+  }
 }
 
 // mutations
@@ -70,6 +75,11 @@ const mutations = {
     const personMilestones = state.milestonesByPersonId[personMilestone.person_id]
     const index = personMilestones.findIndex(pm => pm.id === personMilestone.id)
     state.milestonesByPersonId[personMilestone.person_id].splice(index, 1, personMilestone)
+  },
+  removePersonMilestone(state, personMilestone) {
+    const personMilestones = state.milestonesByPersonId[personMilestone.person_id]
+    const index = personMilestones.findIndex(pm => pm.id === personMilestone.id)
+    state.milestonesByPersonId[personMilestone.person_id].splice(index, 1)
   }
 }
 
