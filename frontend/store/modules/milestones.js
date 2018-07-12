@@ -1,7 +1,7 @@
 import axios from "axios"
 import Vue from "vue"
 
-import { keyBy, groupBy } from "lodash-es"
+import { keyBy, groupBy, sortBy } from "lodash-es"
 
 const MILESTONES_URL = `api/milestones`
 const PERSON_MILESTONE_URL = `api/persons_positions_milestones`
@@ -52,11 +52,18 @@ const mutations = {
   },
   setPersonMilestones(state, personMilestones) {
     state.milestonesByPersonId = groupBy(personMilestones, "person_id")
+    Object.keys(state.milestonesByPersonId).forEach((person_id) => {
+      state.milestonesByPersonId[person_id] = sortBy(state.milestonesByPersonId[person_id], (pm) => {
+        return pm.time_interval_ordinality
+      })
+    })
   },
   addPersonMilestone(state, personMilestone) {
     const personMilestones = state.milestonesByPersonId[personMilestone.person_id] || []
     const newMilestonesByPersonId = { ...state.milestonesByPersonId }
-    newMilestonesByPersonId[personMilestone.person_id] = [...personMilestones, personMilestone]
+    newMilestonesByPersonId[personMilestone.person_id] = sortBy([...personMilestones, personMilestone], (pm) => {
+      return pm.time_interval_ordinality
+    })
     state.milestonesByPersonId = newMilestonesByPersonId
   },
   setPersonMilestone(state, personMilestone) {
