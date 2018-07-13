@@ -61,7 +61,7 @@ export default {
       div.tab-section.milestones(v-if="currentTab === 'milestones'")
         milestones-form(
         :profile="profile",
-        :personMilestones="milestonesByPersonId[profile.uuid]",
+        :person-milestones="milestonesByPersonId[profile.uuid]",
         :position-milestones="milestonesByPosition[profile.position_id]",
         :position-dates="positionDates")
 

@@ -61,22 +61,22 @@ export default {
 
     div(v-if="positionMilestones.length")
       ul
-        li(v-for="personMilestone in personMilestones")
+        li.field-row(v-for="personMilestone in personMilestones")
           label {{milestonesById[personMilestone.positions_milestone_id].title}}
-          select(v-model="personMilestone.date", @blur="savePersonMilestone(personMilestone)")
+          select(v-model="personMilestone.date", @change="savePersonMilestone(personMilestone)")
             option(v-for="date in positionDates", :value="date.id") {{date.label}}
-          button(type="button", @click="deletePersonMilestone(personMilestone)") delete
+          button.delete(type="button", @click="deletePersonMilestone(personMilestone)")
 
       div(v-if="positionMilestonesLeftToAdd.length")
         h2 Milestones to add
         ul
-          li(v-for="milestone in positionMilestonesLeftToAdd")
+          li.field-row(v-for="milestone in positionMilestonesLeftToAdd")
             label {{milestonesById[milestone.id].title}}
             select(v-model="newMilestoneDates[milestone.id]")
               option(:value="null") Assign automatically
               hr
               option(v-for="date in positionDates", :value="date.id") {{date.label}}
-            button(type="button", @click="createNewPersonMilestone(milestone)") save
+            button.save(type="button", @click="createNewPersonMilestone(milestone)")
 
     div(v-else)
       p There are no milestones for this person's position
@@ -88,8 +88,34 @@ export default {
   @import "../../../init/variables.css";
 
   .milestones-form {
+    display: flex;
+    flex-direction: column;
 
-
+    & .field-row {
+      & label { width: 30%; }
+      & select { width: 50%; }
+      & button {
+        width: 5%;
+      }
+      & button.save {
+        &:after {
+          content: "✓";
+          font-size: .9em;
+        }
+      }
+      & button.delete {
+        background-color: red;
+        border: 2px solid red;
+        &:after {
+          content: "x";
+          font-size: .9em;
+        }
+        &:hover {
+          background-color: white;
+          color: red;
+        }
+      }
+    }
   }
 
 
