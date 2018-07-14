@@ -80,7 +80,7 @@ export default {
     margin: 2px auto;
   }
   &.--highlighted {
-    background-color: yellow;
+    background-color: color(var(--themeColor) alpha(20%));
   }
 }
 
