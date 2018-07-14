@@ -26,7 +26,7 @@ export default {
 <template lang="pug">
   div.milestone-cell
     ul(v-if="personMilestones.length")
-      li(v-for="personMilestone in personMilestones") {{milestonesById[personMilestone.positions_milestone_id].title}}
+      li(v-for="personMilestone in personMilestones", @click="$emit('modal')") {{milestonesById[personMilestone.positions_milestone_id].title}}
 
 </template>
 
@@ -35,7 +35,7 @@ export default {
 @import "../../init/variables.css";
 
 .milestone-cell {
-  
+
 }
 
 </style>

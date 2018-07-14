@@ -35,7 +35,8 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
     },
     data() {
       return {
-        currentProfileInModal: null
+        currentProfileInModal: null,
+        currentTabInModal: null,
       }
     },
     computed: {
@@ -70,6 +71,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       openModalByName(modalName, data={}) {
         if (modalName === "profile-milestones") {
           this.currentProfileInModal = data.profile
+          this.currentTabInModal = data.tab
         }
         this.openModal(modalName)
       },
@@ -98,7 +100,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
   <template lang="pug">
     div.timeline
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
-      profile-milestones-modal(@close="closeModal", v-if="modalVisible && modalName === 'profile-milestones'", :profile="currentProfileInModal")
+      profile-milestones-modal(@close="closeModal", v-if="modalVisible && modalName === 'profile-milestones'", :profile="currentProfileInModal", :tab="currentTabInModal")
 
       div.tables
         div.names-table
@@ -124,7 +126,10 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
             tbody
               tr(v-for="profile in profiles")
                 td(v-for="semester in timelineDates", :class="{'--current': isCurrentSemester(semester)}")
-                  milestone-cell.cell-content(:person-milestones="milestonesForSemester(profile, semester)", :semester="semester")
+                  milestone-cell.cell-content(
+                    :person-milestones="milestonesForSemester(profile, semester)",
+                    :semester="semester",
+                    @modal="openModalByName('profile-milestones', { profile, tab: 'milestones' })")
 
   </template>
 

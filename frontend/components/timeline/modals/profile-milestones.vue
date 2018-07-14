@@ -12,12 +12,16 @@ export default {
   name: "ProfileMilestones",
   props: {
     profile: { required: true },
+    tab: {},
   },
   data() {
     return {
-      currentTab: "information",
+      currentTab: null,
       tabs: ["information", "milestones"],
     }
+  },
+  created() {
+    this.currentTab = (this.tab) ? this.tab : "information"
   },
   computed: {
     ...mapGetters("milestones", ["milestonesByPosition", "milestonesByPersonId"]),
