@@ -64,9 +64,6 @@ export default {
   & .card-content {
     font-size: .8em;
 
-    & .heading {
-    }
-
     & .link:hover {
       cursor: pointer;
       text-decoration: underline;

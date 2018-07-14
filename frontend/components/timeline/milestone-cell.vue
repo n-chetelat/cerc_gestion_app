@@ -1,32 +1,66 @@
 <script>
 import { mapGetters, mapActions } from "vuex"
 
+import MilestoneCard from "./milestone-card.vue"
+
 export default {
   name: "MilestoneCell",
   props: {
-    personMilestones: { default: () => []  },
+    profile: { required: true },
     semester: { required: true },
+    personMilestones: { default: () => []  },
   },
   data() {
     return {
-
+      beingDraggedOver: false,
     }
   },
   computed: {
     ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
   },
   methods: {
+    ...mapActions("milestones", ["updatePersonMilestone"]),
+    onDragOver(event) {
+      this.beingDraggedOver = true
+      event.dataTransfer.dropEffect = "move"
+    },
+    onDrop(event) {
+      this.beingDraggedOver = false
+      event.dataTransfer.dropEffect = "move"
+      const [personMilestoneId, personId, oldDate] = event.dataTransfer.getData("text")
+        .split(",")
+
+      if (personId !== this.profile.uuid) return false
+      if (oldDate === this.semester.id) return false
+
+      const params = {
+        id: personMilestoneId,
+        date: this.semester.id
+      }
+      this.updatePersonMilestone(params).then(() => {
+
+      }).catch((err) => {
+        this.$emit("error")
+      })
+    },
   },
   components: {
-
+    MilestoneCard,
   }
 }
 </script>
 
 <template lang="pug">
-  div.milestone-cell
+  div.milestone-cell(
+    @dragover.prevent="onDragOver",
+    @dragend.prevent="beingDraggedOver = false",
+    @dragleave.prevent="beingDraggedOver = false",
+    @drop.prevent="onDrop",
+    :class="{'--highlighted': beingDraggedOver}")
+
     ul.milestone-list(v-if="personMilestones.length")
-      li.milestone(v-for="personMilestone in personMilestones", @click="$emit('modal')") {{milestonesById[personMilestone.positions_milestone_id].title}}
+      li.milestone(v-for="personMilestone in personMilestones")
+        milestone-card(:person-milestone="personMilestone", @modal="$emit('modal')")
 
 </template>
 
@@ -44,14 +78,9 @@ export default {
   & .milestone {
     width: 100%;
     margin: 2px auto;
-    padding: 3px;
-    border: 2px solid var(--themeColor);
-    border-radius: 3px;
-    background-color: #00a66855;
-    &:before {
-      content: "⁞ ";
-      color: gray;
-    }
+  }
+  &.--highlighted {
+    background-color: yellow;
   }
 }
 

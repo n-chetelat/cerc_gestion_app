@@ -127,8 +127,10 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
               tr(v-for="profile in profiles")
                 td(v-for="semester in timelineDates", :class="{'--current': isCurrentSemester(semester)}")
                   milestone-cell.cell-content(
+                    :profile="profile",
                     :person-milestones="milestonesForSemester(profile, semester)",
                     :semester="semester",
+                    @error="openModalByName('server-error')"
                     @modal="openModalByName('profile-milestones', { profile, tab: 'milestones' })")
 
   </template>

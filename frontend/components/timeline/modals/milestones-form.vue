@@ -41,8 +41,6 @@ export default {
     async savePersonMilestone(personMilestone) {
       const params = {
         id: personMilestone.id,
-        person_id: this.profile.id,
-        positions_milestone_id: personMilestone.positions_milestone_id,
         date: personMilestone.date
       }
       await this.updatePersonMilestone(params)
