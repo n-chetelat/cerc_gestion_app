@@ -36,7 +36,7 @@ Rails.application.routes.draw do
           resources :positions_milestones, only: [:index]
         end
       end
-      resources :boards, only: [:show]
+      resources :boards, only: [:index, :show]
       resources :phases, only: [] do
         scope module: "phases" do
           resources :persons, only: [:update]

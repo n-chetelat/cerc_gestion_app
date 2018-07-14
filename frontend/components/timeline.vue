@@ -7,6 +7,7 @@ import { groupBy } from "lodash-es"
 
 import ServerErrorModal from "./boards/modals/server-error.vue"
 import MilestoneCell from "./timeline/milestone-cell.vue"
+import AdminNav from "components/shared/admin-nav.vue"
 import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   export default {
@@ -92,6 +93,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
     components: {
       ServerErrorModal,
       MilestoneCell,
+      AdminNav,
       ProfileMilestonesModal
     }
   }
@@ -101,6 +103,8 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
     div.timeline
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
       profile-milestones-modal(@close="closeModal", v-if="modalVisible && modalName === 'profile-milestones'", :profile="currentProfileInModal", :tab="currentTabInModal")
+
+      admin-nav
 
       div.tables
         div.names-table
@@ -145,6 +149,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   .timeline {
     display: flex;
+    flex-direction: column;
     flex-wrap: nowrap;
     height: 100%;
 

@@ -10,6 +10,13 @@ module Api
       @resource_name = :board
     end
 
+    def index
+      boards = Board.pluck(:slug, :title).map do |board|
+        {slug: board[0], title: board[1]}
+      end
+      render json: boards
+    end
+
     def show
     end
 

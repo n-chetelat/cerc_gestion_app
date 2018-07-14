@@ -91,6 +91,11 @@ export default {
       flex-direction: column;
       margin: 3em auto;
       padding: 1em;
+
+      & button {
+        padding: 0;
+        min-height: 3em;
+      }
     }
 
     & .visible-columns {

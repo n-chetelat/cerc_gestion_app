@@ -5,6 +5,7 @@ const BOARD_URL = "api/boards"
 const PHASE_URL = "api/phases"
 
 const state = {
+  all: [],
   current: null,
   emailTemplatesByPhase: {}
 }
@@ -13,6 +14,7 @@ const state = {
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BOARD_URL}`,
   phaseEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PHASE_URL}`,
+  boards: state => state.all,
   currentBoard: state => state.current,
   phasesById: state => {
     if (!state.current) return {}
@@ -33,6 +35,11 @@ const getters = {
 
 // actions
 const actions = {
+   fetchAllBoards({ commit, getters }) {
+     return axios.get(getters.endpoint).then(({ data }) => {
+       commit('setAllBoards', data)
+     })
+   },
    fetchBoard({ commit, getters }, boardId) {
     return axios.get(`${getters.endpoint}/${boardId}`).then(({ data }) => {
       commit('setCurrentBoard', data)
@@ -55,6 +62,9 @@ const actions = {
 
 // mutations
 const mutations = {
+  setAllBoards(state, boards) {
+    state.all = boards
+  },
   setCurrentBoard(state, board) {
     state.current = board
   },

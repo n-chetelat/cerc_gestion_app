@@ -6,6 +6,7 @@ import { keyBy, pick } from "lodash-es"
 
 import { mapGetters, mapActions } from "vuex"
 
+import AdminNav from "components/shared/admin-nav.vue"
 import Field from "components/profiles/field.vue"
 import StaticField from "components/profiles/static-field.vue"
 import ProfilesSidebar from "components/profiles/profiles-sidebar.vue"
@@ -90,6 +91,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       },
     },
     components: {
+      AdminNav,
       Field,
       StaticField,
       ProfilesSidebar,
@@ -103,6 +105,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     div.profiles
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
       new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
+
+      admin-nav.admin-nav
 
       div.tables
         div.names-table
@@ -145,8 +149,10 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
   .profiles {
     display: flex;
+    flex-direction: column;
     flex-wrap: nowrap;
     height: 100%;
+
 
     & .sidebar {
       position: fixed;
@@ -160,7 +166,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       }
     }
 
-    & .tables {
+    & .admin-nav, & .tables {
       width: 96%;
     }
 

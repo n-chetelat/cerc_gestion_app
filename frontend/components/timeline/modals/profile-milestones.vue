@@ -101,6 +101,9 @@ export default {
       }
       & .field {
         width: 50%;
+        & .field-cell {
+          text-align: left;
+        }
       }
     }
 
