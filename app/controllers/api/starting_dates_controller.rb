@@ -19,9 +19,10 @@ module Api
     def timeline
       min_date = Person.active.joins(:application)
         .minimum("applications.starting_date")
-      if min_date.nil? || min_date < Date.today
+      if min_date.nil? || min_date > Date.today
         min_date = Date.parse("#{Date.today.year}-01-01")
       end
+
 
       max_date = Person.joins(:persons_positions_milestones)
         .maximum("persons_positions_milestones.date").try(:to_date)
