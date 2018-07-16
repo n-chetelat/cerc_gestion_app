@@ -166,6 +166,10 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       }
     }
 
+    & .cell-content {
+      cursor: pointer;
+    }
+
     & .cell-content, .header-content {
       min-width: var(--cellWidth)em;
       max-width: var(--cellWidth)em;

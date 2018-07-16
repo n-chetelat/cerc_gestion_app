@@ -4,6 +4,7 @@ import { mapGetters, mapActions } from "vuex"
 
 import Modal from "components/shared/modal.vue"
 import Field from "components/profiles/field.vue"
+import StaticField from "components/profiles/static-field.vue"
 import MilestonesForm from "./milestones-form.vue"
 
 import { values } from "lodash-es"
@@ -35,13 +36,23 @@ export default {
       } else if (position.time_interval === "month") {
         return this.months
       } else return []
-    }
+    },
+    staticFields() {
+      return {
+        name: "Name",
+        lastname: "Lastname",
+        position_id: "Position",
+        email: "Email",
+        starting_date: "Starting Date"
+      }
+    },
   },
   methods: {
   },
   components: {
     Modal,
     Field,
+    StaticField,
     MilestonesForm
   }
 }
@@ -58,9 +69,13 @@ export default {
 
       div.tab-section.profile-info(v-if="currentTab === 'information'")
         ul
+          li.field-row(v-for="(label, key) in staticFields", )
+            span.field-label {{label}}
+            static-field.field(:profile="profile", :field-name="key")
+
           li.field-row(v-for="personField in profileFieldValuesByProfileId[profile.id]", v-if="personField && personField.value")
-              span.field-label {{fieldsById[personField.profile_field_id].label}} &nbsp;
-              field.field(:profile="profile", :field="fieldsById[personField.profile_field_id]")
+            span.field-label {{fieldsById[personField.profile_field_id].label}} &nbsp;
+            field.field(:profile="profile", :field="fieldsById[personField.profile_field_id]")
 
       div.tab-section.milestones(v-if="currentTab === 'milestones'")
         milestones-form(
