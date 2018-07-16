@@ -19,7 +19,8 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         await Promise.all([
           this.fetchMilestones(), this.fetchProfiles(),
           this.getAllPositions(), this.fetchProfileFields(),
-          this.fetchMonths(), this.fetchSemesters()
+          this.fetchMonths({extended: true}),
+          this.fetchSemesters({extended: true})
         ])
         await this.fetchPersonMilestones()
       } catch (err) {
@@ -54,7 +55,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       milestonesBySemester() {
         const structure = {}
         this.profiles.forEach((profile) => {
-          structure[profile.uuid] = groupBy(this.milestonesByPersonId[profile.uuid], (m) => m.date)
+          structure[profile.uuid] = groupBy(this.milestonesByPersonId[profile.uuid], (m) => m.semester)
         })
         return structure
       },
@@ -89,6 +90,11 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         if (!this.milestonesBySemester[profile.uuid]) return null
         return this.milestonesBySemester[profile.uuid][semester.id]
       },
+      monthDateToSemesterDate(date) {
+        const winterRegex = new RegExp(/\d{4}-(01|02|03|04|05)-\d{2}/)
+        const summerRegex = new RegExp(/\d{4}-(06|07|08)-\d{2}/)
+        const autumnRegex = new RegExp(/\d{4}-(09|10|11|12)-\d{2}/)
+      }
     },
     components: {
       ServerErrorModal,
@@ -129,11 +135,11 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
                     span.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
             tbody
               tr(v-for="profile in profiles")
-                td(v-for="semester in timelineDates", :class="{'--current': isCurrentSemester(semester)}")
+                td(v-for="date in timelineDates", :class="{'--current': isCurrentSemester(date)}")
                   milestone-cell.cell-content(
                     :profile="profile",
-                    :person-milestones="milestonesForSemester(profile, semester)",
-                    :semester="semester",
+                    :person-milestones="milestonesForSemester(profile, date)",
+                    :date="date",
                     @error="openModalByName('server-error')"
                     @modal="openModalByName('profile-milestones', { profile, tab: 'milestones' })")
 

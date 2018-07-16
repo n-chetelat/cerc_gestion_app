@@ -30,7 +30,11 @@ module Api
     end
 
     def update
-      @resource.update_attributes(permitted_params)
+      if params[:date].present?
+        parsed_date = Date.parse(params[:date])
+        new_date = Date.parse("#{parsed_date.year}-#{parsed_date.month}-01")
+        @resource.date = new_date
+      end
       if @resource.save
         render :show
       else

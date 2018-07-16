@@ -21,4 +21,8 @@ module ApplicationHelper
     bucket.signed_url("app_documentation.pdf")
   end
 
+  def month_date_to_semester_date(date_string)
+    ::DatesService.month_date_to_semester_date(date_string).to_s
+  end
+
 end

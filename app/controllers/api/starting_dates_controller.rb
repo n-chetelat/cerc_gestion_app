@@ -3,13 +3,17 @@ module Api
     before_action :authenticate_admin_user!
 
     def semesters
-      options = set_options_for(:semester)
-      render json: ::DatesService.generate_starting_dates(:semester, options)
+      if params[:extended]
+        options = set_extended_dates_options_for(:semester)
+      end
+      render json: ::DatesService.generate_starting_dates(:semester, options || {})
     end
 
     def months
-      options = set_options_for(:month)
-      render json: ::DatesService.generate_starting_dates(:month, options)
+      if params[:extended]
+        options = set_extended_dates_options_for(:month)
+      end
+      render json: ::DatesService.generate_starting_dates(:month, options || {})
     end
 
     def timeline
@@ -20,7 +24,8 @@ module Api
       end
 
       max_date = Person.joins(:persons_positions_milestones)
-        .maximum("persons_positions_milestones.date").try(:to_date) || min_date + 24.months
+        .maximum("persons_positions_milestones.date").try(:to_date)
+        .try(:+, 1.year) || min_date + 24.months
       dates = ::DatesService.generate_semester_and_month_structure(
         min_date, max_date
       )
@@ -29,22 +34,17 @@ module Api
 
     private
 
-      def set_options_for(interval_type)
-        return {} unless params[:min_date].present?
-
+      def set_extended_dates_options_for(interval_type)
         options = {}
-        options[:min_date] = Date.parse(params[:min_date])
+        today = Date.today
+        options[:min_date] = Date.parse("#{today.year}-#{today.month}-01") - 1.year
+        extra_years = 3
 
-        # If minimum date is in a past year,
-        # add up the past years/months and the default
-        # future years/months to calculate
         case interval_type
         when :semester
-          years = (Date.today.year - options[:min_date].year)
-          options[:years] = years + ::DatesService::DEFAULT_YEARS if years > 0
+          options[:years] = ::DatesService::DEFAULT_YEARS + extra_years
         when :month
-          months = (Date.today.year*12+Date.today.month) - (options[:min_date].year*12+options[:min_date].month)
-          options[:months] = months + ::DatesService::DEFAULT_MONTHS if months > 0
+          options[:months] = ::DatesService::DEFAULT_MONTHS + extra_years*12
         else
           raise "Invalid interval type"
         end

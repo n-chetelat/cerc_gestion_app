@@ -22,8 +22,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         await this.fetchProfiles()
         await Promise.all([
           this.getAllPositions(),
-          this.fetchSemesters(),
-          this.fetchMonths(),
+          this.fetchSemesters({extended: true}),
+          this.fetchMonths({extended: true}),
         ])
         const dynamicFields = this.fields.map(f => f.id)
         const staticFields = Object.keys(this.staticFields)

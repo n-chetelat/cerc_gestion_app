@@ -7,7 +7,7 @@ export default {
   name: "MilestoneCell",
   props: {
     profile: { required: true },
-    semester: { required: true },
+    date: { required: true },
     personMilestones: { default: () => []  },
   },
   data() {
@@ -31,11 +31,11 @@ export default {
         .split(",")
 
       if (personId !== this.profile.uuid) return false
-      if (oldDate === this.semester.id) return false
+      if (oldDate === this.date.id) return false
 
       const params = {
         id: personMilestoneId,
-        date: this.semester.id
+        date: this.date.id
       }
       this.updatePersonMilestone(params).then(() => {
 
