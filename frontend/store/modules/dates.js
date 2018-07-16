@@ -17,19 +17,19 @@ const getters = {
   months: state => state.months,
   timelineDates: state => state.timeline,
   monthDatesBySemester: state => {
-    
+
   }
 }
 
 // actions
 const actions = {
-  fetchSemesters({ commit, getters }) {
-    return axios.get(`${getters.endpoint}/semesters`).then(({ data }) => {
+  fetchSemesters({ commit, getters }, params={}) {
+    return axios.get(`${getters.endpoint}/semesters`, { params }).then(({ data }) => {
       commit("setSemesters", data)
     })
   },
-  fetchMonths({ commit, getters }) {
-    return axios.get(`${getters.endpoint}/months`).then(({ data }) => {
+  fetchMonths({ commit, getters }, params={}) {
+    return axios.get(`${getters.endpoint}/months`, { params }).then(({ data }) => {
       commit("setMonths", data)
     })
   },

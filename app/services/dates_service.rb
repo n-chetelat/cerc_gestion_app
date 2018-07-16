@@ -6,6 +6,8 @@ class DatesService
     summer: [6,7,8],
     autumn: [9,10,11,12]
   }
+  DEFAULT_MONTHS = 12
+  DEFAULT_YEARS = 2
 
   def self.get_semesters_in_interval(min_date, max_date)
     raise "Invalid date interval" if min_date > max_date
@@ -56,10 +58,10 @@ class DatesService
   end
 
   def self.generate_starting_dates(interval_type, options={})
-    months = options[:months] || 12
-    years = options[:years] || 2
+    months = options[:months] || DEFAULT_MONTHS
+    years = options[:years] || DEFAULT_YEARS
     choices = []
-    min_date = Date.parse("#{Date.today.year}-#{Date.today.month}-01")
+    min_date = options[:min_date] || Date.parse("#{Date.today.year}-#{Date.today.month}-01")
 
     case interval_type
     when :semester
