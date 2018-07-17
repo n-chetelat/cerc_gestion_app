@@ -25,9 +25,13 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           this.fetchSemesters({extended: true}),
           this.fetchMonths({extended: true}),
         ])
-        const dynamicFields = this.fields.map(f => f.id)
-        const staticFields = Object.keys(this.staticFields)
-        this.selectedFields = [...staticFields, ...dynamicFields]
+        if (localStorage.getItem("profile-fields")) {
+          this.selectedFields = JSON.parse(localStorage.getItem("profile-fields"))
+        } else {
+          const dynamicFields = this.fields.map(f => f.id)
+          const staticFields = Object.keys(this.staticFields)
+          this.selectedFields = [...staticFields, ...dynamicFields]
+        }
       } catch (err) {
         this.openModal("server-error", {})
       }
@@ -97,6 +101,12 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       ProfilesSidebar,
       NewProfileModal,
       ServerErrorModal
+    },
+    watch: {
+      selectedFields: function(val, oldVal) {
+        const fieldsToRemember = JSON.stringify(val)
+        localStorage.setItem("profile-fields", fieldsToRemember)
+      }
     }
   }
   </script>

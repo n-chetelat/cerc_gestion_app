@@ -18,9 +18,7 @@ export default {
       selectedFields: [],
     }
   },
-  mounted() {
-    this.addAllColumns()
-  },
+
   methods: {
     toggleSidebarOpen() {
       this.sidebarOpen = !this.sidebarOpen
@@ -33,6 +31,13 @@ export default {
         this.selectedFields = []
       }
     },
+    addRememberedColumns() {
+      if (localStorage.getItem("profile-fields")) {
+        this.selectedFields = JSON.parse(localStorage.getItem("profile-fields"))
+      } else {
+        this.addAllColumns()
+      }
+    },
     addAllColumns() {
       const dynamicFieldIds = this.dynamicFields.map(f => f.id)
       const staticFieldIds = Object.keys(this.staticFields)
@@ -43,6 +48,14 @@ export default {
     }
   },
   components: {
+  },
+  watch: {
+    dynamicFields: function(val, oldVal) {
+      if (oldVal.length) return // Trigger only on transition from empty array to full
+      if (val.length) {
+        this.addRememberedColumns()
+      }
+    },
   },
 }
 </script>
