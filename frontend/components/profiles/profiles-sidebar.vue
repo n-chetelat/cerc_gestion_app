@@ -8,7 +8,7 @@ export default {
     staticFields: {
       required: true, default: {}
     },
-    dynamicFields: { // use this instead of getting fields from vuex to avoid fields not being loaded yet.
+    dynamicFields: {
       required: true, default: []
     }
   },
