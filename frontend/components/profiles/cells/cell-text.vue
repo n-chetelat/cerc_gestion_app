@@ -7,7 +7,7 @@ export default {
   mixins: [CellFieldMixin],
   data() {
     return {
-      textValue: null
+      textValue: this.field.value
     }
   },
   computed: {
@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     setNewValue(event) {
-      this.textValue = event.target.innerText.trim()
       this.updateValue(event, this.textValue)
     }
   }
@@ -36,10 +35,13 @@ export default {
 
 <template lang="pug">
   span.cell-text
-    span.cell-display(contenteditable, @blur="setNewValue($event)") {{displayValue}}
+    span.cell-display(v-if="!editing", @dblclick="editing = true") {{displayValue}}
+    input(v-else, type="text", v-model="textValue", v-on-clickaway="closeEditing", @blur="setNewValue($event)")
 
 </template>
 
 <style>
+
+
 
 </style>

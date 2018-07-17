@@ -68,7 +68,6 @@ export default {
       @apply --field-cell-style;
 
       &.cell-textarea {
-        overflow: hidden;
         font-family: var(--textFamily);
         font-size: .9em;
         line-height: 1.3em;

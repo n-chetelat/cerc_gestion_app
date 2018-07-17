@@ -18,6 +18,7 @@ export default {
       return true
     },
     formattedDate() {
+      if (!this.field.value) return null
       let date =  moment(this.field.value).format("D MMMM YYYY")
       if (date === "Invalid date") { date = null }
       return date

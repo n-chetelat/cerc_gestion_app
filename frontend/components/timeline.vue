@@ -90,11 +90,6 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         if (!this.milestonesBySemester[profile.uuid]) return null
         return this.milestonesBySemester[profile.uuid][semester.id]
       },
-      monthDateToSemesterDate(date) {
-        const winterRegex = new RegExp(/\d{4}-(01|02|03|04|05)-\d{2}/)
-        const summerRegex = new RegExp(/\d{4}-(06|07|08)-\d{2}/)
-        const autumnRegex = new RegExp(/\d{4}-(09|10|11|12)-\d{2}/)
-      }
     },
     components: {
       ServerErrorModal,

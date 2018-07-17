@@ -39,7 +39,7 @@
       width: var(--cellWidth)em;
       display: inline-block;
     }
-    & select {
+    & select, & input, & textarea {
       min-width: 100%;
       width: var(--cellWidth)em;
     }
