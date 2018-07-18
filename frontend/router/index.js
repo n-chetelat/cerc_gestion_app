@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-import * as store from '../store'
+import store from "../store"
 
 import RecruitmentForm from "./../components/recruitment-form.vue"
 import Board from "./../components/board.vue"
@@ -35,7 +35,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
 })
 
 export default router

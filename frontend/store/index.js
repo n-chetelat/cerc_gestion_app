@@ -12,10 +12,12 @@ import profiles from './modules/profiles'
 import dates from './modules/dates'
 import milestones from './modules/milestones'
 
-const adminStore = {
+const store = {
+  state: {
+    authorized: false,
+  },
   getters: {
     currentHost: (state, getters) => `${process.env.RAILS_HOST}/${getters["locales/currentLocale"]}`,
-    isAuthenticated: state => true
   },
   modules: {
     locales,
@@ -33,17 +35,4 @@ const adminStore = {
   },
 }
 
-const publicStore = {
-  getters: {
-    currentHost: (state, getters) => `${process.env.RAILS_HOST}/${getters["locales/currentLocale"]}`,
-    isAuthenticated: state => false
-  },
-  modules: {
-    locales,
-    recruitmentInfo,
-    positions,
-    application
-  }
-}
-
-export { adminStore, publicStore }
+export default store

@@ -1,17 +1,14 @@
-<template lang="pug">
-  recruitment-form
-</template>
-
 <script>
-import RecruitmentForm from "./recruitment-form.vue"
+
 
 export default {
   name: "App",
-  components: {
-    RecruitmentForm
-  }
 }
 </script>
+
+<template lang="pug">
+  router-view
+</template>
 
 <style scoped>
 </style>

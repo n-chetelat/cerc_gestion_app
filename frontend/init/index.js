@@ -7,10 +7,9 @@ import "./tooltip.css";
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { adminStore, publicStore } from '../store'
+import store from '../store'
 import router from '../router'
 import App from '../components/app.vue'
-import AppAdmin from '../components/app-admin.vue'
 
 import Vue2Filters from 'vue2-filters'
 import VTooltip from 'v-tooltip'
@@ -26,24 +25,13 @@ import axios from "axios"
 axios.defaults.headers.common["X-CSRF-TOKEN"] = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
 document.addEventListener('DOMContentLoaded', () => {
-  let options = {}
-  let el = document.getElementById("app-admin")
-  let component = AppAdmin
-  if (el) {
-    options = {
-      store: new Vuex.Store(adminStore),
-      el: document.getElementById("app-admin"),
-      router
-    }
-  } else {
-    options = {
-      store: new Vuex.Store(publicStore),
-      el: document.getElementById("app"),
-    }
-    component = App
+  let options = {
+    el: document.getElementById("app"),
+    store: new Vuex.Store(store),
+    router
   }
   const app = new Vue({
     ...options,
-    render: h => h(component)
+    render: h => h(App)
   })
 })

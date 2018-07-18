@@ -16,7 +16,9 @@ Rails.application.routes.draw do
 
     namespace "api", defaults: {format: "json"} do
 
-      resource :users, only: [:show]
+      resource :users, only: [:show] do
+        get :auth
+      end
 
       resources :positions, only: [:index] do
         get :form, on: :member
