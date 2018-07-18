@@ -6,7 +6,7 @@ class Person < ApplicationRecord
 
   has_one :application, foreign_key: "person_id", dependent: :destroy
 
-  has_many :persons_phases, class_name: "PersonPhase", foreign_key: "person_id", dependent: :destroy
+  has_one :persons_phase, class_name: "PersonPhase", foreign_key: "person_id", dependent: :destroy
 
   has_many :persons_threads, class_name: "Email::PersonThread", foreign_key: "person_id", dependent: :destroy, inverse_of: :person
   has_many :threads, through: :persons_threads
@@ -16,7 +16,8 @@ class Person < ApplicationRecord
   has_many :persons_positions_milestones, class_name: "::PersonPositionsMilestone",  dependent: :destroy
   has_many :positions_milestones, through: :persons_positions_milestones
 
-  scope :not_in_phase, -> { where.not(id: joins(:persons_phases).select(:person_id)) }
+  scope :in_recruitment, -> { joins(:application).where("applications.closed_at IS NULL") }
+  scope :not_in_phase, -> { in_recruitment.where.not(id: joins(:persons_phase).select(:person_id)) }
   scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
   scope :rejected, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = FALSE") }
   scope :active, -> { accepted.where(finished_at: nil) }
@@ -39,7 +40,7 @@ class Person < ApplicationRecord
   end
 
   def current_phase
-    PersonPhase.find_by(person_id: self.id).try(:phase)
+    self.persons_phase.try(:phase)
   end
 
   def position
@@ -50,6 +51,10 @@ class Person < ApplicationRecord
     if self.application.present?
       self.application.starting_date_to_s
     end
+  end
+
+  def in_recruitment?
+    self.class.in_recruitment.exists?(id: self.id)
   end
 
   def accepted?

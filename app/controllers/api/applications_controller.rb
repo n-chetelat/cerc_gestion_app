@@ -27,7 +27,7 @@ module Api
       if @resource = ApplicationService.create_application(params)
         email_labels = PhaseService.prepare_email_label_lists(@resource.person, Phase.current_initial)
 
-        PhaseService.place_person_in_phase(@resource.person, Phase.current_initial, request)
+        PhaseService.place_person_in_phase(@resource.person, Phase.current_initial)
         PhaseService.apply_automatic_callbacks_for(@resource.person, Phase.current_initial, request)
         PhaseService.update_email_labels_for(@resource.person, email_labels[:add_label_ids],
           email_labels[:remove_label_ids], request)
@@ -59,7 +59,7 @@ module Api
       end
 
       def broadcast_changes
-        if @resource
+        if @resource && @resource.closed_at.nil?
           slugs = @resource.person.current_phase.boards.pluck(:slug)
           BoardChannelService.send_phases_update(slugs)
         end

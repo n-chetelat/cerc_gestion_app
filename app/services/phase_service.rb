@@ -1,11 +1,14 @@
 class PhaseService
 
-  def self.place_person_in_phase(person, phase, request)
+  def self.place_person_in_phase(person, phase)
     return if phase.nil? || person.nil?
 
-    person_phase = PersonPhase.find_or_initialize_by(person: person)
-    person_phase.phase = phase
-    person_phase.save!
+    if person.persons_phase.nil?
+      person.create_persons_phase!(phase_id: phase.id)
+    else
+      person.persons_phase.phase_id = phase.id
+      person.persons_phase.save!
+    end
   end
 
   def self.prepare_email_label_lists(person, phase)

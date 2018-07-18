@@ -17,7 +17,7 @@ module Api
       def update
         email_labels = PhaseService.prepare_email_label_lists(@resource, @phase)
         PhaseService.place_person_in_phase(@resource,
-          @phase, request)
+          @phase)
         PhaseService.update_email_labels_for(@resource, email_labels[:add_label_ids],
           email_labels[:remove_label_ids], request)
         render :show
