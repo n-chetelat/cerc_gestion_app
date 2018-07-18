@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-import store from './../store'
+import * as store from '../store'
 
 import RecruitmentForm from "./../components/recruitment-form.vue"
 import Board from "./../components/board.vue"

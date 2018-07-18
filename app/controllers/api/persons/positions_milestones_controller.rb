@@ -1,6 +1,7 @@
 module Api
   module Persons
     class PositionsMilestonesController < ApiController
+      before_action :authenticate_admin_user!
       before_action :set_person, only: [:index]
 
       attr_reader :partial_path, :resource_name

@@ -15,7 +15,7 @@ import milestones from './modules/milestones'
 const adminStore = {
   getters: {
     currentHost: (state, getters) => `${process.env.RAILS_HOST}/${getters["locales/currentLocale"]}`,
-    isAuthenticated: state => false
+    isAuthenticated: state => true
   },
   modules: {
     locales,

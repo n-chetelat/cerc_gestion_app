@@ -1,7 +1,7 @@
 module Api
   module Persons
     class ProfileFieldsController < ApiController
-
+      before_action :authenticate_admin_user!
       attr_reader :partial_path, :resource_name
 
       def initialize

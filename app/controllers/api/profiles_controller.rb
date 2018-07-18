@@ -1,5 +1,6 @@
 module Api
   class ProfilesController < ApiController
+    before_action :authenticate_admin_user!
     before_action :set_resource, only: [:show, :update, :destroy]
 
     attr_reader :partial_path, :resource_name
