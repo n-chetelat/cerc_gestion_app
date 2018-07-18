@@ -65,7 +65,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       },
       profilesTableMinHeight() {
         const cellHeight = 62
-        return (this.profiles.length + 1) * cellHeight
+        return (this.profiles.length + 2) * cellHeight // Add the equivalent of 2 more cells for headers/padding.
       }
     },
     methods: {

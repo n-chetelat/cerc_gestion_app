@@ -43,7 +43,6 @@ export default {
 
   span.cell-textarea
     span.cell-display(v-if="!editing", @dblclick="editing = true") {{displayValue}}
-    //- textarea(v-else, v-model="textValue", v-on-clickaway="closeEditing", @blur="setNewValue($event)") {{textValue}}
 
     div.textarea-popup(v-else, :style="{left: popupLeft, top: popupTop}")
       textarea(v-model="textValue", v-on-clickaway="closeEditing", @blur="setNewValue($event)", placeholder="'Write in some text...'") {{textValue}}
@@ -54,20 +53,18 @@ export default {
 
 @import "../../../init/variables.css";
 
-.textarea-popup, .textarea-popup textarea {
-  min-width: var(--cellWidth)em;
-  min-height: calc(var(--cellMinHeight) * 3)px;
-  width: var(--cellWidth)em;
-  height: calc(var(--cellMinHeight) * 3)px;
-  border-radius: 5px;
-}
-.textarea-popup {
-  position: fixed;
-}
-
 .cell-textarea {
+  & .textarea-popup, .textarea-popup textarea {
+    min-width: var(--cellWidth)em;
+    min-height: calc(var(--cellMinHeight) * 3)px;
+    width: var(--cellWidth)em;
+    height: calc(var(--cellMinHeight) * 3)px;
+    border-radius: 5px;
+  }
+  & .textarea-popup {
+    position: fixed;
+  }
   & .textarea-popup textarea {
-    min-width: var(--cellWidth)em; /* need to repeat due to more specific rule */
     background-color: white;
     border: 2px solid var(--themeColor);
     padding: 5px;
