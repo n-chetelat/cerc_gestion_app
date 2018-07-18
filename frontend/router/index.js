@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import axios from "axios"
+
 Vue.use(VueRouter)
 
 import store from "../store"
@@ -34,8 +36,24 @@ const routes = [
   }
 ]
 
+function AuthGuard(to, from, next) {
+  if (!to.path.startsWith("/admin/")) next()
+  else {
+    const url = `${process.env.RAILS_HOST}/en/api/users/auth`
+    axios.get(url).then(({ data }) => {
+      if (data.authorized) {
+        next()
+      } else {
+        window.location = "/admin/login"
+      }
+    })
+  }
+}
+
 const router = new VueRouter({
   routes,
 })
+
+router.beforeEach(AuthGuard)
 
 export default router

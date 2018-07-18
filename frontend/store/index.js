@@ -13,9 +13,6 @@ import dates from './modules/dates'
 import milestones from './modules/milestones'
 
 const store = {
-  state: {
-    authorized: false,
-  },
   getters: {
     currentHost: (state, getters) => `${process.env.RAILS_HOST}/${getters["locales/currentLocale"]}`,
   },
