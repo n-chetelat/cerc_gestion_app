@@ -29,6 +29,13 @@ export default {
     }
   },
   components: {
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === from.name) {
+        window.location.reload()
+      }
+    }
   }
 }
 </script>
@@ -37,7 +44,7 @@ export default {
     nav.admin-nav
       a.admin-link(href="/admin", target="_blank") Dashboard
       router-link.admin-link(v-for="route in routes", :to="{name: route}", v-if="$route.name !== route") {{route | capitalize}}
-      select.admin-link(v-if="$route.name !== 'board'", v-model="boardSlug", @change="navigateToBoard")
+      select.admin-link(v-model="boardSlug", @change="navigateToBoard")
         option(:value="null") -- Go To Board --
         option(v-for="board in boards", :value="board.slug") {{board.title}}
 

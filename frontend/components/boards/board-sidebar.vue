@@ -2,6 +2,7 @@
 
 import { mapGetters } from "vuex"
 
+import AdminNav from "components/shared/admin-nav.vue"
 import DropBox from "./board-sidebar/drop-box.vue"
 import LoggedInUsers from "./board-sidebar/logged-in-users.vue"
 
@@ -31,6 +32,7 @@ export default {
     },
   },
   components: {
+    AdminNav,
     DropBox,
     LoggedInUsers
   }
@@ -41,7 +43,7 @@ export default {
   div.board-sidebar
     div.heading
       span.circle.user-initials(v-tooltip="userTooltip") {{userInitials}}
-      a.admin-link(href="/admin", target="_blank") Go to admin dashboard
+      admin-nav.admin-links
     logged-in-users.logged-in
 
     div.drop-boxes
@@ -70,10 +72,24 @@ export default {
       margin: auto 3px;
     }
 
-    & .admin-link {
+    & .admin-links {
+      display: flex;
+      flex-wrap: wrap;
       color: white;
       font-size: .8em;
       text-decoration: underline;
+      & .admin-link {
+        display: inline-block;
+        padding: 5px;
+        &:before {
+          content: none;
+        }
+      }
+      & select.admin-link {
+        width: 90%;
+        margin-left: 0;
+        padding: 0;
+      }
     }
   }
   & .logged-in {
