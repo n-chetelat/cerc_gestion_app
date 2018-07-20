@@ -1,9 +1,10 @@
   <script>
 import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
+import FilterMixin from "mixins/filter-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
-import { groupBy, filter } from "lodash-es"
+import { groupBy } from "lodash-es"
 
 import ServerErrorModal from "./boards/modals/server-error.vue"
 import MilestoneCell from "./timeline/milestone-cell.vue"
@@ -12,7 +13,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   export default {
     name: "Timeline",
-    mixins: [SceneMixin, ModalMixin],
+    mixins: [SceneMixin, ModalMixin, FilterMixin],
     async created() {
       try {
         await this.fetchActiveProfileTimelineDates()
@@ -39,14 +40,11 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       return {
         currentProfileInModal: null,
         currentTabInModal: null,
-        filteredProfileIds: [],
-        selectedProfileIds: [],
-        filterAction: null
       }
     },
     computed: {
+      ...mapGetters("profiles", [, "profiles"]),
       ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
-      ...mapGetters("profiles", ["profiles"]),
       ...mapGetters("dates", ["timelineDates"]),
       ...mapGetters("positions", ["allPositionsById"]),
       currentDate() {
@@ -67,18 +65,6 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         const headerHeight = 122
         return (this.profiles.length + 1) * cellMaxHeight + headerHeight
       },
-      filteredProfiles() {
-        if (!this.profiles) return []
-        if (!this.filteredProfileIds.length) return this.profiles
-        return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
-      },
-      selectedProfileIdMap() {
-        const profileIdMap = {}
-        this.selectedProfileIds.forEach((id) => {
-          profileIdMap[id] = id
-        })
-        return profileIdMap
-      }
     },
     methods: {
       ...mapActions("milestones", ["fetchMilestones", "fetchPersonMilestones"]),
@@ -105,20 +91,6 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         if (!this.milestonesBySemester[profile.uuid]) return null
         return this.milestonesBySemester[profile.uuid][semester.id]
       },
-      filterProfiles(profileIds) {
-        this.filteredProfileIds = profileIds
-      },
-      takeFilterAction() {
-        if (!this.filterAction) return
-        if (this.filterAction === "show_all") {
-          this.filterProfiles(this.profiles.map((p) => p.id))
-        } else if (this.filterAction === "show_selected") {
-          this.filterProfiles(this.selectedProfileIds)
-        } else if (this.filterAction === "deselect_all") {
-          this.selectedProfileIds = []
-        }
-        this.filterAction = null
-      }
     },
     components: {
       ServerErrorModal,
@@ -144,9 +116,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
                 th.selection-box
                   select(v-model="filterAction", @change="takeFilterAction")
                     option(:value="null") -- Actions --
-                    option(:value="'show_all'") Show all
-                    option(:value="'show_selected'") Show selected
-                    option(:value="'deselect_all'") Deselect all
+                    option(v-for="action in filterActions", :value="action.id") {{action.label}}
                 th
                   div.header-content Name
             tbody
@@ -181,11 +151,6 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   @import "../init/variables.css";
 
-  :root {
-    --cellMaxHeight: 62;
-    --selectionBoxRatio: .5
-  }
-
   .timeline {
     display: flex;
     flex-direction: column;
@@ -194,26 +159,6 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
     & .tables {
       width: 100%;
-    }
-
-    & .names-table {
-      & .selection-box {
-        width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-        max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-        text-align: center;
-        & input {
-          width: auto;
-        }
-        & button {
-          text-transform: none;
-          padding: 0;
-        }
-        & select {
-          width: 100%;
-          font-size: .8em;
-          border: none;
-        }
-      }
     }
 
     & .timeline-table {
@@ -240,9 +185,6 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       }
     }
 
-    & tr.--selected, & tr.--selected td {
-      background-color: yellow;
-    }
 
     & .header-content {
       height: 100px;

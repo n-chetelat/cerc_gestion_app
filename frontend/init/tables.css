@@ -51,11 +51,40 @@
     & td .cell-display {
       width: var(--nameCellWidth)em;
     }
+
+  }
+
+  & .selection-box {
+    width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
+    max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
+    text-align: center;
+    & input {
+      width: auto;
+    }
+    & button {
+      text-transform: none;
+      padding: 0;
+    }
+    & select {
+      width: 100%;
+      font-size: .8em;
+      border: none;
+    }
+  }
+
+  & .header span {
+    display: inline-block;
+    padding: .5em;
+    background-color: white;
   }
 
   & .dynamic-table {
     margin-left: 10px;
     overflow-x: scroll;
     overflow-y: hidden;
+  }
+
+  & tr.--selected, & tr.--selected td {
+    background-color: var(--highlightColor);
   }
 }

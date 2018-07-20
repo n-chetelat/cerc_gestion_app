@@ -12,14 +12,17 @@
   --headerColor: #292929;
   --errorColor: #ff6a6a;
 
-  /* profiles */
+  /* profiles and timeline */
   --cellWidth: 15;
   --cellMinHeight: 40;
+  --cellMaxHeight: 62;
   --cellPadding: 10;
   --nameCellWidth: 12;
   --profilesSidebarOffset: 16;
   --menuSpace: 3;
   --profilesSidebarWidth: calc(var(--profilesSidebarOffset)+var(--menuSpace));
+  --selectionBoxRatio: 0.5;
+  --highlightColor: #00B2CA55;
 
   --field-style: {
     display: flex;

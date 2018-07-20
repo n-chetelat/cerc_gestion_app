@@ -1,6 +1,7 @@
   <script>
 import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
+import FilterMixin from "mixins/filter-mixin.js"
 
 import { keyBy, pick } from "lodash-es"
 
@@ -15,7 +16,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
   export default {
     name: "Profiles",
-    mixins: [SceneMixin, ModalMixin],
+    mixins: [SceneMixin, ModalMixin, FilterMixin],
     async created() {
       try {
         await this.fetchProfileFields()
@@ -43,7 +44,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       }
     },
     computed: {
-      ...mapGetters("profiles", ["profiles", "fields"]),
+      ...mapGetters("profiles", [, "profiles", "fields"]),
       nameFields() {
         return {
           name: "Name",
@@ -116,16 +117,22 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
       new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
 
-      admin-nav.admin-nav
+      admin-nav.admin-nav(@filter="filterProfiles")
 
       div.tables
         div.names-table
           table
             thead
               tr
+                th.selection-box
+                  select(v-model="filterAction", @change="takeFilterAction")
+                    option(:value="null") -- Actions --
+                    option(v-for="action in filterActions", :value="action.id") {{action.label}}
                 th(v-for="(label, key) in nameFields") {{label}}
             tbody
-              tr(v-for="profile in profiles")
+              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
+                td.selection-box
+                  input(type="checkbox", :value="profile.id", v-model="selectedProfileIds")
                 td(v-for="(label, key) in nameFields")
                   static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
@@ -134,10 +141,12 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           table
             thead
               tr
-                th(v-for="(label, key) in filteredStaticFields") {{label}}
-                th(v-for="field in filteredFields") {{field.label}}
+                th.header(v-for="(label, key) in filteredStaticFields")
+                  span {{label}}
+                th.header(v-for="field in filteredFields")
+                  span {{field.label}}
             tbody
-              tr(v-for="profile in profiles")
+              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
                 td(v-for="(label, key) in filteredStaticFields")
                   static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
                 td(v-for="field in filteredFields")
@@ -154,7 +163,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
   @import "../init/variables.css";
 
   :root {
-    --profilesTableOffset: calc(var(--nameCellWidth)*2+2);
+    --profilesTableOffset: calc(var(--nameCellWidth)*(2+var(--selectionBoxRatio)));
   }
 
   .profiles {
@@ -181,7 +190,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     }
 
     & .profiles-table {
-      transform: translate(var(--profilesTableOffset)em, 0);
+      transform: translate(calc(var(--profilesTableOffset)+3)em, 0);
       width: calc(100% - var(--profilesTableOffset)em);
     }
 
