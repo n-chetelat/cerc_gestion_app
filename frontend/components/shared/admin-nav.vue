@@ -2,6 +2,8 @@
 
 import { mapGetters, mapActions } from "vuex"
 
+import FilterComponent from "components/shared/filter-component.vue"
+
 export default {
   name: "AdminNav",
   data() {
@@ -20,15 +22,20 @@ export default {
   },
   computed: {
     ...mapGetters("boards", ["boards"]),
+    ...mapGetters("profiles", ["profiles"]),
   },
   methods: {
     ...mapActions("boards", ["fetchAllBoards"]),
     navigateToBoard() {
       if (!this.boardSlug) return
       this.$router.push({name: "board", params: { boardSlug: this.boardSlug }})
+    },
+    emitFilteredProfiles(profileIds) {
+      this.$emit("filter", profileIds.map((id) => parseInt(id)))
     }
   },
   components: {
+    FilterComponent
   },
   watch: {
     '$route' (to, from) {
@@ -42,11 +49,13 @@ export default {
 
 <template lang="pug">
     nav.admin-nav
-      a.admin-link(href="/admin", target="_blank") Dashboard
-      router-link.admin-link(v-for="route in routes", :to="{name: route}", v-if="$route.name !== route") {{route | capitalize}}
-      select.admin-link(v-model="boardSlug", @change="navigateToBoard")
-        option(:value="null") -- Go To Board --
-        option(v-for="board in boards", :value="board.slug") {{board.title}}
+      filter-component.filter(v-if="$route.name !== 'board'", :collection="profiles", @filter="emitFilteredProfiles")
+      div.nav-links
+        a.admin-link(href="/admin", target="_blank") Dashboard
+        router-link.admin-link(v-for="route in routes", :to="{name: route}", v-if="$route.name !== route") {{route | capitalize}}
+        select.admin-link(v-model="boardSlug", @change="navigateToBoard")
+          option(:value="null") -- Go To Board --
+          option(v-for="board in boards", :value="board.slug") {{board.title}}
 
 
 </template>
@@ -60,7 +69,18 @@ export default {
   padding-right: 2em;
   border-bottom: 3px solid var(--themeColor);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+
+  & .filter {
+    label {
+      margin-right: 5px;
+    }
+  }
+
+  & .admin-links {
+    display: flex;
+    justify-content: flex-end;
+  }
 
   & .admin-link {
     display: inline-block;

@@ -3,7 +3,7 @@ import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
-import { groupBy } from "lodash-es"
+import { groupBy, filter } from "lodash-es"
 
 import ServerErrorModal from "./boards/modals/server-error.vue"
 import MilestoneCell from "./timeline/milestone-cell.vue"
@@ -39,6 +39,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       return {
         currentProfileInModal: null,
         currentTabInModal: null,
+        filteredProfileIds: []
       }
     },
     computed: {
@@ -63,6 +64,11 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         const cellMaxHeight = 62
         const headerHeight = 122
         return (this.profiles.length + 1) * cellMaxHeight + headerHeight
+      },
+      filteredProfiles() {
+        if (!this.profiles) return []
+        if (!this.filteredProfileIds.length) return this.profiles
+        return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
       }
     },
     methods: {
@@ -90,6 +96,9 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         if (!this.milestonesBySemester[profile.uuid]) return null
         return this.milestonesBySemester[profile.uuid][semester.id]
       },
+      filterProfiles(profileIds) {
+        this.filteredProfileIds = profileIds
+      }
     },
     components: {
       ServerErrorModal,
@@ -105,7 +114,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
       profile-milestones-modal(@close="closeModal", v-if="modalVisible && modalName === 'profile-milestones'", :profile="currentProfileInModal", :tab="currentTabInModal")
 
-      admin-nav
+      admin-nav(@filter="filterProfiles")
 
       div.tables
         div.names-table
@@ -115,7 +124,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
                 th
                   div.header-content Name
             tbody
-              tr(v-for="profile in profiles")
+              tr(v-for="profile in filteredProfiles")
                 td
                   div.cell-content(@click="openModalByName('profile-milestones', { profile })") {{profile.full_name}}
                     div.person-position-label {{allPositionsById[profile.position_id].title}}
@@ -129,7 +138,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
                     p {{date.label}}
                     span.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
             tbody
-              tr(v-for="profile in profiles")
+              tr(v-for="profile in filteredProfiles")
                 td(v-for="date in timelineDates", :class="{'--current': isCurrentSemester(date)}")
                   milestone-cell.cell-content(
                     :profile="profile",

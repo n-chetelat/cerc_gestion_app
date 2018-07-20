@@ -17,6 +17,7 @@ const getters = {
   profileFieldsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PROFILE_FIELDS_URL}`,
   personsEndpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${PERSONS_URL}`,
   profiles: state => state.all,
+  profilesById: state => keyBy(state.all, "id"),
   fields: state => state.fields,
   fieldsById: state => keyBy(state.fields, "id"),
   profileFieldValuesByProfileId: (state) => {
