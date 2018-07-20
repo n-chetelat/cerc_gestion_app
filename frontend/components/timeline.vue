@@ -39,7 +39,9 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       return {
         currentProfileInModal: null,
         currentTabInModal: null,
-        filteredProfileIds: []
+        filteredProfileIds: [],
+        selectedProfileIds: [],
+        filterAction: null
       }
     },
     computed: {
@@ -69,6 +71,13 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         if (!this.profiles) return []
         if (!this.filteredProfileIds.length) return this.profiles
         return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
+      },
+      selectedProfileIdMap() {
+        const profileIdMap = {}
+        this.selectedProfileIds.forEach((id) => {
+          profileIdMap[id] = id
+        })
+        return profileIdMap
       }
     },
     methods: {
@@ -98,6 +107,17 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       },
       filterProfiles(profileIds) {
         this.filteredProfileIds = profileIds
+      },
+      takeFilterAction() {
+        if (!this.filterAction) return
+        if (this.filterAction === "show_all") {
+          this.filterProfiles(this.profiles.map((p) => p.id))
+        } else if (this.filterAction === "show_selected") {
+          this.filterProfiles(this.selectedProfileIds)
+        } else if (this.filterAction === "deselect_all") {
+          this.selectedProfileIds = []
+        }
+        this.filterAction = null
       }
     },
     components: {
@@ -121,10 +141,18 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
           table
             thead
               tr
+                th.selection-box
+                  select(v-model="filterAction", @change="takeFilterAction")
+                    option(:value="null") -- Actions --
+                    option(:value="'show_all'") Show all
+                    option(:value="'show_selected'") Show selected
+                    option(:value="'deselect_all'") Deselect all
                 th
                   div.header-content Name
             tbody
-              tr(v-for="profile in filteredProfiles")
+              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
+                td.selection-box
+                  input(type="checkbox", :value="profile.id", v-model="selectedProfileIds")
                 td
                   div.cell-content(@click="openModalByName('profile-milestones', { profile })") {{profile.full_name}}
                     div.person-position-label {{allPositionsById[profile.position_id].title}}
@@ -138,7 +166,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
                     p {{date.label}}
                     span.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
             tbody
-              tr(v-for="profile in filteredProfiles")
+              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
                 td(v-for="date in timelineDates", :class="{'--current': isCurrentSemester(date)}")
                   milestone-cell.cell-content(
                     :profile="profile",
@@ -155,6 +183,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   :root {
     --cellMaxHeight: 62;
+    --selectionBoxRatio: .5
   }
 
   .timeline {
@@ -167,8 +196,28 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       width: 100%;
     }
 
+    & .names-table {
+      & .selection-box {
+        width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
+        max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
+        text-align: center;
+        & input {
+          width: auto;
+        }
+        & button {
+          text-transform: none;
+          padding: 0;
+        }
+        & select {
+          width: 100%;
+          font-size: .8em;
+          border: none;
+        }
+      }
+    }
+
     & .timeline-table {
-      transform: translate(var(--cellWidth)em, 0);
+      transform: translate(calc(var(--cellWidth)*(1+var(--selectionBoxRatio)))em, 0);
       width: calc(100% - var(--cellWidth)em);
 
       & th.--current, td.--current {
@@ -189,6 +238,10 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       & .person-position-label {
         font-size: .8em;
       }
+    }
+
+    & tr.--selected, & tr.--selected td {
+      background-color: yellow;
     }
 
     & .header-content {

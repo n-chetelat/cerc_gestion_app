@@ -20,6 +20,10 @@ export default {
   },
   methods: {
     onFilter() {
+      this.searchITemsToFilter()
+      this.$emit("filter", this.filteredIds)
+    },
+    searchITemsToFilter() {
       var options = {
         shouldSort: true,
         threshold: 0.4,
@@ -33,8 +37,7 @@ export default {
       }
       const fuse = new Fuse(this.collection, options)
       this.filteredIds = fuse.search(this.q)
-      this.$emit("filter", this.filteredIds)
-    }
+    },
   },
   components: {
   },
