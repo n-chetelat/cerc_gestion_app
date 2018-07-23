@@ -20,10 +20,8 @@
     font-family: var(--textFamily);
   }
 
-  & td {
-    &.--invalid {
-      background-color: var(--errorColor);
-    }
+  & th {
+    height: 55px;
   }
 
   & .names-table {
@@ -82,6 +80,12 @@
     margin-left: 10px;
     overflow-x: scroll;
     overflow-y: hidden;
+  }
+
+  & .names-table, & .profiles-table {
+    & td.--invalid {
+        background-color: var(--errorColor);
+    }
   }
 
   & tr.--selected, & tr.--selected td {

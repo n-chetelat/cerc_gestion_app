@@ -3,14 +3,15 @@ import SceneMixin from "mixins/scene-mixin.js"
 import ModalMixin from "mixins/modal-mixin.js"
 import FilterMixin from "mixins/filter-mixin.js"
 
-import { keyBy, pick } from "lodash-es"
+import { keyBy, pick, filter } from "lodash-es"
 
 import { mapGetters, mapActions } from "vuex"
 
 import AdminNav from "components/shared/admin-nav.vue"
-import Field from "components/profiles/field.vue"
-import StaticField from "components/profiles/static-field.vue"
+import NamesTable from "components/profiles/names-table.vue"
+import ProfilesTable from "components/profiles/profiles-table.vue"
 import ProfilesSidebar from "components/profiles/profiles-sidebar.vue"
+
 import NewProfileModal from "components/profiles/modals/new-profile.vue"
 import ServerErrorModal from "./boards/modals/server-error.vue"
 
@@ -45,18 +46,17 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     },
     computed: {
       ...mapGetters("profiles", [, "profiles", "fields"]),
-      nameFields() {
-        return {
-          name: "Name",
-          lastname: "Lastname"
-        }
-      },
       staticFields() {
         return {
           position_id: "Position",
           email: "Email",
           starting_date: "Starting Date"
         }
+      },
+      filteredProfiles() {
+        if (!this.profiles) return []
+        if (!this.filteredProfileIds.length) return this.profiles
+        return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
       },
       filteredStaticFields() {
         return pick(this.staticFields, this.selectedFields)
@@ -97,8 +97,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     },
     components: {
       AdminNav,
-      Field,
-      StaticField,
+      NamesTable,
+      ProfilesTable,
       ProfilesSidebar,
       NewProfileModal,
       ServerErrorModal
@@ -120,37 +120,20 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       admin-nav.admin-nav(@filter="filterProfiles")
 
       div.tables
-        div.names-table
-          table
-            thead
-              tr
-                th.selection-box
-                  select(v-model="filterAction", @change="takeFilterAction")
-                    option(:value="null") -- Actions --
-                    option(v-for="action in filterActions", :value="action.id") {{action.label}}
-                th(v-for="(label, key) in nameFields") {{label}}
-            tbody
-              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
-                td.selection-box
-                  input(type="checkbox", :value="profile.id", v-model="selectedProfileIds")
-                td(v-for="(label, key) in nameFields")
-                  static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+        names-table(:displayed-profiles="filteredProfiles",
+          @filter="filterProfiles",
+          @selection="selectProfiles",
+          @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
 
-        div.dynamic-table.profiles-table(:style="{minHeight: `${profilesTableMinHeight}px`}")
-          table
-            thead
-              tr
-                th.header(v-for="(label, key) in filteredStaticFields")
-                  span {{label}}
-                th.header(v-for="field in filteredFields")
-                  span {{field.label}}
-            tbody
-              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
-                td(v-for="(label, key) in filteredStaticFields")
-                  static-field(:profile="profile", :field-name="key", @error="openModalByName('server-error')", @valid="signalFieldValidity")
-                td(v-for="field in filteredFields")
-                  field(:profile="profile", :field="field", @error="openModalByName('server-error')", @valid="signalFieldValidity")
+        profiles-table.dynamic-table(
+          :displayed-profiles="filteredProfiles",
+          :selected-profile-ids="selectedProfileIds",
+          :static-fields="filteredStaticFields",
+          :fields="filteredFields",
+
+          @error="openModalByName('server-error')", @valid="signalFieldValidity",
+          :style="{minHeight: `${profilesTableMinHeight}px`}")
 
       profiles-sidebar.sidebar(@toggle="toggleSidebarOpen",
         :static-fields="staticFields", :dynamic-fields="fields",
