@@ -1,7 +1,10 @@
 <script>
 
+import DisplayFieldMixin from "../../../../mixins/display-field-mixin.js"
+
 export default {
-  name: "CellMonth",
+  name: "DisplayMonth",
+  mixins: [DisplayFieldMixin],
   computed: {
     calculatedValue() {
       return this.choicesById &&
@@ -13,7 +16,8 @@ export default {
 </script>
 
 <template lang="pug">
-div.cell-month
+div.display-month
+  label {{field.label}}
   span {{calculatedValue}}
 
 </template>
