@@ -173,7 +173,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     }
 
     & .profiles-table {
-      transform: translate(var(--profilesTableOffset)em, 0);
+      position: absolute;
+      left: var(--profilesTableOffset)em;
       width: calc(100% - var(--profilesTableOffset)em);
     }
 

@@ -30,6 +30,12 @@
       emitValid(event, value) {
         this.$emit("valid", event, value)
       },
+      scrollHeaderSideways() {
+        const body = this.$el.querySelector(".table-body")
+        const head = this.$el.querySelector(".table-head")
+        const leftEdge = body.getBoundingClientRect().x
+        head.setAttribute("style", `left: ${leftEdge}px;`)
+      }
     },
     components: {
       StaticField,
@@ -39,7 +45,7 @@
   </script>
 
   <template lang="pug">
-    div.profiles-table
+    div.profiles-table(@scroll="scrollHeaderSideways")
 
       div.table-head
         div.row
@@ -48,6 +54,8 @@
           div.cell(v-for="field in fields")
             div {{field.label}}
       div.table-body
+        div.row.placeholder-row
+          div.cell(v-for="(label, key) in staticFields")
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell(v-for="(label, key) in staticFields")
             static-field(:profile="profile", :field-name="key", @error="$emit('error')", @valid="emitValid")
@@ -68,15 +76,29 @@
 
   .profiles-table {
 
+    & .table-head {
+      width: 100%;
+      position: fixed;
+      min-height: var(--cellMinHeight)px;
+      margin: 0 auto;
+      text-align: center;
+      .cell {
+        font-weight: bold;
+        background-color: white;
+      }
+    }
+
     & .row {
       display: flex;
       &.--selected, &--selected .cell, &.--selected .name-cell {
         background-color: var(--highlightColor);
       }
+      &.placeholder-row {
+        background-color: white;
+      }
     }
 
     & .cell {
-      //- overflow: hidden;
       min-width: var(--cellWidth)em;
       width: var(--cellWidth)em;
       height: var(--cellHeight)px;
@@ -84,15 +106,6 @@
       padding-top: var(--cellPadding)px;
       &.--invalid {
         background-color: var(--errorColor);
-      }
-    }
-
-    & .table-head {
-      min-height: var(--cellMinHeight)px;
-      margin: 0 auto;
-      text-align: center;
-      .cell {
-        font-weight: bold;
       }
     }
 

@@ -81,6 +81,8 @@
           div.cell.name-cell(v-for="(label, key) in nameFields") {{label}}
 
       div.table-body
+        div.row.placeholder-row
+          div.cell.name-cell(v-for="(label, key) in nameFields")
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell.name-cell.selection-box
             input(type="checkbox", :value="profile.id", v-model="selectedProfileIds", @change="emitSelectedProfiles")
@@ -103,25 +105,8 @@
     background-color: white;
     z-index: 4;
 
-    & .row {
-      display: flex;
-      &.--selected, &--selected .cell, &.--selected .name-cell {
-        background-color: var(--highlightColor);
-      }
-    }
-
-    & .cell {
-      //- overflow: hidden;
-      width: var(--cellWidth)em;
-      height: var(--cellHeight)px;
-      border: .5px solid;
-      padding-top: var(--cellPadding)px;
-      &.--invalid {
-        background-color: var(--errorColor);
-      }
-    }
-
     & .table-head {
+      position: fixed;
       .cell {
         min-height: var(--cellMinHeight)px;
         margin: 0 auto;
@@ -132,6 +117,23 @@
         & .name-cell {
           border-top: .5px solid black;
         }
+      }
+    }
+
+    & .row {
+      display: flex;
+      &.--selected, &--selected .cell, &.--selected .name-cell {
+        background-color: var(--highlightColor);
+      }
+    }
+
+    & .cell {
+      width: var(--cellWidth)em;
+      height: var(--cellHeight)px;
+      border: .5px solid;
+      padding-top: var(--cellPadding)px;
+      &.--invalid {
+        background-color: var(--errorColor);
       }
     }
 
