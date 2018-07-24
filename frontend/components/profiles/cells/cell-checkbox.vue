@@ -47,6 +47,11 @@ export default {
   @import "../../../init/variables.css";
 
   .cell-checkbox {
+    &.--editing {
+      z-index: 100;
+      background-color: white;
+    }
+
     & ul {
       text-align: left;
     }

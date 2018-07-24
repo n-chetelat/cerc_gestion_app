@@ -111,7 +111,7 @@
     }
 
     & .cell {
-      overflow: hidden;
+      //- overflow: hidden;
       width: var(--cellWidth)em;
       height: var(--cellHeight)px;
       border: .5px solid;

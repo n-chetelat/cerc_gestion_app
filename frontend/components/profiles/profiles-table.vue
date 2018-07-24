@@ -76,7 +76,7 @@
     }
 
     & .cell {
-      overflow: hidden;
+      //- overflow: hidden;
       min-width: var(--cellWidth)em;
       width: var(--cellWidth)em;
       height: var(--cellHeight)px;
