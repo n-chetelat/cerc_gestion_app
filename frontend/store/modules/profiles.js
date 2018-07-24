@@ -1,6 +1,6 @@
 import axios from "axios"
 
-import { keyBy } from "lodash-es"
+import { keyBy, groupBy } from "lodash-es"
 
 const PROFILE_URL = `api/profiles`
 const PROFILE_FIELDS_URL = `api/profile_fields`

@@ -19,6 +19,13 @@ const getters = {
   milestonesById: state => keyBy(state.milestones, "id"),
   milestonesByPosition: state => groupBy(state.milestones, "position_id"),
   milestonesByPersonId: state => state.milestonesByPersonId,
+  milestonesBySemester: (state, getters, root, rootGetters) => {
+    const structure = {}
+    rootGetters['profiles/profiles'].forEach((profile) => {
+      structure[profile.uuid] = groupBy(state.milestonesByPersonId[profile.uuid], (m) => m.semester)
+    })
+    return structure
+  },
 }
 
 // actions

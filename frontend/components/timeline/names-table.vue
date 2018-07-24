@@ -25,6 +25,7 @@
     },
     computed: {
       ...mapGetters("profiles", [, "profiles"]),
+      ...mapGetters("positions", ["allPositionsById"]),
       nameFields() {
         return {
           name: "Name",
@@ -47,8 +48,8 @@
       emitSelectedProfiles() {
         this.$emit("selection", this.selectedProfileIds)
       },
-      emitValid(event, value) {
-        this.$emit("valid", event, value)
+      emitModalByName(name, data) {
+        this.$emit("modal", name, data)
       },
       takeFilterAction() {
         if (!this.filterAction) return
@@ -78,16 +79,16 @@
             select(v-model="filterAction", @change="emitFilterAction")
               option(:value="null") -- Actions --
               option(v-for="action in filterActions", :value="action.id") {{action.label}}
-          div.cell.name-cell(v-for="(label, key) in nameFields") {{label}}
+          div.cell.full-name Name
 
       div.table-body
         div.row.placeholder-row
-          div.cell.name-cell(v-for="(label, key) in nameFields")
+          div.cell.name-cell
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell.name-cell.selection-box
             input(type="checkbox", :value="profile.id", v-model="selectedProfileIds", @change="emitSelectedProfiles")
-          div.cell.name-cell(v-for="(label, key) in nameFields")
-            static-field(:profile="profile", :field-name="key", @error="emit('error')", @valid="emitValid")
+          div.cell.name-cell(@click="emitModalByName('profile-milestones', { profile })") {{profile.full_name}}
+            div.person-position-label {{allPositionsById[profile.position_id].title}}
 
 
   </template>
@@ -112,6 +113,7 @@
         margin: 0 auto;
         text-align: center;
         font-weight: bold;
+        background-color: color(var(--themeColor) tint(40%));
       }
       & .row:first-of-type {
         & .name-cell {
@@ -125,6 +127,9 @@
       &.--selected, &--selected .cell, &.--selected .name-cell {
         background-color: var(--highlightColor);
       }
+      &.placeholder-row .name-cell {
+        width: calc(var(--cellWidth)*(1+var(--selectionBoxRatio)))em;
+      }
     }
 
     & .cell {
@@ -134,6 +139,9 @@
       padding-top: var(--cellPadding)px;
       &.--invalid {
         background-color: var(--errorColor);
+      }
+      &.full-name {
+        cursor: pointer;
       }
     }
 
@@ -167,6 +175,10 @@
         font-size: .8em;
         border: none;
       }
+    }
+
+    & .person-position-label {
+      font-size: .8em;
     }
 
   }

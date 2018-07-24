@@ -6,9 +6,11 @@ import FilterMixin from "mixins/filter-mixin.js"
 import { mapGetters, mapActions } from "vuex"
 import { groupBy } from "lodash-es"
 
-import ServerErrorModal from "./boards/modals/server-error.vue"
-import MilestoneCell from "./timeline/milestone-cell.vue"
 import AdminNav from "components/shared/admin-nav.vue"
+import NamesTable from "components/timeline/names-table.vue"
+import TimelineTable from "components/timeline/timeline-table.vue"
+
+import ServerErrorModal from "./boards/modals/server-error.vue"
 import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   export default {
@@ -40,28 +42,20 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       return {
         currentProfileInModal: null,
         currentTabInModal: null,
+        selectedFields: [],
       }
     },
     computed: {
       ...mapGetters("profiles", [, "profiles"]),
       ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
       ...mapGetters("dates", ["timelineDates"]),
-      ...mapGetters("positions", ["allPositionsById"]),
-      currentDate() {
-        const today = new Date
-        const month = `${today.getMonth() + 1}`.padStart(2, "0")
-        const date = `${today.getFullYear()}-${month}-01`
-        return date
-      },
-      milestonesBySemester() {
-        const structure = {}
-        this.profiles.forEach((profile) => {
-          structure[profile.uuid] = groupBy(this.milestonesByPersonId[profile.uuid], (m) => m.semester)
-        })
-        return structure
+      filteredProfiles() {
+        if (!this.profiles) return []
+        if (!this.filteredProfileIds.length) return this.profiles
+        return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
       },
       timelineTableMinHeight() {
-        const cellMaxHeight = 62
+        const cellMaxHeight = 55
         const headerHeight = 122
         return (this.profiles.length + 1) * cellMaxHeight + headerHeight
       },
@@ -83,19 +77,12 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         this.modalName = null
         if (this.currentProfileInModal) this.currentProfileInModal = null
       },
-      isCurrentSemester(semester) {
-        const dates = [semester.id, ...semester.months.map(m => m.id)]
-        return dates.includes(this.currentDate)
-      },
-      milestonesForSemester(profile, semester) {
-        if (!this.milestonesBySemester[profile.uuid]) return null
-        return this.milestonesBySemester[profile.uuid][semester.id]
-      },
     },
     components: {
       ServerErrorModal,
-      MilestoneCell,
       AdminNav,
+      NamesTable,
+      TimelineTable,
       ProfileMilestonesModal
     }
   }
@@ -109,47 +96,28 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       admin-nav(@filter="filterProfiles")
 
       div.tables
-        div.names-table
-          table
-            thead
-              tr
-                th.selection-box
-                  select(v-model="filterAction", @change="takeFilterAction")
-                    option(:value="null") -- Actions --
-                    option(v-for="action in filterActions", :value="action.id") {{action.label}}
-                th
-                  div.header-content Name
-            tbody
-              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
-                td.selection-box
-                  input(type="checkbox", :value="profile.id", v-model="selectedProfileIds")
-                td
-                  div.cell-content(@click="openModalByName('profile-milestones', { profile })") {{profile.full_name}}
-                    div.person-position-label {{allPositionsById[profile.position_id].title}}
+        names-table(:displayed-profiles="filteredProfiles",
+          @filter="filterProfiles",
+          @selection="selectProfiles",
+          @modal="openModalByName",
+          @error="openModalByName('server-error')")
 
-        div.dynamic-table.timeline-table(:style="{minHeight: `${timelineTableMinHeight}px`}")
-          table
-            thead
-              tr
-                th(v-for="date in timelineDates", :class="{'--current': isCurrentSemester(date)}")
-                  div.header-content
-                    p {{date.label}}
-                    span.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
-            tbody
-              tr(v-for="profile in filteredProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
-                td(v-for="date in timelineDates", :class="{'--current': isCurrentSemester(date)}")
-                  milestone-cell.cell-content(
-                    :profile="profile",
-                    :person-milestones="milestonesForSemester(profile, date)",
-                    :date="date",
-                    @error="openModalByName('server-error')"
-                    @modal="openModalByName('profile-milestones', { profile, tab: 'milestones' })")
+        timeline-table.dynamic-table(
+          :displayed-profiles="filteredProfiles",
+          :selected-profile-ids="selectedProfileIds",
+          :timeline-dates="timelineDates",
+          @error="openModalByName('server-error')",
+          :style="{minHeight: `${timelineTableMinHeight}px`}")
 
   </template>
 
   <style>
 
   @import "../init/variables.css";
+
+  :root {
+    --timelineTableOffset: calc(var(--cellWidth)*(1+var(--selectionBoxRatio)));
+  }
 
   .timeline {
     display: flex;
@@ -162,41 +130,12 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
     }
 
     & .timeline-table {
-      transform: translate(calc(var(--cellWidth)*(1+var(--selectionBoxRatio)))em, 0);
-      width: calc(100% - var(--cellWidth)em);
-
-      & th.--current, td.--current {
-        background-color: color(var(--themeColor) alpha(20%));
-      }
-    }
-
-    & .cell-content {
-      cursor: pointer;
-    }
-
-    & .cell-content, .header-content {
-      min-width: var(--cellWidth)em;
-      max-width: var(--cellWidth)em;
-      min-height: var(--cellMinHeight)px;
-      max-height: var(--cellMaxHeight)px;
-
-      & .person-position-label {
-        font-size: .8em;
-      }
+      position: absolute;
+      left: var(--timelineTableOffset)em;
+      width: calc(100% - var(--timelineTableOffset)em);
     }
 
 
-    & .header-content {
-      height: 100px;
-      overflow: hidden;
-      max-height: 100%;
-    }
-
-
-    & .months-label {
-      display: inline-block;
-      font-size: .7em;
-    }
 
   }
 
