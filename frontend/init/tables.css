@@ -6,11 +6,12 @@
   flex-wrap: nowrap;
   height: 100%;
   overflow-x: hidden;
+  margin: 0.5em;
 
-  table {
+  /* table {
     margin: 10px 0;
-  }
-  & table, th, td {
+  } */
+  /* & table, th, td {
     border: 1px solid;
     border-collapse: collapse;
   }
@@ -22,9 +23,9 @@
 
   & th {
     height: 55px;
-  }
+  } */
 
-  & .names-table {
+  /* & .names-table {
     position: absolute;
     background-color: white;
     z-index: 4;
@@ -50,8 +51,8 @@
       width: var(--nameCellWidth)em;
     }
 
-  }
-
+  } */
+/*
   & .selection-box {
     width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
     max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
@@ -68,26 +69,26 @@
       font-size: .8em;
       border: none;
     }
-  }
+  } */
 
-  & .header span {
+  /* & .header span {
     display: inline-block;
     padding: .5em;
     background-color: white;
-  }
+  } */
 
   & .dynamic-table {
     overflow-x: scroll;
     overflow-y: hidden;
   }
 
-  & .names-table, & .profiles-table {
+  /* & .names-table, & .profiles-table {
     & td.--invalid {
         background-color: var(--errorColor);
     }
-  }
+  } */
 
-  & tr.--selected, & tr.--selected td {
+  /* & tr.--selected, & tr.--selected td {
     background-color: var(--highlightColor);
-  }
+  } */
 }

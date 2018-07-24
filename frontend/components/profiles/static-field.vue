@@ -69,7 +69,6 @@ export default {
     @apply --field-style;
     & .field-cell {
       @apply --field-cell-style;
-      z-index: 10;
 
     }
   }

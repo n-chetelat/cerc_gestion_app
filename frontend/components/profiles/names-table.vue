@@ -94,6 +94,10 @@
 
   @import "../../init/variables.css";
 
+  :root {
+    --cellHeight: 55;
+  }
+
   .names-table {
     position: absolute;
     background-color: white;
@@ -107,18 +111,26 @@
     }
 
     & .cell {
+      overflow: hidden;
       width: var(--cellWidth)em;
-      height: 55px;
-      border: 0.5px solid;
+      height: var(--cellHeight)px;
+      border: .5px solid;
+      padding-top: var(--cellPadding)px;
       &.--invalid {
         background-color: var(--errorColor);
       }
     }
 
     & .table-head {
+      .cell {
+        min-height: var(--cellMinHeight)px;
+        margin: 0 auto;
+        text-align: center;
+        font-weight: bold;
+      }
       & .row:first-of-type {
         & .name-cell {
-          border-top: 0.5px solid black;
+          border-top: .5px solid black;
         }
       }
     }
@@ -126,13 +138,13 @@
     & .table-body {
       & .row:last-of-type {
         & .name-cell {
-          border-bottom: 0.5px solid black;
+          border-bottom: .5px solid black;
         }
       }
     }
 
     & .name-cell {
-      border: 1px solid white;
+      border: .5px solid white;
       background-color: color(var(--themeColor) tint(40%));
     }
 
@@ -140,6 +152,7 @@
       width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
       max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
       text-align: center;
+      padding: var(--cellPadding)px;
       & input {
         width: auto;
       }

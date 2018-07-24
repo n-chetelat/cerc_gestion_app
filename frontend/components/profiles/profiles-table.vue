@@ -62,6 +62,10 @@
 
   @import "../../init/variables.css";
 
+  :root {
+    --cellHeight: 55;
+  }
+
   .profiles-table {
 
     & .row {
@@ -72,12 +76,23 @@
     }
 
     & .cell {
+      overflow: hidden;
       min-width: var(--cellWidth)em;
       width: var(--cellWidth)em;
-      height: 55px;
+      height: var(--cellHeight)px;
       border: 0.5px solid;
+      padding-top: var(--cellPadding)px;
       &.--invalid {
         background-color: var(--errorColor);
+      }
+    }
+
+    & .table-head {
+      min-height: var(--cellMinHeight)px;
+      margin: 0 auto;
+      text-align: center;
+      .cell {
+        font-weight: bold;
       }
     }
 
