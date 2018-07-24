@@ -146,7 +146,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
   @import "../init/variables.css";
 
   :root {
-    --profilesTableOffset: calc(var(--nameCellWidth)*(2+var(--selectionBoxRatio)));
+    --profilesTableOffset: calc(var(--cellWidth)*(2+var(--selectionBoxRatio)));
   }
 
   .profiles {
@@ -173,7 +173,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     }
 
     & .profiles-table {
-      transform: translate(calc(var(--profilesTableOffset)+3)em, 0);
+      transform: translate(var(--profilesTableOffset)em, 0);
       width: calc(100% - var(--profilesTableOffset)em);
     }
 

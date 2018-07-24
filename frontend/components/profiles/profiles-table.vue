@@ -40,19 +40,20 @@
 
   <template lang="pug">
     div.profiles-table
-      table
-        thead
-          tr
-            th.header(v-for="(label, key) in staticFields")
-              span {{label}}
-            th.header(v-for="field in fields")
-              span {{field.label}}
-        tbody
-          tr(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
-            td(v-for="(label, key) in staticFields")
-              static-field(:profile="profile", :field-name="key", @error="$emit('error')", @valid="emitValid")
-            td(v-for="field in fields")
-              field(:profile="profile", :field="field", @error="$emit('error')", @valid="emitValid")
+
+      div.table-head
+        div.row
+          div.cell(v-for="(label, key) in staticFields")
+            div {{label}}
+          div.cell(v-for="field in fields")
+            div {{field.label}}
+      div.table-body
+        div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
+          div.cell(v-for="(label, key) in staticFields")
+            static-field(:profile="profile", :field-name="key", @error="$emit('error')", @valid="emitValid")
+          div.cell(v-for="field in fields")
+            field(:profile="profile", :field="field", @error="$emit('error')", @valid="emitValid")
+
 
 
   </template>
@@ -63,6 +64,22 @@
 
   .profiles-table {
 
+    & .row {
+      display: flex;
+      &.--selected, &--selected .cell, &.--selected .name-cell {
+        background-color: var(--highlightColor);
+      }
+    }
+
+    & .cell {
+      min-width: var(--cellWidth)em;
+      width: var(--cellWidth)em;
+      height: 55px;
+      border: 0.5px solid;
+      &.--invalid {
+        background-color: var(--errorColor);
+      }
+    }
 
   }
 

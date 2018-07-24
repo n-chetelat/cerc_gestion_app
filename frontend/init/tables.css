@@ -77,7 +77,6 @@
   }
 
   & .dynamic-table {
-    margin-left: 10px;
     overflow-x: scroll;
     overflow-y: hidden;
   }
