@@ -107,6 +107,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
           :selected-profile-ids="selectedProfileIds",
           :timeline-dates="timelineDates",
           @error="openModalByName('server-error')",
+          @modal="openModalByName",
           :style="{minHeight: `${timelineTableMinHeight}px`}")
 
   </template>

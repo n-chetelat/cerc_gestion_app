@@ -44,10 +44,12 @@ export default {
 @import "../../init/variables.css";
 
 .milestone-card {
+  cursor: pointer;
   padding: 3px;
   border: 2px solid var(--themeColor);
   border-radius: 3px;
   background-color: #00a66855;
+  width: 100%;
   &:before {
     content: "⁞ ";
     color: gray;

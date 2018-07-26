@@ -69,11 +69,15 @@ export default {
 @import "../../init/variables.css";
 
 .milestone-cell {
+  height: 100%;
+  width: 100%;
   & .milestone-list {
     display: flex;
     flex-direction: column;
     max-height: var(--cellMinHeight)px;
     overflow-y: auto;
+    height: 100%;
+    justify-content: space-evenly;
   }
   & .milestone {
     width: 100%;

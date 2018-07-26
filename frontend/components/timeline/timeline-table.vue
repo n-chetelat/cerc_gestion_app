@@ -45,7 +45,10 @@ import MilestoneCell from "components/timeline/milestone-cell.vue"
         const head = this.$el.querySelector(".table-head")
         const leftEdge = body.getBoundingClientRect().x
         head.setAttribute("style", `left: ${leftEdge}px;`)
-      }
+      },
+      emitModalByName(name, data={}) {
+        this.$emit("modal", name, data)
+      },
     },
     components: {
       MilestoneCell
@@ -71,8 +74,8 @@ import MilestoneCell from "components/timeline/milestone-cell.vue"
               :profile="profile",
               :person-milestones="milestonesForSemester(profile, date)",
               :date="date",
-              @error="openModalByName('server-error')"
-              @modal="openModalByName('profile-milestones', { profile, tab: 'milestones' })")
+              @error="emitModalByName('server-error')",
+              @modal="emitModalByName('profile-milestones', { profile, tab: 'milestones' })")
 
 
 
@@ -116,7 +119,9 @@ import MilestoneCell from "components/timeline/milestone-cell.vue"
       width: var(--cellWidth)em;
       height: var(--cellHeight)px;
       border: 0.5px solid;
-      padding-top: var(--cellPadding)px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       &.--current {
         background-color: color(var(--themeColor) alpha(20%));
       }
