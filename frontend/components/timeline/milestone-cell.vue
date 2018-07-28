@@ -74,7 +74,6 @@ export default {
   & .milestone-list {
     display: flex;
     flex-direction: column;
-    max-height: var(--cellMinHeight)px;
     overflow-y: auto;
     height: 100%;
     justify-content: space-evenly;
