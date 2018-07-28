@@ -45,7 +45,7 @@
   </script>
 
   <template lang="pug">
-    div.profiles-table(@scroll="scrollHeaderSideways")
+    div.table.profiles-table(@scroll="scrollHeaderSideways")
 
       div.table-head
         div.row
@@ -70,44 +70,7 @@
 
   @import "../../init/variables.css";
 
-  :root {
-    --cellHeight: 55;
-  }
-
   .profiles-table {
-
-    & .table-head {
-      width: 100%;
-      position: fixed;
-      min-height: var(--cellMinHeight)px;
-      margin: 0 auto;
-      text-align: center;
-      .cell {
-        font-weight: bold;
-        background-color: white;
-      }
-    }
-
-    & .row {
-      display: flex;
-      &.--selected, &--selected .cell, &.--selected .name-cell {
-        background-color: var(--highlightColor);
-      }
-      &.placeholder-row {
-        background-color: white;
-      }
-    }
-
-    & .cell {
-      min-width: var(--cellWidth)em;
-      width: var(--cellWidth)em;
-      height: var(--cellHeight)px;
-      border: 0.5px solid;
-      padding-top: var(--cellPadding)px;
-      &.--invalid {
-        background-color: var(--errorColor);
-      }
-    }
 
   }
 

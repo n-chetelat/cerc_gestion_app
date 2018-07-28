@@ -57,13 +57,13 @@ import MilestoneCell from "components/timeline/milestone-cell.vue"
   </script>
 
   <template lang="pug">
-    div.timeline-table(@scroll="scrollHeaderSideways")
+    div.table.timeline-table(@scroll="scrollHeaderSideways")
 
       div.table-head
         div.row
           div.cell(v-for="date in timelineDates", :class="{'--current': isCurrentSemester(date)}")
             div.date-label
-              p {{date.label}}
+              div {{date.label}}
               span.months-label {{date.months[0].label}} - {{date.months[date.months.length-1].label}}
       div.table-body
         div.row.placeholder-row
@@ -85,57 +85,10 @@ import MilestoneCell from "components/timeline/milestone-cell.vue"
 
   @import "../../init/variables.css";
 
-  :root {
-    --cellHeight: 55;
-  }
-
   .timeline-table {
 
-    & .table-head {
-      width: 100%;
-      position: fixed;
-      min-height: var(--cellMinHeight)px;
-      margin: 0 auto;
-      text-align: center;
-      background-color: white;
-      .cell {
-        font-weight: bold;
-        background-color: white;
-      }
-    }
-
-    & .row {
-      display: flex;
-      &.--selected, &--selected .cell, &.--selected .name-cell {
-        background-color: var(--highlightColor);
-      }
-      &.placeholder-row {
-        background-color: white;
-      }
-    }
-
-    & .cell {
-      min-width: var(--cellWidth)em;
-      width: var(--cellWidth)em;
-      height: var(--cellHeight)px;
-      border: 0.5px solid;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      &.--current {
-        background-color: color(var(--themeColor) alpha(20%));
-      }
-    }
-
     & .months-label {
-      display: inline-block;
       font-size: .7em;
-    }
-
-    & .date-label {
-      & p {
-        margin: 0;
-      }
     }
 
   }

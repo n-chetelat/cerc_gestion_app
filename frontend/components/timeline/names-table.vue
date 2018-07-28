@@ -71,7 +71,7 @@
   </script>
 
   <template lang="pug">
-    div.names-table
+    div.table.names-table
 
       div.table-head
         div.row
@@ -79,7 +79,7 @@
             select(v-model="filterAction", @change="emitFilterAction")
               option(:value="null") -- Actions --
               option(v-for="action in filterActions", :value="action.id") {{action.label}}
-          div.cell.full-name Name
+          div.cell.name-cell Name
 
       div.table-body
         div.row.placeholder-row
@@ -87,7 +87,8 @@
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell.name-cell.selection-box
             input(type="checkbox", :value="profile.id", v-model="selectedProfileIds", @change="emitSelectedProfiles")
-          div.cell.name-cell(@click="emitModalByName('profile-milestones', { profile })") {{profile.full_name}}
+          div.cell.name-cell.full-name(@click="emitModalByName('profile-milestones', { profile })")
+            div {{profile.full_name}}
             div.person-position-label {{allPositionsById[profile.position_id].title}}
 
 
@@ -97,84 +98,13 @@
 
   @import "../../init/variables.css";
 
-  :root {
-    --cellHeight: 55;
-  }
-
   .names-table {
-    position: absolute;
-    background-color: white;
-    z-index: 4;
-
-    & .table-head {
-      position: fixed;
-      .cell {
-        min-height: var(--cellMinHeight)px;
-        margin: 0 auto;
-        text-align: center;
-        font-weight: bold;
-        background-color: color(var(--themeColor) tint(40%));
-      }
-      & .row:first-of-type {
-        & .name-cell {
-          border-top: .5px solid black;
-        }
-      }
-    }
-
-    & .row {
-      display: flex;
-      &.--selected, &--selected .cell, &.--selected .name-cell {
-        background-color: var(--highlightColor);
-      }
-      &.placeholder-row .name-cell {
-        width: calc(var(--cellWidth)*(1+var(--selectionBoxRatio)))em;
-      }
-    }
-
     & .cell {
-      width: var(--cellWidth)em;
-      height: var(--cellHeight)px;
-      border: .5px solid;
-      padding-top: var(--cellPadding)px;
-      &.--invalid {
-        background-color: var(--errorColor);
-      }
-      &.full-name {
-        cursor: pointer;
-      }
+      flex-direction: column;
     }
 
-    & .table-body {
-      & .row:last-of-type {
-        & .name-cell {
-          border-bottom: .5px solid black;
-        }
-      }
-    }
-
-    & .name-cell {
-      border: .5px solid white;
-      background-color: color(var(--themeColor) tint(40%));
-    }
-
-    & .selection-box {
-      width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-      max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-      text-align: center;
-      padding: var(--cellPadding)px;
-      & input {
-        width: auto;
-      }
-      & button {
-        text-transform: none;
-        padding: 0;
-      }
-      & select {
-        width: 100%;
-        font-size: .8em;
-        border: none;
-      }
+    & .full-name {
+      cursor: pointer;
     }
 
     & .person-position-label {

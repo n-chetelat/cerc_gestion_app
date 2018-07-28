@@ -70,7 +70,7 @@
   </script>
 
   <template lang="pug">
-    div.names-table
+    div.table.names-table
 
       div.table-head
         div.row
@@ -96,78 +96,7 @@
 
   @import "../../init/variables.css";
 
-  :root {
-    --cellHeight: 55;
-  }
-
   .names-table {
-    position: absolute;
-    background-color: white;
-    z-index: 4;
-
-    & .table-head {
-      position: fixed;
-      .cell {
-        min-height: var(--cellMinHeight)px;
-        margin: 0 auto;
-        text-align: center;
-        font-weight: bold;
-      }
-      & .row:first-of-type {
-        & .name-cell {
-          border-top: .5px solid black;
-        }
-      }
-    }
-
-    & .row {
-      display: flex;
-      &.--selected, &--selected .cell, &.--selected .name-cell {
-        background-color: var(--highlightColor);
-      }
-    }
-
-    & .cell {
-      width: var(--cellWidth)em;
-      height: var(--cellHeight)px;
-      border: .5px solid;
-      padding-top: var(--cellPadding)px;
-      &.--invalid {
-        background-color: var(--errorColor);
-      }
-    }
-
-    & .table-body {
-      & .row:last-of-type {
-        & .name-cell {
-          border-bottom: .5px solid black;
-        }
-      }
-    }
-
-    & .name-cell {
-      border: .5px solid white;
-      background-color: color(var(--themeColor) tint(40%));
-    }
-
-    & .selection-box {
-      width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-      max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-      text-align: center;
-      padding: var(--cellPadding)px;
-      & input {
-        width: auto;
-      }
-      & button {
-        text-transform: none;
-        padding: 0;
-      }
-      & select {
-        width: 100%;
-        font-size: .8em;
-        border: none;
-      }
-    }
 
   }
 

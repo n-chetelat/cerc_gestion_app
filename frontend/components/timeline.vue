@@ -4,7 +4,7 @@ import ModalMixin from "mixins/modal-mixin.js"
 import FilterMixin from "mixins/filter-mixin.js"
 
 import { mapGetters, mapActions } from "vuex"
-import { groupBy } from "lodash-es"
+import { groupBy, filter } from "lodash-es"
 
 import AdminNav from "components/shared/admin-nav.vue"
 import NamesTable from "components/timeline/names-table.vue"

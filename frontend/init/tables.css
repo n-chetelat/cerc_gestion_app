@@ -1,5 +1,10 @@
 @import "./variables.css";
 
+:root {
+  --currentColor: color(var(--themeColor) tint(80%));
+  --nameCellColor: color(var(--themeColor) tint(40%));
+}
+
 .tables {
   position: relative;
   display: flex;
@@ -7,88 +12,89 @@
   height: 100%;
   overflow-x: hidden;
   margin: 0.5em;
+}
 
-  /* table {
-    margin: 10px 0;
-  } */
-  /* & table, th, td {
-    border: 1px solid;
-    border-collapse: collapse;
+.table {
+
+  & .row {
+    display: flex;
+    &.--selected, &--selected .cell, &.--selected .name-cell {
+      background-color: var(--highlightColor);
+    }
   }
 
-  & th, td {
-    padding: var(--cellPadding)px;
-    font-family: var(--textFamily);
+  & .cell {
+    min-width: var(--cellWidth)em;
+    width: var(--cellWidth)em;
+    height: var(--cellHeight)px;
+    border: .5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.--invalid {
+      background-color: var(--errorColor);
+    }
+    &.--current {
+      background-color: var(--currentColor);
+    }
+    &.name-cell {
+      border: .5px solid white;
+      background-color: var(--nameCellColor);
+    }
   }
 
-  & th {
-    height: 55px;
-  } */
+  & .table-head {
+    position: fixed;
+    .cell {
+      min-height: var(--cellMinHeight)px;
+      margin: 0 auto;
+      text-align: center;
+      font-weight: bold;
+      background-color: white;
+      &.--current {
+        background-color: var(--currentColor);
+      }
+    }
+  }
 
-  /* & .names-table {
+  &.names-table {
     position: absolute;
     background-color: white;
     z-index: 4;
-
-    & tr:first-of-type {
-      & th {
-        border-top: 1px solid black;
+    & .table-head {
+      & .cell {
+        background-color: var(--nameCellColor);
       }
     }
-
-    & tr:last-of-type {
-      & td {
-        border-bottom: 1px solid black;
+    & .table-body {
+      & .row:last-of-type {
+        & .name-cell {
+          border-bottom: .5px solid black;
+        }
       }
     }
-
-    & th, td {
-      border: 1px solid white;
-      background-color: color(var(--themeColor) tint(40%));
+    & .row:first-of-type {
+      & .name-cell {
+        border-top: .5px solid black;
+      }
     }
-
-    & td .cell-display {
-      width: var(--nameCellWidth)em;
+    & .cell.selection-box {
+      min-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em; /*include to override another rule*/
+      max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
+      text-align: center;
+      & input {
+        width: auto;
+      }
+      & select {
+        width: 90%;
+        font-size: .8em;
+        border: none;
+      }
     }
-
-  } */
-/*
-  & .selection-box {
-    width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-    max-width: calc(var(--cellWidth)*var(--selectionBoxRatio))em;
-    text-align: center;
-    & input {
-      width: auto;
-    }
-    & button {
-      text-transform: none;
-      padding: 0;
-    }
-    & select {
-      width: 100%;
-      font-size: .8em;
-      border: none;
-    }
-  } */
-
-  /* & .header span {
-    display: inline-block;
-    padding: .5em;
-    background-color: white;
-  } */
-
-  & .dynamic-table {
-    overflow-x: scroll;
-    overflow-y: hidden;
   }
+}
 
-  /* & .names-table, & .profiles-table {
-    & td.--invalid {
-        background-color: var(--errorColor);
-    }
-  } */
-
-  /* & tr.--selected, & tr.--selected td {
-    background-color: var(--highlightColor);
-  } */
+.dynamic-table {
+  overflow-x: scroll;
+  overflow-y: hidden;
 }

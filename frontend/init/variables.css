@@ -14,6 +14,7 @@
 
   /* profiles and timeline */
   --cellWidth: 15;
+  --cellHeight: 55;
   --cellMinHeight: 40;
   --cellMaxHeight: 62;
   --cellPadding: 10;
