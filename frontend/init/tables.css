@@ -46,6 +46,9 @@
     &.name-cell {
       border: 1px solid white;
       background-color: var(--nameCellColor);
+      &.--invalid {
+        background-color: var(--errorColor);
+      }
     }
   }
 

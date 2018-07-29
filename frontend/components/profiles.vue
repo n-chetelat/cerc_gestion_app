@@ -80,7 +80,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         this.openModal(modalName)
       },
       signalFieldValidity(event, value) {
-        const cell = event.target.closest("td")
+        const cell = event.target.closest(".cell")
         if (!cell) return
         if (value) {
           cell.classList.remove("--invalid")
