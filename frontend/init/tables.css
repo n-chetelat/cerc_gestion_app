@@ -20,6 +20,9 @@
     display: flex;
     &.--selected .cell, &.--selected .name-cell {
       background-color: var(--selectHighlightColor);
+      &.--invalid {
+        background-color: var(--errorColor);
+      }
     }
   }
 
