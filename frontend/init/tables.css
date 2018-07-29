@@ -3,6 +3,7 @@
 :root {
   --currentColor: color(var(--themeColor) tint(80%));
   --nameCellColor: color(var(--themeColor) tint(40%));
+  --borderColor: #444444;
 }
 
 .tables {
@@ -11,7 +12,6 @@
   flex-wrap: nowrap;
   height: 100%;
   overflow-x: hidden;
-  margin: 0.5em;
 }
 
 .table {
@@ -27,10 +27,16 @@
     min-width: var(--cellWidth)em;
     width: var(--cellWidth)em;
     height: var(--cellHeight)px;
-    border: .5px solid;
+
+    border-style: solid;
+    border-width: 1px 1px 0 0;
+    border-color: var(--borderColor);
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+
     &.--invalid {
       background-color: var(--errorColor);
     }
@@ -38,7 +44,7 @@
       background-color: var(--currentColor);
     }
     &.name-cell {
-      border: .5px solid white;
+      border: 1px solid white;
       background-color: var(--nameCellColor);
     }
   }
@@ -57,6 +63,19 @@
     }
   }
 
+  & .table-body {
+    & .row:last-of-type {
+      & .cell {
+        border-bottom: 1px solid var(--borderColor);
+      }
+    }
+  }
+  & .row:first-of-type {
+    & .name-cell {
+      border-top: 1px solid var(--borderColor);
+    }
+  }
+
   &.names-table {
     position: absolute;
     background-color: white;
@@ -64,18 +83,6 @@
     & .table-head {
       & .cell {
         background-color: var(--nameCellColor);
-      }
-    }
-    & .table-body {
-      & .row:last-of-type {
-        & .name-cell {
-          border-bottom: .5px solid black;
-        }
-      }
-    }
-    & .row:first-of-type {
-      & .name-cell {
-        border-top: .5px solid black;
       }
     }
     & .cell.selection-box {
