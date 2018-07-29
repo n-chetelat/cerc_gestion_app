@@ -23,7 +23,7 @@
   --menuSpace: 3;
   --profilesSidebarWidth: calc(var(--profilesSidebarOffset)+var(--menuSpace));
   --selectionBoxRatio: 0.55;
-  --highlightColor: #00B2CA55;
+  --selectHighlightColor: #00B2CA55;
 
   --field-style: {
     display: flex;

@@ -18,8 +18,8 @@
 
   & .row {
     display: flex;
-    &.--selected, &--selected .cell, &.--selected .name-cell {
-      background-color: var(--highlightColor);
+    &.--selected .cell, &.--selected .name-cell {
+      background-color: var(--selectHighlightColor);
     }
   }
 
