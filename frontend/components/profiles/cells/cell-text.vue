@@ -12,7 +12,7 @@ export default {
   },
   computed: {
     displayValue() {
-      return this.textValue
+      return this.field.value
     },
     isValid() {
       if (this.field.fieldName === "email") {
