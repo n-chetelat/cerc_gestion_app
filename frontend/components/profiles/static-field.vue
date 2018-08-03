@@ -29,6 +29,10 @@ export default {
         email: {form: "text", optional: false, value: this.profile.email, fieldName: "email"},
         starting_date: {form: this.profile.starting_date_type, optional: false, fieldName: "starting_date",
           value: this.profile.starting_date, starting_date_label: this.profile.starting_date_label},
+        applied_at: {form: "text", optional: false, fieldName: "applied_at",
+          value: this.profile.applied_at, editable: false},
+        closed_at: {form: "text", optional: false, fieldName: "closed_at",
+          value: this.profile.closed_at, editable: false}
       }
     },
   },
@@ -57,7 +61,8 @@ export default {
       :profile="profile", :field="calculatedFieldDataFor('starting_date')", @error="$emit('error')", @valid="emitValid")
 
     component.field-cell(v-else, :is="`cell-${calculatedFieldDataFor(fieldName).form}`",
-      :profile="profile", :field="calculatedFieldDataFor(fieldName)", @error="$emit('error')", @valid="emitValid")
+      :class="{'not-editable': calculatedFieldDataFor(fieldName).editable === false}",
+      :profile="profile", :field="calculatedFieldDataFor(fieldName)", :editable="calculatedFieldDataFor(fieldName).editable", @error="$emit('error')", @valid="emitValid")
 
 </template>
 
@@ -69,7 +74,9 @@ export default {
     @apply --field-style;
     & .field-cell {
       @apply --field-cell-style;
-
+    }
+    .not-editable {
+      color: color(var(--textColor) tint(50%));
     }
   }
 

@@ -117,8 +117,7 @@ export default {
       margin-top: 1em;
 
       & .field-columns {
-        min-height: 300px;
-        max-height: 500px;
+        height: 300px;
         overflow-y: auto;
       }
       & .apply-filter-btn {

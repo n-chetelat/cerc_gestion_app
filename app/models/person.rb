@@ -17,6 +17,7 @@ class Person < ApplicationRecord
   has_many :positions_milestones, through: :persons_positions_milestones
 
   scope :in_recruitment, -> { joins(:application).where("applications.closed_at IS NULL") }
+  scope :post_recruitment, -> { joins(:application).where("applications.closed_at IS NOT NULL") }
   scope :not_in_phase, -> { in_recruitment.where.not(id: joins(:persons_phase).select(:person_id)) }
   scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
   scope :rejected, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = FALSE") }

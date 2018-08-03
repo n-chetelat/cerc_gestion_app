@@ -12,6 +12,9 @@ export default {
     },
     profile: {
       required: true
+    },
+    editable: {
+      default: true
     }
   },
   data() {

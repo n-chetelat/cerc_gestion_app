@@ -11,7 +11,7 @@ module Api
     end
 
     def index
-      @resources = Person.active
+      @resources = Person.post_recruitment
     end
 
     def show

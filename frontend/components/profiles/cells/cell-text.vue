@@ -35,7 +35,7 @@ export default {
 
 <template lang="pug">
   span.cell-text
-    span.cell-display(v-if="!editing", @dblclick="editing = true") {{displayValue}}
+    span.cell-display(v-if="!editing", @dblclick="editing = (editable) ? true : false") {{displayValue}}
     input(v-else, type="text", v-model="textValue", v-on-clickaway="closeEditing", @blur="setNewValue($event)")
 
 </template>
