@@ -61,6 +61,11 @@
           this.emitSelectedProfiles()
         }
         this.filterAction = null
+      },
+      profileStatusLabel(profile) {
+        if (profile.status === "rejected") return "Rejected"
+        else if (profile.status === "inactive") return "Not currently active"
+        else return "Currently active"
       }
     },
     components: {
@@ -86,7 +91,9 @@
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell.name-cell.selection-box
             input(type="checkbox", :value="profile.id", v-model="selectedProfileIds", @change="emitSelectedProfiles")
-          div.cell.name-cell(v-for="(label, key) in nameFields")
+          div.cell.name-cell(v-for="(label, key) in nameFields",
+            :class="{'--rejected': profile.status === 'rejected', '--inactive': profile.status === 'inactive'}",
+            v-tooltip="{content: profileStatusLabel(profile), delay: {show: 900}}")
             static-field(:profile="profile", :field-name="key", @error="emit('error')", @valid="emitValid")
 
 

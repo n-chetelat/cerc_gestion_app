@@ -27,6 +27,7 @@ const getters = {
     }
     return map
   },
+  profilesByStatus: state => groupBy(state.all, "status")
 }
 
 // actions

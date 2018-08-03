@@ -4,6 +4,8 @@
   --currentColor: color(var(--themeColor) tint(80%));
   --nameCellColor: color(var(--themeColor) tint(40%));
   --borderColor: #444444;
+  --rejectedColor: #f39d9d;
+  --inactiveColor: #c3c7c6;
 }
 
 .tables {
@@ -51,6 +53,12 @@
       background-color: var(--nameCellColor);
       &.--invalid {
         background-color: var(--errorColor);
+      }
+      &.--rejected {
+        background-color: var(--rejectedColor);
+      }
+      &.--inactive {
+        background-color: var(--inactiveColor);
       }
     }
   }

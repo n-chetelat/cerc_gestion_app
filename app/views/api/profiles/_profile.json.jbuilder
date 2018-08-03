@@ -2,6 +2,7 @@ json.extract! person, :id, :name, :lastname, :uuid
 json.full_name person.full_name
 json.email person.email
 json.position_id person.position.id
+json.status person.status
 
 application = person.application
 

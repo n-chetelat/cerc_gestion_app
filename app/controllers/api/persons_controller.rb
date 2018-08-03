@@ -22,6 +22,7 @@ module Api
       render :show
     end
 
+
     private
 
       def set_resource
