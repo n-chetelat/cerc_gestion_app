@@ -1,6 +1,6 @@
 import axios from "axios"
 
-import { keyBy, groupBy } from "lodash-es"
+import { keyBy, groupBy, filter } from "lodash-es"
 
 const PROFILE_URL = `api/profiles`
 const PROFILE_FIELDS_URL = `api/profile_fields`
@@ -27,7 +27,8 @@ const getters = {
     }
     return map
   },
-  profilesByStatus: state => groupBy(state.all, "status")
+  profilesByStatus: state => groupBy(state.all, "status"),
+  activeProfiles: state => filter(state.all, p => p.status === "active")
 }
 
 // actions

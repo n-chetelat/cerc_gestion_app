@@ -46,18 +46,18 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       }
     },
     computed: {
-      ...mapGetters("profiles", [, "profiles"]),
+      ...mapGetters("profiles", ["profiles", "activeProfiles"]),
       ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
       ...mapGetters("dates", ["timelineDates"]),
       filteredProfiles() {
-        if (!this.profiles) return []
-        if (!this.filteredProfileIds.length) return this.profiles
-        return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
+        if (!this.activeProfiles) return []
+        if (!this.filteredProfileIds.length) return this.activeProfiles
+        return filter(this.activeProfiles, (p) => this.filteredProfileIds.includes(p.id))
       },
       timelineTableMinHeight() {
         const cellMaxHeight = 55
         const headerHeight = 122
-        return (this.profiles.length + 1) * cellMaxHeight + headerHeight
+        return (this.activeProfiles.length + 1) * cellMaxHeight + headerHeight
       },
     },
     methods: {

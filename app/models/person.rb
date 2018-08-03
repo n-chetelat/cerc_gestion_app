@@ -23,6 +23,7 @@ class Person < ApplicationRecord
   scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
   scope :rejected, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = FALSE") }
   scope :active, -> { accepted.where(finished_at: nil) }
+  scope :inactive, -> { accepted.where.not(finished_at: nil) }
 
   delegate :starting_date, to: :application
 
