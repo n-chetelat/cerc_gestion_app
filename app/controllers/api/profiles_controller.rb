@@ -11,7 +11,7 @@ module Api
     end
 
     def index
-      @resources = Person.active + Person.inactive + Person.rejected
+      @resources = Person.active + Person.incoming + Person.finished + Person.rejected
     end
 
     def show

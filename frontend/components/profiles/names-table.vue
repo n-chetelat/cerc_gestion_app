@@ -19,12 +19,16 @@
         filterActions: [
           {id: "show_all", label: "Show all"},
           {id: "show_selected", label: "Show selected"},
+          {id: "active_only", label: "Show active"},
+          {id: "incoming_only", label: "Show incoming"},
+          {id: "rejected_only", label: "Show rejected"},
+          {id: "finished_only", label: "Show finished"},
           {id: "deselect_all", label: "Deselect all"},
         ]
       }
     },
     computed: {
-      ...mapGetters("profiles", [, "profiles"]),
+      ...mapGetters("profiles", [, "profiles", "profilesByStatus"]),
       nameFields() {
         return {
           name: "Name",
@@ -59,12 +63,21 @@
         } else if (this.filterAction === "deselect_all") {
           this.selectProfiles([])
           this.emitSelectedProfiles()
+        } else if (this.filterAction === "active_only") {
+            this.filterProfiles(this.profilesByStatus.active.map((p) => p.id))
+        } else if (this.filterAction === "incoming_only") {
+          this.filterProfiles(this.profilesByStatus.incoming.map((p) => p.id))
+        } else if (this.filterAction === "rejected_only") {
+          this.filterProfiles(this.profilesByStatus.rejected.map((p) => p.id))
+        } else if (this.filterAction === "finished_only") {
+          this.filterProfiles(this.profilesByStatus.finished.map((p) => p.id))
         }
         this.filterAction = null
       },
       profileStatusLabel(profile) {
         if (profile.status === "rejected") return "Rejected"
-        else if (profile.status === "inactive") return "Not currently active"
+        else if (profile.status === "finished") return "Finished"
+        else if (profile.status === "incoming") return "Accepted"
         else return "Currently active"
       }
     },
@@ -92,7 +105,7 @@
           div.cell.name-cell.selection-box
             input(type="checkbox", :value="profile.id", v-model="selectedProfileIds", @change="emitSelectedProfiles")
           div.cell.name-cell(v-for="(label, key) in nameFields",
-            :class="{'--rejected': profile.status === 'rejected', '--inactive': profile.status === 'inactive'}",
+            :class="{'--rejected': profile.status === 'rejected', '--finished': profile.status === 'finished', '--incoming': profile.status === 'incoming'}",
             v-tooltip="{content: profileStatusLabel(profile), delay: {show: 900}}")
             static-field(:profile="profile", :field-name="key", @error="emit('error')", @valid="emitValid")
 
