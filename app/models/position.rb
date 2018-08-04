@@ -7,6 +7,8 @@ class Position < ApplicationRecord
     validates_uniqueness_of :title, scope: :locale
   end
 
+  validates :duration_units, presence: true
+
   has_one :recruitment_form, class_name: "Positions::RecruitmentForm", dependent: :destroy
   has_many :applications, foreign_key: "position_id"
 

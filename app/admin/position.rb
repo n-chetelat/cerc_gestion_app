@@ -5,7 +5,7 @@ ActiveAdmin.register Position do
   scope :visible
   scope :hidden
 
-  permit_params :hidden, :time_interval_cd, :position,
+  permit_params :hidden, :time_interval_cd, :position, :duration_units,
   translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
       :id, :_destroy, :position, :form_cd, :optional, :choices,
@@ -51,6 +51,7 @@ ActiveAdmin.register Position do
       row :hidden
       row :position
       row(:time_interval_cd) { te(resource, :time_interval) }
+      row(:duration_units) { te(resource, :duration_units) }
     end
     panel "Recruitment Form" do
       table_for resource.recruitment_form.form_fields.order(position: :asc) do
@@ -83,6 +84,7 @@ ActiveAdmin.register Position do
       f.input :hidden
       f.input :position
       f.input :time_interval_cd, as: :select, collection: enum_option_pairs(Position, :time_interval, true), hint: "The starting date for the applicant will be divided into this unit.", input_html: {class: "select2"}
+      f.input :duration_units
       if !f.object.new_record?
         panel "Recruitment Form" do
           para "N.B: Besides the fields below, each position's form asks for: #{f.object.recruitment_form.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"
