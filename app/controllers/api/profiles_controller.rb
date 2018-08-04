@@ -1,7 +1,7 @@
 module Api
   class ProfilesController < ApiController
     before_action :authenticate_admin_user!
-    before_action :set_resource, only: [:show, :update, :destroy]
+    before_action :set_resource, only: [:show, :update, :destroy, :finished]
 
     attr_reader :partial_path, :resource_name
 
@@ -56,6 +56,14 @@ module Api
       render :show
     end
 
+    def finished
+      @resource.finished_at = DateTime.now
+      unless @resource.save
+        raise "Could not mark profile as finished"
+      end
+      render :show
+    end
+
     private
 
       def set_resource
@@ -63,7 +71,7 @@ module Api
       end
 
       def permitted_params
-        params.permit(:name, :lastname, :email, :finished_at)
+        params.permit(:name, :lastname, :email)
       end
 
   end

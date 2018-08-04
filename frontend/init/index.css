@@ -94,6 +94,14 @@ button {
       color: white;
     }
   }
+  &.caution {
+    background-color: red;
+    border: 1px solid red;
+    &:hover {
+      color: red;
+      background-color: white;
+    }
+  }
 }
 
 li.nav-tab {

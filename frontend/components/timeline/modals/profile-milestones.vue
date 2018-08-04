@@ -48,6 +48,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions("profiles", ["markProfileAsFinished"]),
+    async markAsFinished() {
+      await this.markProfileAsFinished(this.profile.uuid)
+    }
   },
   components: {
     Modal,
@@ -68,6 +72,8 @@ export default {
         li.nav-tab(v-for="tab in tabs", @click="currentTab = tab", :class="{'--selected': currentTab === tab}") {{tab | capitalize}}
 
       div.tab-section.profile-info(v-if="currentTab === 'information'")
+        div.actions
+          button.caution(@click="markAsFinished") Mark as finished
         ul
           li.field-row(v-for="(label, key) in staticFields", )
             span.field-label {{label}}
@@ -122,8 +128,11 @@ export default {
       }
     }
 
-    & .profile-info {
-
+    & .actions {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
   }

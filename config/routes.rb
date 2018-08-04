@@ -49,7 +49,9 @@ Rails.application.routes.draw do
         resources :threads, only: [:create, :update]
       end
 
-      resources :profiles, only: [:index, :show, :create, :update]
+      resources :profiles, only: [:index, :show, :create, :update] do
+        put :finished, on: :member
+      end
       resources :profile_fields, only: [:index]
 
       resources :milestones, only: [:index]
