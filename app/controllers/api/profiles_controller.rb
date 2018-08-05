@@ -39,10 +39,13 @@ module Api
 
     def update
       if params[:position_id]
-        @resource.application.position_id = params[:position_id] if params[:position_id]
+        @resource.application.position_id = params[:position_id]
       end
       if params[:starting_date]
-        @resource.application.starting_date = params[:starting_date] if params[:starting_date]
+        @resource.application.starting_date = params[:starting_date]
+      end
+      if params[:ending_date]
+        @resource.application.ending_date = params[:ending_date]
       end
 
       @resource.application.save if @resource.application.changed?

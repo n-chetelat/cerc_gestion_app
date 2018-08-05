@@ -29,6 +29,8 @@ export default {
         email: {form: "text", optional: false, value: this.profile.email, fieldName: "email"},
         starting_date: {form: this.profile.starting_date_type, optional: false, fieldName: "starting_date",
           value: this.profile.starting_date, starting_date_label: this.profile.starting_date_label},
+        ending_date: {form: this.profile.starting_date_type, optional: false, fieldName: "ending_date",
+          value: this.profile.ending_date, ending_date_label: this.profile.ending_date_label},
         applied_at: {form: "text", optional: false, fieldName: "applied_at",
           value: this.profile.applied_at, editable: false},
         closed_at: {form: "text", optional: false, fieldName: "closed_at",
@@ -59,6 +61,8 @@ export default {
 
     component.field-cell(v-if="fieldName === 'starting_date'", :is="`cell-${profile.starting_date_type}`",
       :profile="profile", :field="calculatedFieldDataFor('starting_date')", @error="$emit('error')", @valid="emitValid")
+    component.field-cell(v-if="fieldName === 'ending_date'", :is="`cell-${profile.starting_date_type}`",
+      :profile="profile", :field="calculatedFieldDataFor('ending_date')", @error="$emit('error')", @valid="emitValid")
 
     component.field-cell(v-else, :is="`cell-${calculatedFieldDataFor(fieldName).form}`",
       :class="{'not-editable': calculatedFieldDataFor(fieldName).editable === false}",

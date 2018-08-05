@@ -27,20 +27,43 @@ class ApplicationClosingService
     end
   end
 
+  def create_default_end_date
+    duration = (@application.position.duration_units || 2) - 1 # default value of 2 is arbitrary
+    time_interval = @application.position.time_interval
+    starting_date = @application.starting_date
+
+
+    if time_interval == :semester
+      semesters = ::DatesService::SEMESTERS_MONTHS.values
+      index = semesters.find_index(starting_date.month)
+      raise "invalid starting date for interval type" unless index
+      # put starting date month number at beginning of array
+      index.times { semesters.push(semesters.shift) }
+      end_date_semester = semesters[(duration % semesters.size)]
+      end_date_year = starting_date.year + ((duration + index) / semesters.size)
+      end_date = Date.parse("#{end_date_year}-#{end_date_semester}-01")
+    elsif time_interval == :month
+      end_date = starting_date + duration.months
+    else
+      raise "invalid time interval for position"
+    end
+
+    @application.ending_date = end_date
+    @application.save!
+  end
+
   def create_person_position_milestones
     milestones = @application.position.milestones
-    # ActiveRecord::Base.transaction do
-      milestones.order(time_interval_ordinality: :asc).each do |milestone|
-        person_milestone = PersonPositionsMilestone.find_or_initialize_by(
-          person_id: @person.id,
-          positions_milestone_id: milestone.id
-        )
-        if person_milestone.new_record?
-          person_milestone.calculate_date_for_milestone!
-          person_milestone.save
-        end
+    milestones.order(time_interval_ordinality: :asc).each do |milestone|
+      person_milestone = PersonPositionsMilestone.find_or_initialize_by(
+        person_id: @person.id,
+        positions_milestone_id: milestone.id
+      )
+      if person_milestone.new_record?
+        person_milestone.calculate_date_for_milestone!
+        person_milestone.save
       end
-    # end
+    end
   end
 
   private

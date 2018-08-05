@@ -72,6 +72,7 @@ module Api
       def set_up_closed_application_profile
         service = ::ApplicationClosingService.new(@resource)
         service.store_application_fields_in_profile_fields
+        service.create_default_end_date
         service.create_person_position_milestones if @resource.accepted
       end
 

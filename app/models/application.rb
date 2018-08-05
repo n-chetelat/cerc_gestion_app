@@ -37,16 +37,12 @@ class Application < ApplicationRecord
   end
 
   def starting_date_to_s
-    case self.time_interval
-    when :semester
-      ::DatesService.semester_to_s(self.starting_date)
-    when :month
-      ::DatesService.month_to_s(self.starting_date)
-    else
-      ""
-    end
+    self.date_to_s(self.starting_date)
   end
 
+  def ending_date_to_s
+    self.date_to_s(self.ending_date)
+  end
 
   def fields_for_current_position
     self.fields.select do |key, value|
@@ -73,6 +69,18 @@ class Application < ApplicationRecord
   end
 
   protected
+
+    def date_to_s(date)
+      return if date.nil?
+      case self.time_interval
+      when :semester
+        ::DatesService.semester_to_s(date)
+      when :month
+        ::DatesService.month_to_s(date)
+      else
+        ""
+      end
+    end
 
     def only_accepted_when_closed
       if !self.closed_at && self.accepted

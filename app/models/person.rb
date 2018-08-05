@@ -27,7 +27,7 @@ class Person < ApplicationRecord
   scope :active, -> { started.where(finished_at: nil) }
   scope :finished, -> { accepted.where.not(finished_at: nil) }
 
-  delegate :starting_date, to: :application
+  delegate :starting_date, :ending_date, to: :application
 
   def validate_email_format
     unless email =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i

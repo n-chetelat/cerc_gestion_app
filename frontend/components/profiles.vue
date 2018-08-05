@@ -53,6 +53,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           position_id: "Position",
           email: "Email",
           starting_date: "Starting Date",
+          ending_date: "Ending Date",
         }
       },
       filteredProfiles() {
