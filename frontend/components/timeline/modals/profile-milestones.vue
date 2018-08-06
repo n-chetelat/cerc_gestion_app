@@ -42,7 +42,8 @@ export default {
         lastname: "Lastname",
         position_id: "Position",
         email: "Email",
-        starting_date: "Starting Date"
+        starting_date: "Starting Date",
+        ending_date: "Ending Date"
       }
     },
   },

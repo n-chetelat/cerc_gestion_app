@@ -1,8 +1,9 @@
 @import "./variables.css";
 
 :root {
-  --currentColor: color(var(--themeColor) tint(80%));
+  --currentColor: color(var(--themeColor) tint(50%));
   --nameCellColor: color(var(--themeColor) tint(40%));
+  --selectHighlightColor: #00B2CAff;
   --borderColor: #444444;
   --rejectedColor: #f39d9d;
   --finishedColor: #c3c7c6;

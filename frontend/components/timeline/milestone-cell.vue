@@ -17,6 +17,24 @@ export default {
   },
   computed: {
     ...mapGetters("milestones", ["milestonesById", "milestonesByPersonId"]),
+    dateIds() {
+      return [this.date.id, ...this.date.months.map(m => m.id)]
+    },
+    dateInPersonRange() {
+      const cellDate = new Date(`${this.date.id} EST`)
+
+      // Make starting and eding month equal to cell date if the date is in months, not semesters.
+
+      let startDateId = this.profile.starting_date
+      if (this.dateIds.includes(startDateId)) { startDateId = this.dateIds[0] }
+      const startDate = new Date(`${startDateId} EST`)
+
+      let endDateId = this.profile.ending_date
+      if (this.dateIds.includes(endDateId)) { endDateId = this.dateIds[0] }
+      const endDate = new Date(`${endDateId} EST`)
+
+      return (cellDate >= startDate && cellDate <= endDate)
+    }
   },
   methods: {
     ...mapActions("milestones", ["updatePersonMilestone"]),
@@ -56,7 +74,7 @@ export default {
     @dragend.prevent="beingDraggedOver = false",
     @dragleave.prevent="beingDraggedOver = false",
     @drop.prevent="onDrop",
-    :class="{'--highlighted': beingDraggedOver}")
+    :class="{'--highlighted': beingDraggedOver, '--in-range': dateInPersonRange}")
 
     ul.milestone-list(v-if="personMilestones.length")
       li.milestone(v-for="personMilestone in personMilestones")
@@ -71,6 +89,7 @@ export default {
 .milestone-cell {
   height: 100%;
   width: 100%;
+
   & .milestone-list {
     display: flex;
     flex-direction: column;
@@ -84,6 +103,9 @@ export default {
   }
   &.--highlighted {
     background-color: color(var(--themeColor) alpha(20%));
+  }
+  &.--in-range {
+    background-color: color(yellow alpha(20%));
   }
 }
 
