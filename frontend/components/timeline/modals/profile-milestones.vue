@@ -6,8 +6,7 @@ import Modal from "components/shared/modal.vue"
 import Field from "components/profiles/field.vue"
 import StaticField from "components/profiles/static-field.vue"
 import MilestonesForm from "./milestones-form.vue"
-
-import { values } from "lodash-es"
+import Graduate from "./graduate.vue"
 
 export default {
   name: "ProfileMilestones",
@@ -18,7 +17,7 @@ export default {
   data() {
     return {
       currentTab: null,
-      tabs: ["information", "milestones"],
+      tabs: ["information", "milestones", "graduate"],
     }
   },
   created() {
@@ -47,17 +46,12 @@ export default {
       }
     },
   },
-  methods: {
-    ...mapActions("profiles", ["markProfileAsFinished"]),
-    async markAsFinished() {
-      await this.markProfileAsFinished(this.profile.uuid)
-    }
-  },
   components: {
     Modal,
     Field,
     StaticField,
-    MilestonesForm
+    MilestonesForm,
+    Graduate
   }
 }
 </script>
@@ -72,8 +66,7 @@ export default {
         li.nav-tab(v-for="tab in tabs", @click="currentTab = tab", :class="{'--selected': currentTab === tab}") {{tab | capitalize}}
 
       div.tab-section.profile-info(v-if="currentTab === 'information'")
-        div.actions
-          button.caution(@click="markAsFinished") Mark as finished
+
         ul
           li.field-row(v-for="(label, key) in staticFields", )
             span.field-label {{label}}
@@ -89,6 +82,9 @@ export default {
         :person-milestones="milestonesByPersonId[profile.uuid]",
         :position-milestones="milestonesByPosition[profile.position_id]",
         :position-dates="positionDates")
+
+      div.tab-section(v-if="currentTab === 'graduate'")
+        graduate(:profile="profile")
 
 </template>
 
@@ -126,13 +122,6 @@ export default {
           text-align: left;
         }
       }
-    }
-
-    & .actions {
-      display: flex;
-      width: 100%;
-      flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
   }

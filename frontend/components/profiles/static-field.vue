@@ -61,7 +61,7 @@ export default {
 
     component.field-cell(v-if="fieldName === 'starting_date'", :is="`cell-${profile.starting_date_type}`",
       :profile="profile", :field="calculatedFieldDataFor('starting_date')", @error="$emit('error')", @valid="emitValid")
-    component.field-cell(v-if="fieldName === 'ending_date'", :is="`cell-${profile.starting_date_type}`",
+    component.field-cell(v-else-if="fieldName === 'ending_date'", :is="`cell-${profile.starting_date_type}`",
       :profile="profile", :field="calculatedFieldDataFor('ending_date')", @error="$emit('error')", @valid="emitValid")
 
     component.field-cell(v-else, :is="`cell-${calculatedFieldDataFor(fieldName).form}`",

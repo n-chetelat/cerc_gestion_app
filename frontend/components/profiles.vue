@@ -48,8 +48,8 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       ...mapGetters("profiles", [, "profiles", "fields", "profilesByStatus"]),
       staticFields() {
         return {
-          applied_at: "Applied sent",
-          closed_at: "Application closed",
+          applied_at: "Applied sent on",
+          closed_at: "Application closed on",
           position_id: "Position",
           email: "Email",
           starting_date: "Starting Date",

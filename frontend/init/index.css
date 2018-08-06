@@ -101,7 +101,18 @@ button {
       color: red;
       background-color: white;
     }
+    &.--disabled {
+      cursor: default;
+      border: 1px solid transparent;
+      background-color: #ff000099;
+      color: white;
+    }
+    &.--disabled:hover {
+      background-color: #ff000099;
+      color: white;
+    }
   }
+
 }
 
 li.nav-tab {
