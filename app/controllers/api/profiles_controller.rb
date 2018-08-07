@@ -28,6 +28,9 @@ module Api
       ActiveRecord::Base.transaction do
         @resource.save!
         application.save!
+        service = ::ApplicationClosingService.new(application)
+        service.create_default_end_date
+        service.create_person_position_milestones
       end
 
       if @resource.persisted? && application.persisted?
@@ -55,8 +58,16 @@ module Api
       end
       unless @resource.save
         raise "Could not update person's information"
+      else
+        if params[:position_id]
+          @resource.persons_positions_milestones.destroy_all
+          service = ::ApplicationClosingService.new(@resource.application)
+          service.create_default_end_date
+          service.create_person_position_milestones
+        end
+        render :show
       end
-      render :show
+
     end
 
     def finished

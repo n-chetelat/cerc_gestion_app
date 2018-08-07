@@ -40,11 +40,11 @@ export default {
   },
   methods: {
     ...mapActions("profiles", ["createProfile"]),
-    async saveNewProfile() {
+    saveNewProfile() {
       if (this.formIsValid) {
         try {
           this.loading = true
-          await this.createProfile(this.newProfile).then(() => {
+          this.createProfile(this.newProfile).then(() => {
             this.sent = true
             this.loading = false
           })

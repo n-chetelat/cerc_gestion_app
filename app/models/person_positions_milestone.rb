@@ -9,7 +9,7 @@ class PersonPositionsMilestone < ApplicationRecord
 
   validates :date, presence: true
   validate :milestone_belongs_to_person_position
-  validate :person_is_active
+  validate :person_is_accepted
   validates :positions_milestone_id, uniqueness: { scope: :person_id }
   validate :match_application_dates_with_milestones
 
@@ -46,9 +46,10 @@ class PersonPositionsMilestone < ApplicationRecord
       end
     end
 
-    def person_is_active
-      unless Person.find_by(id: self.person_id).try(:active?)
-        errors.add(:person_id, "The person with id #{self.person_id} does not have an active profile.")
+    def person_is_accepted
+      person = Person.find_by(id: self.person_id)
+      unless person.try(:accepted?)
+        errors.add(:person_id, "The person with id #{self.person_id} does not have an accepted profile.")
       end
     end
 
