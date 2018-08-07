@@ -11,6 +11,7 @@ class PersonPositionsMilestone < ApplicationRecord
   validate :milestone_belongs_to_person_position
   validate :person_is_active
   validates :positions_milestone_id, uniqueness: { scope: :person_id }
+  validate :match_application_dates_with_milestones
 
   alias_method :milestone, :positions_milestone
 
@@ -48,6 +49,17 @@ class PersonPositionsMilestone < ApplicationRecord
     def person_is_active
       unless Person.find_by(id: self.person_id).try(:active?)
         errors.add(:person_id, "The person with id #{self.person_id} does not have an active profile.")
+      end
+    end
+
+    def match_application_dates_with_milestones
+      unless self.date >= self.person.starting_date
+        errors.add(:starting_date, "Milestone dates cannot come before starting date")
+      end
+
+      return if self.person.ending_date.nil?
+      unless self.date <= self.person.ending_date
+        errors.add(:ending_date, "Milestone dates cannot exceed ending date")
       end
     end
 end

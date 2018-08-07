@@ -16,6 +16,7 @@ class Application < ApplicationRecord
   validates :starting_date, presence: true
   validate :only_accepted_when_closed
   validate :starting_date_in_range, on: :create
+  validate :match_dates_with_milestones
 
   def attachments
     @attachments ||= begin
@@ -41,7 +42,7 @@ class Application < ApplicationRecord
   end
 
   def ending_date_to_s
-    self.date_to_s(self.ending_date)
+    self.date_to_s(self.ending_date) if self.ending_date
   end
 
   def fields_for_current_position
@@ -92,6 +93,19 @@ class Application < ApplicationRecord
       date_choices = ::DatesService.generate_starting_dates(self.time_interval).map {|d| d[:id].to_s }
       unless (date_choices.include?(self.starting_date.try(:to_s)))
         errors.add(:starting_date, "The date #{self.starting_date} is invalid for the interval type #{self.time_interval}")
+      end
+    end
+
+    def match_dates_with_milestones
+      persons_milestones = self.person.persons_positions_milestones
+      return unless persons_milestones.any?
+      unless persons_milestones.minimum(:date) >= self.starting_date
+        errors.add(:starting_date, "Milestone dates cannot come before starting date")
+      end
+
+      return if self.ending_date.nil?
+      unless persons_milestones.maximum(:date) <= self.ending_date
+        errors.add(:ending_date, "Milestone dates cannot exceed ending date")
       end
     end
 
