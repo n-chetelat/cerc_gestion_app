@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     ...mapActions("profiles", ["createProfileData", "updateProfileData", "updatePersonData"]),
+    ...mapActions("milestones", ["fetchPersonMilestones"]),
     async updateValue(event, newValue) {
       if (!this.isValid) {
         this.$emit("valid", event, false)
@@ -46,6 +47,9 @@ export default {
             field: this.field.fieldName,
             newValue
           })
+          if (this.field.fieldName === "position_id") {
+            await this.fetchPersonMilestones()
+          }
         }
         else if (this.field.id) {
           await this.updateProfileData({ personId: this.profile.uuid,

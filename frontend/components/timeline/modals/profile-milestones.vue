@@ -67,7 +67,6 @@ export default {
         li.nav-tab(v-for="tab in tabs", @click="currentTab = tab", :class="{'--selected': currentTab === tab}") {{tab | capitalize}}
 
       div.tab-section.profile-info(v-if="currentTab === 'information'")
-
         ul
           li.field-row(v-for="(label, key) in staticFields", )
             span.field-label {{label}}
