@@ -42,6 +42,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       return {
         currentProfileInModal: null,
         currentTabInModal: null,
+        errorType: null,
         selectedFields: [],
       }
     },
@@ -69,6 +70,8 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         if (modalName === "profile-milestones") {
           this.currentProfileInModal = data.profile
           this.currentTabInModal = data.tab
+        } else if (modalName === "server-error") {
+          this.errorType = data.errorType
         }
         this.openModal(modalName)
       },
@@ -90,7 +93,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
   <template lang="pug">
     div.timeline
-      server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
+      server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'", :error-type="errorType")
       profile-milestones-modal(@close="closeModal", v-if="modalVisible && modalName === 'profile-milestones'", :profile="currentProfileInModal", :tab="currentTabInModal")
 
       admin-nav(@filter="filterProfiles")
@@ -106,7 +109,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
           :displayed-profiles="filteredProfiles",
           :selected-profile-ids="selectedProfileIds",
           :timeline-dates="timelineDates",
-          @error="openModalByName('server-error')",
+          @error="openModalByName",
           @modal="openModalByName",
           :style="{minHeight: `${timelineTableMinHeight}px`}")
 

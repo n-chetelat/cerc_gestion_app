@@ -49,6 +49,9 @@ import MilestoneCell from "components/timeline/milestone-cell.vue"
       emitModalByName(name, data={}) {
         this.$emit("modal", name, data)
       },
+      emitErrorModal(data) {
+        this.emitModalByName('server-error', data)
+      }
     },
     components: {
       MilestoneCell
@@ -74,7 +77,7 @@ import MilestoneCell from "components/timeline/milestone-cell.vue"
               :profile="profile",
               :person-milestones="milestonesForSemester(profile, date)",
               :date="date",
-              @error="emitModalByName('server-error')",
+              @error="emitErrorModal",
               @modal="emitModalByName('profile-milestones', { profile, tab: 'milestones' })")
 
 

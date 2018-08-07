@@ -14,7 +14,8 @@ export default {
   },
   data() {
     return {
-      newMilestoneDates: {}
+      newMilestoneDates: {},
+      formHasError: false
     }
   },
   computed: {
@@ -30,20 +31,32 @@ export default {
   },
   methods: {
     ...mapActions("milestones", ["createPersonMilestone", "updatePersonMilestone", "destroyPersonMilestone"]),
-    async createNewPersonMilestone(milestone) {
+    createNewPersonMilestone(milestone) {
       const params = {
         person_id: this.profile.id,
         positions_milestone_id: milestone.id,
         date: this.newMilestoneDates[milestone.id]
       }
-      await this.createPersonMilestone(params)
+      this.createPersonMilestone(params)
+        .then(() => {
+          this.formHasError = false
+        })
+        .catch((err) => {
+          this.formHasError = true
+        })
     },
-    async savePersonMilestone(personMilestone) {
+    savePersonMilestone(personMilestone) {
       const params = {
         id: personMilestone.id,
         date: personMilestone.date
       }
-      await this.updatePersonMilestone(params)
+      this.updatePersonMilestone(params)
+        .then(() => {
+          this.formHasError = false
+        })
+        .catch((err) => {
+          this.formHasError = true
+        })
     },
     async deletePersonMilestone(personMilestone) {
       await this.destroyPersonMilestone(personMilestone.id)
@@ -56,6 +69,10 @@ export default {
 
 <template lang="pug">
   div.milestones-form
+
+    div.error-msg(v-if="formHasError")
+      p One or more of the milestone dates you have chosen is invalid.
+      p Please be sure that the dates are within the range of the person's Starting and Ending dates.
 
     div(v-if="positionMilestones.length")
       ul
@@ -89,8 +106,17 @@ export default {
     display: flex;
     flex-direction: column;
 
+    & .error-msg {
+      color: red;
+      text-align: center;
+      font-size: .9em;
+    }
+
     & .field-row {
-      & label { width: 30%; }
+      & label {
+        width: 30%;
+        padding-top: 1em;
+      }
       & select { width: 50%; }
       & button {
         width: 5%;

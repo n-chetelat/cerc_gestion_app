@@ -25,6 +25,9 @@ module Api
       @resource.calculate_date_for_milestone! unless permitted_params[:date]
       if @resource.save
         render :show
+      elsif
+        @resource.errors.include?(:invalid_date)
+        render json: {error: "Invalid date for milestone", status: 422}, status: 422
       else
         raise "Person milestone could not be created: #{@resource.errors}"
       end
@@ -36,8 +39,12 @@ module Api
         new_date = Date.parse("#{parsed_date.year}-#{parsed_date.month}-01")
         @resource.date = new_date
       end
+
       if @resource.save
         render :show
+      elsif
+        @resource.errors.include?(:invalid_date)
+        render json: {error: "Invalid date for milestone", status: 422}, status: 422
       else
         raise "Person milestone could not be updated: #{@resource.errors}"
       end

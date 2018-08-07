@@ -58,7 +58,9 @@ export default {
       this.updatePersonMilestone(params).then(() => {
 
       }).catch((err) => {
-        this.$emit("error")
+        if (err.response.data.error === "Invalid date for milestone") {
+          this.$emit("error", {errorType: "invalid_milestone_date"})
+        } else this.$emit("error")
       })
     },
   },

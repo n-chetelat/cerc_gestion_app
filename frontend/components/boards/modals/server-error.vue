@@ -4,6 +4,9 @@ import Modal from "../../shared/modal.vue"
 
 export default {
   name: "ServerError",
+  props: {
+    errorType: {}
+  },
   methods: {
     closeModal() {
       this.$emit("close")
@@ -18,9 +21,13 @@ export default {
 <template lang="pug">
   modal.error-message(@close="closeModal")
     h1.error-message-header(slot="header")
-      span Server Error
+      span(v-if="errorType === 'invalid_milestone_date'") Invalid milestone date
+      span(v-else) Server Error
     div.error-message-body(slot="body")
-      div
+      div(v-if="errorType === 'invalid_milestone_date'")
+        p The date for this milestone could not be updated.
+        p Please make sure the date you have chosen is within the range of this person's Starting and Ending dates.
+      div(v-else)
         p There has been an error with this action.
         p Please try reloading the page or contact technical support.
 
