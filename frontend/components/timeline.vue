@@ -32,7 +32,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
     },
     updated() {
       const timelineTable = document.querySelector(".timeline-table")
-      const currentHeader = document.querySelector("th.--current")
+      const currentHeader = document.querySelector(".cell.--current")
       if (timelineTable && currentHeader) {
         timelineTable.scrollBy(-(timelineTable.scrollWidth), 0)
         timelineTable.scrollBy(currentHeader.offsetLeft, 0)

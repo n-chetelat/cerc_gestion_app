@@ -24,9 +24,9 @@ module Api
       end
 
 
-      max_date = Person.joins(:persons_positions_milestones)
-        .maximum("persons_positions_milestones.date").try(:to_date)
-        .try(:+, 1.year) || min_date + 24.months
+      max_date = Person.active.joins(:application)
+        .maximum("applications.ending_date").try(:to_date) || min_date + 24.months
+
       dates = ::DatesService.generate_semester_and_month_structure(
         min_date, max_date
       )
