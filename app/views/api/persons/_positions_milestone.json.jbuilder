@@ -1,4 +1,4 @@
-json.extract! person_milestone, :id, :positions_milestone_id, :time_interval_ordinality
+json.extract! person_milestone, :id, :positions_milestone_id, :time_interval_ordinality, :comment
 
 date = person_milestone.date.try(:to_date).try(:to_s)
 json.date date

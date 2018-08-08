@@ -38,6 +38,7 @@ module Api
         parsed_date = Date.parse(params[:date])
         new_date = Date.parse("#{parsed_date.year}-#{parsed_date.month}-01")
         @resource.date = new_date
+        @resource.comment = params[:comment]
       end
 
       if @resource.save
@@ -62,7 +63,7 @@ module Api
       end
 
       def permitted_params
-        params.permit(:person_id, :positions_milestone_id, :date)
+        params.permit(:person_id, :positions_milestone_id, :date, :comment)
       end
 
   end

@@ -4,6 +4,8 @@ import { mapGetters, mapActions } from "vuex"
 
 import { filter, keyBy } from "lodash-es"
 
+import PersonMilestoneLine from "./person-milestone-line"
+
 export default {
   name: "MilestonesForm",
   props: {
@@ -45,24 +47,28 @@ export default {
           this.formHasError = true
         })
     },
-    savePersonMilestone(personMilestone) {
-      const params = {
-        id: personMilestone.id,
-        date: personMilestone.date
-      }
-      this.updatePersonMilestone(params)
-        .then(() => {
-          this.formHasError = false
-        })
-        .catch((err) => {
-          this.formHasError = true
-        })
-    },
-    async deletePersonMilestone(personMilestone) {
-      await this.destroyPersonMilestone(personMilestone.id)
+    setFormError(value) {
+      this.formHasError = value
     }
+    // savePersonMilestone(personMilestone) {
+    //   const params = {
+    //     id: personMilestone.id,
+    //     date: personMilestone.date
+    //   }
+    //   this.updatePersonMilestone(params)
+    //     .then(() => {
+    //       this.formHasError = false
+    //     })
+    //     .catch((err) => {
+    //       this.formHasError = true
+    //     })
+    // },
+    // async deletePersonMilestone(personMilestone) {
+    //   await this.destroyPersonMilestone(personMilestone.id)
+    // }
   },
   components: {
+    PersonMilestoneLine
   }
 }
 </script>
@@ -77,10 +83,12 @@ export default {
     div(v-if="positionMilestones.length")
       ul
         li.field-row(v-for="personMilestone in personMilestones")
-          label {{milestonesById[personMilestone.positions_milestone_id].title}}
-          select(v-model="personMilestone.date", @change="savePersonMilestone(personMilestone)")
-            option(v-for="date in positionDates", :value="date.id") {{date.label}}
-          button.delete(type="button", @click="deletePersonMilestone(personMilestone)")
+          person-milestone-line(:person-milestone="personMilestone", :position-dates="positionDates",
+            @valid="setFormError")
+          //- label {{milestonesById[personMilestone.positions_milestone_id].title}}
+          //- select(v-model="personMilestone.date", @change="savePersonMilestone(personMilestone)")
+          //-   option(v-for="date in positionDates", :value="date.id") {{date.label}}
+          //- button.delete(type="button", @click="deletePersonMilestone(personMilestone)")
 
       div(v-if="positionMilestonesLeftToAdd.length")
         h2 Milestones to add
