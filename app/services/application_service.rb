@@ -52,13 +52,14 @@ class ApplicationService
     end.compact
 
     common_fields = application.position.recruitment_form.common_fields.map do |field|
-      next if field[:id] == "starting_date"
+      next if field[:id] == "starting_date" || field[:id] == "ending_date"
       {label: field[:label], value: application.person.send(field[:id])}
     end.compact
 
     other_fields = [
       {label: "Position", value: application.position.title},
-      {label: "Starting on", value: application.starting_date_to_s}
+      {label: "Starting on", value: application.starting_date_to_s},
+      {label: "Ending on", value: application.ending_date_to_s}
     ]
 
     other_fields + common_fields + custom_fields
@@ -140,6 +141,11 @@ class ApplicationService
 
       application.position = position
       application.starting_date = starting_date
+
+      if params[:input_select_ending_date]
+        ending_date = params.delete(:input_select_ending_date)
+        application.ending_date = ending_date
+      end
     end
 
     def self.set_form_fields(application, params)

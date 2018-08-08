@@ -3,7 +3,7 @@ module Positions
 
     self.table_name = "positions_recruitment_forms"
 
-    attr_accessor :name, :lastname, :email, :starting_date
+    attr_accessor :name, :lastname, :email, :starting_date, :ending_date
 
     belongs_to :position
     has_many :form_fields, class_name: "Positions::FormField", dependent: :destroy, foreign_key: "recruitment_form_id"
@@ -19,6 +19,17 @@ module Positions
           options: { choices: ::DatesService.generate_starting_dates(self.position.time_interval) },
           type: "input-select"
         }
+
+        if self.position.ending_date_menu_on_form
+          fields << {
+            id: "ending_date",
+            label: ActionController::Base.helpers.t("activerecord.attributes.positions/recruitment_form.ending_date"),
+            options: { choices: ::DatesService.generate_starting_dates(self.position.time_interval, {years: 4, months: 24}) },
+            type: "input-select"
+          }
+        end
+
+        fields
     end
 
     def self.immutable_common_fields

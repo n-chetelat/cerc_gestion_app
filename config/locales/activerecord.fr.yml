@@ -25,6 +25,7 @@ fr:
         name: Prénom
         lastname: Nom
         starting_date: Date de début
+        ending_date: Date de fin
       form_default: &form_default
         form_cd: Mode de saisie
         label_en: Titre en anglais
