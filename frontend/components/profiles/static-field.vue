@@ -21,6 +21,7 @@ export default {
   computed: {
     ...mapGetters("positions", ["allPositions"]),
     calculatedFieldData() {
+      const createdByHand = this.profile.applied_at === this.profile.closed_at
       return {
         name: {form: "text", optional: false, value: this.profile.name, fieldName: "name"},
         lastname: {form: "text", optional: false, value: this.profile.lastname, fieldName: "lastname"},
@@ -32,9 +33,9 @@ export default {
         ending_date: {form: this.profile.starting_date_type, optional: false, fieldName: "ending_date",
           value: this.profile.ending_date, ending_date_label: this.profile.ending_date_label},
         applied_at: {form: "text", optional: false, fieldName: "applied_at",
-          value: this.profile.applied_at, editable: false},
+          value: (createdByHand) ? "--" : this.profile.applied_at, editable: false},
         closed_at: {form: "text", optional: false, fieldName: "closed_at",
-          value: this.profile.closed_at, editable: false}
+          value: (createdByHand) ? "--" : this.profile.closed_at, editable: false}
       }
     },
   },
