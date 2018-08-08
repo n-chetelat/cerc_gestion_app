@@ -6,6 +6,7 @@ ActiveAdmin.register Position do
   scope :hidden
 
   permit_params :hidden, :time_interval_cd, :position, :duration_units,
+  :ending_date_menu_on_form,
   translations_attributes: [:id, :locale, :_destroy, :title],
     recruitment_form_attributes: [:id, form_fields_attributes: ([
       :id, :_destroy, :position, :form_cd, :optional, :choices,
@@ -52,6 +53,8 @@ ActiveAdmin.register Position do
       row :position
       row(:time_interval_cd) { te(resource, :time_interval) }
       row(:duration_units) { te(resource, :duration_units) }
+      row :ending_date_menu_on_form
+
     end
     panel "Recruitment Form" do
       table_for resource.recruitment_form.form_fields.order(position: :asc) do
@@ -85,6 +88,7 @@ ActiveAdmin.register Position do
       f.input :position
       f.input :time_interval_cd, as: :select, collection: enum_option_pairs(Position, :time_interval, true), hint: "The starting date for the applicant will be divided into this unit.", input_html: {class: "select2"}
       f.input :duration_units
+      f.input :ending_date_menu_on_form, as: :boolean, hint: "If this option is not checked, a new profile will be assigned an end date based on the default program duration."
       if !f.object.new_record?
         panel "Recruitment Form" do
           para "N.B: Besides the fields below, each position's form asks for: #{f.object.recruitment_form.common_fields.map {|field| field[:label] }.join(", ")}.", class: "form-note"

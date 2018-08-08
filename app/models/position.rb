@@ -20,6 +20,8 @@ class Position < ApplicationRecord
   scope :visible, -> { where(hidden: false) }
   scope :hidden, -> { where(hidden: true) }
 
+  store_accessor :options, :ending_date_menu_on_form
+
   as_enum :time_interval, {
     month: 0,
     semester: 1,
@@ -60,6 +62,10 @@ class Position < ApplicationRecord
 
   def add_recruitment_form
     self.build_recruitment_form unless self.recruitment_form
+  end
+
+  def ending_date_menu_on_form=(value)
+    super(value == "1")
   end
 
 end

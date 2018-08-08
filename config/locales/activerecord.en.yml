@@ -33,8 +33,9 @@ en:
         <<: *default
       position:
         <<: *default
-        time_interval_cd: Time units for field "starting on"
+        time_interval_cd: Time units for field "starting date"
         duration_units: Default duration of program in time units
+        ending_date_menu_on_form: Give option of "Ending date" on form?
       positions/recruitment_form:
         <<: *default
       positions/form_field:
