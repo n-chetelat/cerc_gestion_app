@@ -63,9 +63,23 @@ export default {
   @import "../../init/variables.css";
 
   .field {
-    @apply --field-style;
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
     & .field-cell {
-      @apply --field-cell-style;
+      min-height: var(--cellMinHeight)px;
+      margin: 0 auto;
+      text-align: center;
+
+      & .cell-display {
+        min-height: 1.5em;
+        min-width: var(--cellWidth)em;
+        display: inline-block;
+      }
+      & select, & input, & textarea {
+        min-width: 100%;
+        width: var(--cellWidth)em;
+      }
 
       &.cell-textarea {
         font-family: var(--textFamily);

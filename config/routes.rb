@@ -31,6 +31,7 @@ Rails.application.routes.draw do
           resource :keywords, only: [:show, :update, :destroy]
         end
       end
+
       resources :persons, only: [:index, :show, :destroy] do
         scope module: "persons" do
           resource :email, only: [:show]
@@ -38,6 +39,7 @@ Rails.application.routes.draw do
           resources :positions_milestones, only: [:index]
         end
       end
+
       resources :boards, only: [:index, :show]
       resources :phases, only: [] do
         scope module: "phases" do
@@ -49,9 +51,13 @@ Rails.application.routes.draw do
         resources :threads, only: [:create, :update]
       end
 
+      namespace :profiles do
+        resources :filters, only: [:index]
+      end
       resources :profiles, only: [:index, :show, :create, :update] do
         put :finished, on: :member
       end
+
       resources :profile_fields, only: [:index]
 
       resources :milestones, only: [:index]

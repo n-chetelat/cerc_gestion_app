@@ -11,6 +11,7 @@ import keywords from './modules/keywords'
 import profiles from './modules/profiles'
 import dates from './modules/dates'
 import milestones from './modules/milestones'
+import filters from './modules/filters'
 
 const store = {
   getters: {
@@ -29,6 +30,7 @@ const store = {
     profiles,
     dates,
     milestones,
+    filters,
   },
 }
 

@@ -2,6 +2,8 @@
 
 import { mapGetters, mapActions } from "vuex"
 
+import _ from "lodash-es"
+
 import * as Fuse from "fuse.js"
 
 export default {
@@ -16,27 +18,22 @@ export default {
     }
   },
   computed: {
-
+    ...mapGetters("filters", ["filteredProfileIds"])
   },
   methods: {
-    onFilter() {
+    ...mapActions("filters", ["filterProfiles"]),
+    onFilter: _.throttle(function() {
       this.searchITemsToFilter()
       this.$emit("filter", this.filteredIds)
-    },
-    searchITemsToFilter() {
-      var options = {
-        shouldSort: true,
-        threshold: 0.4,
-        minMatchCharLength: 2,
-        keys: [
-          {name: "name", weight: 0.5},
-          {name: "lastname", weight: 0.5},
-          {name: "full_name", weight: 0.3}
-        ],
-        id: "id"
-      }
-      const fuse = new Fuse(this.collection, options)
-      this.filteredIds = fuse.search(this.q)
+    }, 500),
+    async searchITemsToFilter() {
+      await this.filterProfiles({q: this.q}).then(() => {
+        if (!this.filteredProfileIds.length) {
+          this.filteredIds = this.collection.map((p) => p.id)
+        } else {
+          this.filteredIds = this.filteredProfileIds
+        }
+      })
     },
   },
   components: {
