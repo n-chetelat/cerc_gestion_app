@@ -55,7 +55,7 @@
             div {{field.label}}
       div.table-body
         div.row.placeholder-row
-          div.cell(v-for="(label, key) in staticFields")
+          div.cell(v-for="(label, key) in (staticFields + fields)")
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell(v-for="(label, key) in staticFields")
             static-field(:profile="profile", :field-name="key", @error="$emit('error')", @valid="emitValid")

@@ -48,54 +48,56 @@ class ProfileSearchService
     def self.make_column_search_sql(query_str)
       column_title, value = query_str.split("::").map {|s| s.strip }
       return unless column = ProfileField.find_by(label: column_title)
+      return unless value.present?
 
       field_ids = case column.form
       when :text, :textarea
         field_ids = ProfileField.where(form_cd: [0,1]).joins(:persons_profile_fields)
           .where("lower(persons_profile_fields.data::text) @@ ?", value.downcase)
           .select("persons_profile_fields.id")
-        when :date, :month
-          date = Date.parse(value)
-          operator = (["<", ">"].include?(value[0]) ? value[0] : "LIKE")
-          # This query compares strings, not dates. Date casting with to_date() PG method was not working.
-          field_ids = ProfileField.where(form_cd: [4,8]).joins(:persons_profile_fields)
-            .where("persons_profile_fields.data::varchar #{operator} :date AND persons_profile_fields.data::varchar != :date",
-              date: date.to_s)
-            .select("persons_profile_fields.id")
-        when :semester
-          first_date = ::DatesService.semester_label_to_date(value)
-          months = ::DatesService.get_months_in_semester(first_date)
-          last_date = Date.parse("#{first_date.year}-#{months.last}-01")
-          last_date = last_date.end_of_month
 
-          field_ids = ProfileField.where(form_cd: [9]).joins(:persons_profile_fields)
-            .where("persons_profile_fields.data::varchar < :first_date AND persons_profile_fields.data::varchar > :last_date",
-              first_date: first_date.to_s, last_date: last_date.to_s)
-            .select("persons_profile_fields.id")
-        when :radio
-          choices = column.choices_with_locale(:en)
-          choice_options = choices.find do |ch|
-            ch[:label].downcase == value.downcase
-          end
-          return unless choice_options
-          choice_id = choice_options[:id]
+      when :date, :month
+        date = Date.parse(value)
+        operator = (["<", ">"].include?(value[0]) ? value[0] : "@>")
+        # This query compares strings, not dates. Date casting with to_date() PG method was not working.
+        field_ids = ProfileField.where(form_cd: [4,8]).joins(:persons_profile_fields)
+          .where("persons_profile_fields.data #{operator} ? AND NOT (persons_profile_fields.data ? '')", date: date.to_json)
+          .select("persons_profile_fields.id")
 
-          field_ids = ProfileField.where(form_cd: [7]).joins(:persons_profile_fields)
-            .where("persons_profile_fields.data::varchar = ?", choice_id)
-            .select("persons_profile_fields.id")
-        when :checkbox, :select
-          choices = column.choices_with_locale(:en)
-          choice_options = choices.find do |ch|
-            ch[:label].downcase == value.downcase
-          end
-          return unless choice_options
-          choice_id = choice_options[:id]
+      when :semester
+        first_date = ::DatesService.semester_label_to_date(value)
+        months = ::DatesService.get_months_in_semester(first_date)
+        last_date = Date.parse("#{first_date.year}-#{months.last}-01")
+        last_date = last_date.end_of_month
 
-          field_ids = ProfileField.where(form_cd: [5,6]).joins(:persons_profile_fields)
-            .where("persons_profile_fields.data && (?)", choice_id)
-            .select("persons_profile_fields.id")
+        field_ids = ProfileField.where(form_cd: [9]).joins(:persons_profile_fields)
+          .where("persons_profile_fields.data::varchar < :first_date AND persons_profile_fields.data::varchar > :last_date",
+            first_date: first_date.to_s, last_date: last_date.to_s)
+          .select("persons_profile_fields.id")
 
-            # .where("array[persons_profile_fields.data] && array[?::jsonb] or true", ["1"]).pluck("array[persons_profile_fields.data]")
+      when :radio, :select
+        choices = column.choices_with_locale(:en)
+        choice_options = choices.find do |ch|
+          ch[:label].downcase == value.downcase
+        end
+        return unless choice_options
+        choice_id = choice_options[:id]
+
+        field_ids = ProfileField.where(form_cd: [5,7]).joins(:persons_profile_fields)
+          .where("persons_profile_fields.data ?| array[:keys]", keys: [choice_id])
+          .select("persons_profile_fields.id")
+
+      when :checkbox
+        choices = column.choices_with_locale(:en)
+        choice_options = choices.find do |ch|
+          ch[:label].downcase == value.downcase
+        end
+        return unless choice_options
+        choice_ids = choice_options[:id]
+
+        field_ids = ProfileField.where(form_cd: [6]).joins(:persons_profile_fields)
+          .where("persons_profile_fields.data ?| array[:keys]", keys: choice_ids)
+          .select("persons_profile_fields.id")
 
       else
         []
