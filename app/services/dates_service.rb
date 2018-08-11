@@ -40,6 +40,10 @@ class DatesService
     dates
   end
 
+  def self.get_months_in_semester(date)
+    MONTHS_IN_SEMESTER[SEMESTERS_MONTHS.invert[date.month]]
+  end
+
   def self.semester_to_s(date)
     date = Date.parse(date) if date.is_a?(String)
     season = SEMESTERS_MONTHS.invert[date.month]
@@ -55,6 +59,18 @@ class DatesService
     date = Date.parse(date) if date.is_a?(String)
     month_index = date.month
      "#{ActionController::Base.helpers.t("date.month_names")[month_index]} #{date.year}"
+  end
+
+  def self.semester_label_to_date(label)
+    semester, month = SEMESTERS_MONTHS.find do |s, m|
+      label.downcase.scan(/\s+(.+#{s}.+)\s+/).any?
+    end
+    if month
+      match = label.downcase.scan(/\s+(.+#{semester}.+)\s+/).flatten.first
+      new_date = label.gsub!(match, ActionController::Base.helpers.t("date.month_names")[month])
+      return Date.parse(new_date)
+    end
+    nil
   end
 
   def self.month_date_to_semester_date(date_string)
@@ -96,13 +112,11 @@ class DatesService
 
   def self.generate_semester_and_month_structure(min_date, max_date)
     semesters = self.get_semesters_in_interval(min_date, max_date)
-    semesters_by_month = SEMESTERS_MONTHS.invert
 
     semesters.each do |semester|
       min_month = Date.parse(semester[:id])
-      season = semesters_by_month[min_month.month]
-      raise "Invalid semester" if season.nil?
-      months = MONTHS_IN_SEMESTER[season]
+      months = self.get_months_in_semester(min_month)
+      raise "Invalid semester" if months.nil?
       max_month = Date.parse("#{min_month.year}-#{months.last}-01")
       semester[:months] = self.get_months_in_interval(min_month, max_month)
     end
