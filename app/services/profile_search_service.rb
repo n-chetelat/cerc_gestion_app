@@ -52,27 +52,28 @@ class ProfileSearchService
 
       field_ids = case column.form
       when :text, :textarea
-        field_ids = ProfileField.where(form_cd: [0,1]).joins(:persons_profile_fields)
+        field_ids = column.persons_profile_fields
           .where("lower(persons_profile_fields.data::text) @@ ?", value.downcase)
           .select("persons_profile_fields.id")
 
       when :date, :month
-        date = Date.parse(value)
+        date = Date.parse(value) rescue return
         operator = (["<", ">"].include?(value[0]) ? value[0] : "@>")
         # This query compares strings, not dates. Date casting with to_date() PG method was not working.
-        field_ids = ProfileField.where(form_cd: [4,8]).joins(:persons_profile_fields)
-          .where("persons_profile_fields.data #{operator} ? AND NOT (persons_profile_fields.data ? '')", date: date.to_json)
+        field_ids = column.persons_profile_fields
+          .where("persons_profile_fields.data #{operator} :date AND NOT (persons_profile_fields.data ? '')", date: date.to_json)
           .select("persons_profile_fields.id")
 
       when :semester
         first_date = ::DatesService.semester_label_to_date(value)
+        return if first_date.nil?
         months = ::DatesService.get_months_in_semester(first_date)
         last_date = Date.parse("#{first_date.year}-#{months.last}-01")
         last_date = last_date.end_of_month
 
-        field_ids = ProfileField.where(form_cd: [9]).joins(:persons_profile_fields)
-          .where("persons_profile_fields.data::varchar < :first_date AND persons_profile_fields.data::varchar > :last_date",
-            first_date: first_date.to_s, last_date: last_date.to_s)
+        field_ids = column.persons_profile_fields
+          .where("persons_profile_fields.data >= :first_date AND persons_profile_fields.data <= :last_date",
+            first_date: first_date.to_json, last_date: last_date.to_json)
           .select("persons_profile_fields.id")
 
       when :radio, :select
@@ -83,7 +84,7 @@ class ProfileSearchService
         return unless choice_options
         choice_id = choice_options[:id]
 
-        field_ids = ProfileField.where(form_cd: [5,7]).joins(:persons_profile_fields)
+        field_ids = column.persons_profile_fields
           .where("persons_profile_fields.data ?| array[:keys]", keys: [choice_id])
           .select("persons_profile_fields.id")
 
@@ -106,5 +107,6 @@ class ProfileSearchService
       Person.post_recruitment.joins(:persons_profile_fields)
         .where("persons_profile_fields.id IN (?)", field_ids)
     end
+
 
 end

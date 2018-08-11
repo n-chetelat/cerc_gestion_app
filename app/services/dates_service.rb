@@ -62,15 +62,18 @@ class DatesService
   end
 
   def self.semester_label_to_date(label)
+    label.strip!
     semester, month = SEMESTERS_MONTHS.find do |s, m|
-      label.downcase.scan(/\s+(.+#{s}.+)\s+/).any?
+      label.downcase.scan(/(?:\s*)((?:.*)#{s}(?:.*))(?:\s*)/).any?
     end
-    if month
-      match = label.downcase.scan(/\s+(.+#{semester}.+)\s+/).flatten.first
-      new_date = label.gsub!(match, ActionController::Base.helpers.t("date.month_names")[month])
-      return Date.parse(new_date)
+    year = label.downcase.scan(/\d{4}/).first
+
+    if month && year
+      new_date = "#{year}-#{month}-01"
+      Date.parse(new_date)
+    else
+      nil
     end
-    nil
   end
 
   def self.month_date_to_semester_date(date_string)
