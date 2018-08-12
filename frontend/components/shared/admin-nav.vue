@@ -30,8 +30,8 @@ export default {
       if (!this.boardSlug) return
       this.$router.push({name: "board", params: { boardSlug: this.boardSlug }})
     },
-    emitFilteredProfiles(profileIds) {
-      this.$emit("filter", profileIds.map((id) => parseInt(id)))
+    emitFilteredProfiles(profileIds, filtering) {
+      this.$emit("filter", profileIds.map((id) => parseInt(id)), filtering)
     }
   },
   components: {

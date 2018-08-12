@@ -21,14 +21,16 @@ export default {
     ...mapGetters("filters", ["filteredProfileIds"])
   },
   methods: {
-    ...mapActions("filters", ["filterProfiles"]),
-    onFilter: _.throttle(function() {
-      this.searchITemsToFilter()
-      this.$emit("filter", this.filteredIds)
-    }, 500),
-    async searchITemsToFilter() {
-      await this.filterProfiles({q: this.q}).then(() => {
-        if (!this.filteredProfileIds.length) {
+    ...mapActions("filters", ["filterProfilesByQueryString"]),
+    onFilter() {
+      this.searchITemsToFilter().then(() => {
+        const filtering = !!this.q.length
+        this.$emit("filter", this.filteredIds, filtering)
+      })
+    },
+    searchITemsToFilter() {
+      return this.filterProfilesByQueryString({q: this.q}).then(() => {
+        if (!this.q) {
           this.filteredIds = this.collection.map((p) => p.id)
         } else {
           this.filteredIds = this.filteredProfileIds
@@ -52,7 +54,8 @@ export default {
 <template lang="pug">
     div.search
       label Filter
-      input(type="text", v-model="q", @input="onFilter")
+      input(type="text", v-model="q", @keyup.enter="onFilter")
+      button.filter-btn(type="button", @click="onFilter") Go
 
 
 </template>
@@ -62,7 +65,10 @@ export default {
 @import "../../init/variables.css";
 
 .search {
-
+  & .filter-btn {
+    padding: 10px;
+    margin-left: 5px;
+  }
 }
 
 </style>

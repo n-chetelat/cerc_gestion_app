@@ -17,7 +17,11 @@ class ProfileSearchService
 
       query_components.each do |component|
         if component.scan(/:{2}/).any? # column name is specified
-          column_result_person_ids += self.get_column_results_person_ids(component)
+          if column_result_person_ids.empty?
+            column_result_person_ids = self.get_column_results_person_ids(component)
+          else
+            column_result_person_ids &= self.get_column_results_person_ids(component)
+          end
         else # no column name is specified - looks only in name, lastname, position
           search_strs << component
         end
@@ -45,8 +49,8 @@ class ProfileSearchService
     def self.get_search_str_results_person_ids(query_str)
       query_strs = query_str.split.map {|str| "%#{str.strip}%"}
       position_ids = Position.translation_class.where(locale: :en)
-        .where("title ILIKE any (array[?])", query_strs)
-        .select(:id)
+        .where("lower(title) ILIKE any (array[?])", query_strs)
+        .select(:position_id)
 
       sql = "name ILIKE any (array[?]) OR lastname ILIKE any (array[?])"\
         " OR applications.position_id IN (?)"
@@ -82,7 +86,7 @@ class ProfileSearchService
       persons = case column_title
       when "position"
         position_id = Position.translation_class.where(locale: :en)
-          .find_by(title: value).try(:id)
+          .find_by("lower(title) = ?", value).try(:position_id)
          Person.post_recruitment.where("applications.position_id = ?", position_id)
 
       when "starting date", "ending date", "applciation sent on", "application closed on"
@@ -101,7 +105,7 @@ class ProfileSearchService
           return Person.none
         end
 
-        Person.post_recruitment.where("applications.#{attr_name} #{operator} ?", value)
+        Person.post_recruitment.where("applications.#{attr_name} #{operator} ?", date)
 
       when "name", "lastname", "email"
         Person.post_recruitment.where("#{column_title} ILIKE ?", value)

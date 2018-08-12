@@ -18,7 +18,7 @@ const getters = {
 
 // actions
 const actions = {
-  filterProfiles({ commit, getters }, params) {
+  filterProfilesByQueryString({ commit, getters }, params) {
     if (!params.q || !params.q.length) {
       commit("setFilteredProfiles", [])
     }
