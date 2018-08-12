@@ -59,8 +59,62 @@ class ProfileSearchService
 
     def self.get_column_results_person_ids(query_str)
       column_title, value = query_str.split("::").map {|s| s.strip }
-      return [] unless column = ProfileField.find_by(label: column_title)
+      column_title.downcase!
+      column = ProfileField.find_by("lower(label) = ?", column_title)
       return [] unless value.present?
+
+      if column
+        field_ids = self.get_column_results_for_dynamic_fields(column, value)
+        person_ids = Person.post_recruitment.joins(:persons_profile_fields)
+          .where("persons_profile_fields.id IN (?)", field_ids)
+          .pluck("persons.id")
+      else
+        person_ids = self.get_column_results_for_static_fields(column_title, value)
+      end
+
+      person_ids
+    end
+
+
+
+    def self.get_column_results_for_static_fields(column_title, value)
+
+      persons = case column_title
+      when "position"
+        position_id = Position.translation_class.where(locale: :en)
+          .find_by(title: value).try(:id)
+         Person.post_recruitment.where("applications.position_id = ?", position_id)
+
+      when "starting date", "ending date", "applciation sent on", "application closed on"
+        date = Date.parse(value) rescue nil
+        return [] unless date
+        operator = (["<", ">"].include?(value[0]) ? value[0] : "=")
+
+        attr_name = "created_at"
+        if /starting/.match(column_title)
+          attr_name = "starting_date"
+        elsif /ending/.match(column_title)
+          attr_name = "ending_date"
+        elsif /closed/.match(attr_name)
+          attr_name = "closed_at"
+        else
+          return Person.none
+        end
+
+        Person.post_recruitment.where("applications.#{attr_name} #{operator} ?", value)
+
+      when "name", "lastname", "email"
+        Person.post_recruitment.where("#{column_title} ILIKE ?", value)
+      else
+        []
+      end
+      person_ids = persons.pluck("persons.id")
+
+    end
+
+
+
+    def self.get_column_results_for_dynamic_fields(column, value)
 
       field_ids = case column.form
       when :text, :textarea
@@ -117,9 +171,7 @@ class ProfileSearchService
         field_ids = []
       end
 
-      Person.post_recruitment.joins(:persons_profile_fields)
-        .where("persons_profile_fields.id IN (?)", field_ids)
-        .pluck("persons.id")
+      field_ids
     end
 
 
