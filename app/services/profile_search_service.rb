@@ -2,38 +2,47 @@ class ProfileSearchService
 
   def self.filter_profiles_by_query_string(query_str)
     return Person.none if query_str.blank?
-    query = self.parse_query_string_into_sql(query_str)
-    Person.accepted.where(query[:sql], *query[:vars])
+    person_ids = self.get_person_ids_from_query(query_str)
+    Person.post_recruitment.where(id: person_ids)
   end
 
   # private
 
-    def self.parse_query_string_into_sql(query_str)
+    def self.get_person_ids_from_query(query_str)
       query_components = query_str.split(";")
-      search_str_sql_components = []
-      column_sql_components = []
+
+      column_result_person_ids = []
+      search_str_result_person_ids = []
+      search_strs = []
+
       query_components.each do |component|
-        component.strip!
-        if component.scan(/:{2}/) # no column name is specified
-          search_str_sql_components << component
-        else
-          column_sql_components << self.make_column_search_sql(compenent)
+        if component.scan(/:{2}/).any? # column name is specified
+          column_result_person_ids += self.get_column_results_person_ids(component)
+        else # no column name is specified - looks only in name, lastname, position
+          search_strs << component
         end
       end
 
-     if search_str_sql_components.any?
-       self.make_string_search_sql(search_str_sql_components.joins(" "))
-      end
+     if search_strs.any?
+       search_str_result_person_ids =
+        self.get_search_str_results_person_ids(search_strs.compact.join(" "))
+     end
 
-      column_sql_components.compact!
-      column_sql = column_sql_components.map {|c| c[:sql] }.join(" OR ")
-      sql = [search_str_sql[:sql], column_sql].map {|c| c.presence}.compact.join(" AND ")
-      column_vars = column_sql_components.map {|c| c[:vars].flatten }.compact
-      vars = search_str_sql[:vars] + column_vars
-      {sql: sql, vars: vars}
+     if search_str_result_person_ids.any? && column_result_person_ids.any?
+       # Take intersection of person id arrays
+       person_ids = (column_result_person_ids & search_str_result_person_ids)
+     elsif search_str_result_person_ids.empty? && column_result_person_ids.empty?
+       person_ids = []
+     else
+       person_ids = (search_str_result_person_ids.any?) ? search_str_result_person_ids
+        : column_result_person_ids
+     end
+      person_ids
     end
 
-    def self.make_string_search_sql(query_str)
+
+
+    def self.get_search_str_results_person_ids(query_str)
       query_strs = query_str.split.map {|str| "%#{str.strip}%"}
       position_ids = Position.translation_class.where(locale: :en)
         .where("title ILIKE any (array[?])", query_strs)
@@ -42,13 +51,16 @@ class ProfileSearchService
       sql = "name ILIKE any (array[?]) OR lastname ILIKE any (array[?])"\
         " OR applications.position_id IN (?)"
       vars = [query_strs, query_strs, position_ids]
-      {sql: sql, vars: vars}
+
+      Person.post_recruitment.where(sql, *vars).pluck(:id)
     end
 
-    def self.make_column_search_sql(query_str)
+
+
+    def self.get_column_results_person_ids(query_str)
       column_title, value = query_str.split("::").map {|s| s.strip }
-      return unless column = ProfileField.find_by(label: column_title)
-      return unless value.present?
+      return [] unless column = ProfileField.find_by(label: column_title)
+      return [] unless value.present?
 
       field_ids = case column.form
       when :text, :textarea
@@ -57,7 +69,8 @@ class ProfileSearchService
           .select("persons_profile_fields.id")
 
       when :date, :month
-        date = Date.parse(value) rescue return
+        date = Date.parse(value) rescue nil
+        return [] unless date
         operator = (["<", ">"].include?(value[0]) ? value[0] : "@>")
         # This query compares strings, not dates. Date casting with to_date() PG method was not working.
         field_ids = column.persons_profile_fields
@@ -66,7 +79,7 @@ class ProfileSearchService
 
       when :semester
         first_date = ::DatesService.semester_label_to_date(value)
-        return if first_date.nil?
+        return [] if first_date.nil?
         months = ::DatesService.get_months_in_semester(first_date)
         last_date = Date.parse("#{first_date.year}-#{months.last}-01")
         last_date = last_date.end_of_month
@@ -81,7 +94,7 @@ class ProfileSearchService
         choice_options = choices.find do |ch|
           ch[:label].downcase == value.downcase
         end
-        return unless choice_options
+        return [] unless choice_options
         choice_id = choice_options[:id]
 
         field_ids = column.persons_profile_fields
@@ -93,7 +106,7 @@ class ProfileSearchService
         choice_options = choices.find do |ch|
           ch[:label].downcase == value.downcase
         end
-        return unless choice_options
+        return [] unless choice_options
         choice_ids = choice_options[:id]
 
         field_ids = ProfileField.where(form_cd: [6]).joins(:persons_profile_fields)
@@ -101,11 +114,12 @@ class ProfileSearchService
           .select("persons_profile_fields.id")
 
       else
-        []
+        field_ids = []
       end
 
       Person.post_recruitment.joins(:persons_profile_fields)
         .where("persons_profile_fields.id IN (?)", field_ids)
+        .pluck("persons.id")
     end
 
 
