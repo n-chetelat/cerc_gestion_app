@@ -20,7 +20,8 @@
           {id: "show_all", label: "Show all"},
           {id: "show_selected", label: "Show selected"},
           {id: "deselect_all", label: "Deselect all"},
-        ]
+        ],
+        nonFilterActions: ["deselect_all", "show_all"]
       }
     },
     computed: {
@@ -39,11 +40,14 @@
         })
         return profileIdMap
       },
+      IsFiltering() {
+        return !this.filterAction || this.nonFilterActions.includes(this.filterAction)
+      },
     },
     methods: {
       emitFilterAction() {
         this.takeFilterAction()
-        this.$emit("filter", this.filteredProfileIds)
+        this.$emit("filter", this.filteredProfileIds, this.IsFiltering)
       },
       emitSelectedProfiles() {
         this.$emit("selection", this.selectedProfileIds)

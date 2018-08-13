@@ -96,11 +96,11 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'", :error-type="errorType")
       profile-milestones-modal(@close="closeModal", v-if="modalVisible && modalName === 'profile-milestones'", :profile="currentProfileInModal", :tab="currentTabInModal")
 
-      admin-nav(@filter="filterProfiles")
+      admin-nav(@filter="onFilterBySearch")
 
       div.tables
         names-table(:displayed-profiles="filteredProfiles",
-          @filter="filterProfiles",
+          @filter="onFilterByMenu",
           @selection="selectProfiles",
           @modal="openModalByName",
           @error="openModalByName('server-error')")
