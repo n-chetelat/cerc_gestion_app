@@ -11,6 +11,7 @@
       selectedProfileIds: { required: true },
       staticFields: {required: true },
       fields: { required: true },
+      numSelectedFields: { required: true }
     },
     data() {
       return {
@@ -55,7 +56,7 @@
             div {{field.label}}
       div.table-body
         div.row.placeholder-row
-          div.cell(v-for="(label, key) in (staticFields + fields)")
+          div.cell(v-for="n in numSelectedFields")
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell(v-for="(label, key) in staticFields")
             static-field(:profile="profile", :field-name="key", @error="$emit('error')", @valid="emitValid")

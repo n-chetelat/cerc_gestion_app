@@ -134,6 +134,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
           :selected-profile-ids="selectedProfileIds",
           :static-fields="filteredStaticFields",
           :fields="filteredFields",
+          :num-selected-fields="selectedFields.length",
 
           @error="openModalByName('server-error')", @valid="signalFieldValidity",
           :style="{minHeight: `${profilesTableMinHeight}px`}")
