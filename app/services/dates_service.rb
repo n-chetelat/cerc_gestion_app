@@ -145,6 +145,20 @@ class DatesService
     semesters
   end
 
+  # Qty includes current semester, so qty == 1 gives only current.
+  def self.find_date_x_semesters_away(date, qty)
+    qty = 1 if (qty <= 0)
+    qty = qty - 1
+    semesters = SEMESTERS_MONTHS.values
+    index = semesters.find_index(date.month)
+    raise "invalid date" unless index
+    # put starting date month number at beginning of array
+    index.times { semesters.push(semesters.shift) }
+    semester = semesters[(qty % semesters.size)]
+    year = date.year + ((qty + index) / semesters.size)
+    Date.parse("#{year}-#{semester}-01")
+  end
+
   private
 
     def self.semester_regexes

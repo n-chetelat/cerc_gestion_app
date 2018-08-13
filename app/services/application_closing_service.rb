@@ -30,7 +30,7 @@ class ApplicationClosingService
   def create_default_end_date
     return unless @application.ending_date.nil?
 
-    duration = (@application.position.duration_units || 2) - 1 # default value of 2 is arbitrary
+    duration = (@application.position.duration_units || ::Position::DEFAULT_MINIMUM_DURATION) - 1 # default value of 2 is arbitrary
     time_interval = @application.position.time_interval
     starting_date = @application.starting_date
 

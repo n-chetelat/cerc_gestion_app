@@ -17,20 +17,13 @@ class PersonPositionsMilestone < ApplicationRecord
 
   def calculate_date_for_milestone!
     return unless person.accepted?
-    ordinality = self.time_interval_ordinality - 1
+    ordinality = self.time_interval_ordinality
     time_interval = self.positions_milestone.time_interval
     starting_date = self.person.starting_date
     if time_interval == :semester
-      semesters = ::DatesService::SEMESTERS_MONTHS.values
-      index = semesters.find_index(starting_date.month)
-      raise "invalid starting date for interval type" unless index
-      # put starting date month number at beginning of array
-      index.times { semesters.push(semesters.shift) }
-      milestone_semester = semesters[(ordinality % semesters.size)]
-      milestone_year = starting_date.year + ((ordinality + index) / semesters.size)
-      milestone_date = Date.parse("#{milestone_year}-#{milestone_semester}-01")
+      milestone_date = ::DatesService.find_date_x_semesters_away(starting_date, ordinality)
     elsif time_interval == :month
-      milestone_date = starting_date + ordinality.months
+      milestone_date = starting_date + (ordinality - 1).months
     else
       raise "invalid time interval for milestone"
     end

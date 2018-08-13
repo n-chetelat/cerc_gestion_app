@@ -1,5 +1,7 @@
 class Position < ApplicationRecord
 
+  DEFAULT_MINIMUM_DURATION = 2
+
   before_save :add_recruitment_form
 
   translates :title
