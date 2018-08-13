@@ -68,6 +68,7 @@ export default {
     overflow-y: auto;
     & .field-cell {
       min-height: var(--cellMinHeight)px;
+      min-width: var(--cellMinHeight)px;
       margin: 0 auto;
       text-align: center;
 

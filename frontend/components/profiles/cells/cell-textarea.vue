@@ -8,6 +8,8 @@ export default {
   data() {
     return {
       textValue: this.field.value,
+      popupLeft: 0,
+      popupTop: 0,
     }
   },
   computed: {
@@ -23,28 +25,36 @@ export default {
         return this.editing ? this.field.value : truncated
       }
     },
-    popupLeft() {
-      return this.$el.getBoundingClientRect().left
-    },
-    popupTop() {
-      return this.$el.getBoundingClientRect().top
-    }
   },
   methods: {
     setNewValue(event) {
       this.closeEditing()
       this.updateValue(event, this.textValue)
     },
-  }
+    onEditing() {
+      if (this.editing) { this.editing = false}
+      else {
+        this.popupTop = this.getPopupTop()
+        this.popupLeft = this.getPopupLeft()
+        this.editing = true
+      }
+    },
+    getPopupLeft() {
+      return this.$el.getBoundingClientRect().left
+    },
+    getPopupTop() {
+      return this.$el.getBoundingClientRect().top
+    }
+  },
 }
 </script>
 
 <template lang="pug">
 
   span.cell-textarea
-    span.cell-display(v-if="!editing", @dblclick="editing = true") {{displayValue}}
+    span.cell-display(v-if="!editing", @dblclick="onEditing") {{displayValue}}
 
-    div.textarea-popup(v-else, :style="{left: popupLeft, top: popupTop}")
+    div.textarea-popup(v-else, :style="{left: popupLeft + 'px', top: popupTop + 'px'}")
       textarea(v-model="textValue", v-on-clickaway="closeEditing", @blur="setNewValue($event)", placeholder="'Write in some text...'") {{textValue}}
 
 </template>
