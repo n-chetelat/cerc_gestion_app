@@ -24,7 +24,8 @@
           {id: "rejected_only", label: "Show rejected"},
           {id: "finished_only", label: "Show finished"},
           {id: "deselect_all", label: "Deselect all"},
-        ]
+        ],
+        nonFilterActions: ["deselect_all", "show_all"]
       }
     },
     computed: {
@@ -42,11 +43,14 @@
         })
         return profileIdMap
       },
+      IsFiltering() {
+        return !this.filterAction || this.nonFilterActions.includes(this.filterAction)
+      }
     },
     methods: {
       emitFilterAction() {
         this.takeFilterAction()
-        this.$emit("filter", this.filteredProfileIds)
+        this.$emit("filter", this.filteredProfileIds, this.IsFiltering)
       },
       emitSelectedProfiles() {
         this.$emit("selection", this.selectedProfileIds)
@@ -64,7 +68,7 @@
           this.selectProfiles([])
           this.emitSelectedProfiles()
         } else if (this.filterAction === "active_only") {
-            this.filterProfiles(this.profilesByStatus.active.map((p) => p.id))
+          this.filterProfiles(this.profilesByStatus.active.map((p) => p.id))
         } else if (this.filterAction === "incoming_only") {
           this.filterProfiles(this.profilesByStatus.incoming.map((p) => p.id))
         } else if (this.filterAction === "rejected_only") {

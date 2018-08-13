@@ -42,7 +42,6 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       return {
         sidebarOpen: false,
         selectedFields: [],
-        queryStrFilter: false,
       }
     },
     computed: {
@@ -59,7 +58,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       },
       filteredProfiles() {
         if (!this.profiles) return []
-        if (!this.queryStrFilter) return this.profiles
+        if (!this.filtering) return this.profiles
         return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
       },
       filteredStaticFields() {
@@ -98,10 +97,6 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       filterFields(filteredFieldIds) {
         this.selectedFields = [...filteredFieldIds]
       },
-      onFilter(profileIds, queryStrFilter=false) {
-        this.queryStrFilter = queryStrFilter
-        this.filterProfiles(profileIds)
-      }
     },
     components: {
       AdminNav,
@@ -125,11 +120,11 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       server-error-modal(@close="closeModal", v-if="modalVisible && modalName === 'server-error'")
       new-profile-modal(@close="closeModal", v-if="modalVisible && modalName === 'new-profile'", @error="openModalByName('server-error')")
 
-      admin-nav.admin-nav(@filter="onFilter")
+      admin-nav.admin-nav(@filter="onFilterBySearch")
 
       div.tables
         names-table(:displayed-profiles="filteredProfiles",
-          @filter="onFilter",
+          @filter="onFilterByMenu",
           @selection="selectProfiles",
           @error="openModalByName('server-error')", @valid="signalFieldValidity")
 
