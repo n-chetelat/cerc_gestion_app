@@ -89,23 +89,49 @@ class ProfileSearchService
           .find_by("lower(title) = ?", value).try(:position_id)
          Person.post_recruitment.where("applications.position_id = ?", position_id)
 
-      when "starting date", "ending date", "applciation sent on", "application closed on"
+      when "starting date", "ending date"
         date = Date.parse(value) rescue nil
+        is_semester = false
+
+        if date.nil? # Try for semester-based date
+          date = ::DatesService.semester_label_to_date(value)
+          is_semester = true
+        end
+
         return [] unless date
         operator = (["<", ">"].include?(value[0]) ? value[0] : "=")
 
-        attr_name = "created_at"
+        if operator == "<" && is_semester
+          date = date - 1.day
+        end
+
         if /starting/.match(column_title)
           attr_name = "starting_date"
         elsif /ending/.match(column_title)
           attr_name = "ending_date"
+        else
+          return Person.none
+        end
+
+        Person.post_recruitment.where("applications.#{attr_name}::date #{operator} ?", date)
+
+      when "application sent on", "application closed on"
+        date = Date.parse(value) rescue nil
+        return [] unless date
+        operator = (["<", ">"].include?(value[0]) ? value[0] : "=")
+
+        if /sent/.match(column_title)
+          attr_name = "created_at"
         elsif /closed/.match(attr_name)
           attr_name = "closed_at"
         else
           return Person.none
         end
 
-        Person.post_recruitment.where("applications.#{attr_name} #{operator} ?", date)
+        sql = "applications.#{attr_name}::date #{operator} ? "\
+          " AND applications.created_at::date != applications.closed_at::date"
+
+        Person.post_recruitment.where(sql, date)
 
       when "name", "lastname", "email"
         Person.post_recruitment.where("#{column_title} ILIKE ?", value)
