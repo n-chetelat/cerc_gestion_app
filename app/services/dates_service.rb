@@ -9,6 +9,24 @@ class DatesService
   DEFAULT_MONTHS = 12
   DEFAULT_YEARS = 2
 
+  def self.current_semester(date)
+    month = Date.parse("#{date.year}-#{date.month}-01").to_s #Date object guaranteed well-formed date string with zero-padding
+    self.month_date_to_semester_date(month)
+  end
+
+  def self.current_month(date)
+    Date.parse("#{date.year}-#{date.month}-01")
+  end
+
+  def self.end_of_semester_date(date)
+    month = self.get_months_in_semester(date)[-1]
+    Date.parse("#{date.year}-#{month}-01").end_of_month
+  end
+
+  def self.end_of_month_date(date)
+    self.current_month(date).end_of_month
+  end
+
   def self.get_semesters_in_interval(min_date, max_date)
     raise "Invalid date interval" if min_date > max_date
     min_year = min_date.year

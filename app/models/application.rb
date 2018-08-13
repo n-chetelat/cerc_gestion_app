@@ -104,7 +104,8 @@ class Application < ApplicationRecord
       end
 
       return if self.ending_date.nil?
-      unless persons_milestones.maximum(:date) <= self.ending_date
+      max_date = DatesService.send("end_of_#{self.time_interval}_date", self.ending_date)
+      unless persons_milestones.maximum(:date) <= max_date
         errors.add(:ending_date, "Milestone dates cannot exceed ending date")
       end
     end

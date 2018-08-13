@@ -72,6 +72,9 @@ module Api
 
     def finished
       @resource.finished_at = DateTime.now
+      application = @resource.application
+      application.ending_date = DatesService.send("current_#{application.time_interval}", DateTime.now)
+      application.save!
       unless @resource.save
         raise "Could not mark profile as finished"
       end
