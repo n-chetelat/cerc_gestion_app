@@ -1,6 +1,6 @@
 <script>
 
-import { mapGetters } from "vuex"
+import { mapGetters, mapActions } from "vuex"
 
 export default {
   name: "ProfilesSidebar",
@@ -20,6 +20,7 @@ export default {
   },
 
   methods: {
+    ...mapActions("csv", ["storeFilteredFieldsForCSV"]),
     toggleSidebarOpen() {
       this.sidebarOpen = !this.sidebarOpen
       this.$emit("toggle", this.sidebarOpen)
@@ -54,6 +55,7 @@ export default {
       if (oldVal.length) return // Trigger only on transition from empty array to full
       if (val.length) {
         this.addRememberedColumns()
+        this.storeFilteredFieldsForCSV(this.selectedFields)
       }
     },
   },

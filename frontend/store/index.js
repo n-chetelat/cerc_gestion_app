@@ -12,6 +12,7 @@ import profiles from './modules/profiles'
 import dates from './modules/dates'
 import milestones from './modules/milestones'
 import filters from './modules/filters'
+import csv from './modules/csv'
 
 const store = {
   getters: {
@@ -31,6 +32,7 @@ const store = {
     dates,
     milestones,
     filters,
+    csv,
   },
 }
 

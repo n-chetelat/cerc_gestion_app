@@ -3,6 +3,7 @@
 import { mapGetters, mapActions } from "vuex"
 
 import FilterComponent from "components/shared/filter-component.vue"
+import CsvComponent from "components/shared/csv-component.vue"
 
 export default {
   name: "AdminNav",
@@ -35,7 +36,8 @@ export default {
     }
   },
   components: {
-    FilterComponent
+    FilterComponent,
+    CsvComponent
   },
   watch: {
     '$route' (to, from) {
@@ -50,6 +52,7 @@ export default {
 <template lang="pug">
     nav.admin-nav
       filter-component.filter(v-if="$route.name !== 'board'", :collection="profiles", @filter="emitFilteredProfiles")
+      csv-component(v-if="$route.name !== 'board'", )
       div.nav-links
         a.admin-link(href="/admin", target="_blank") Dashboard
         router-link.admin-link(v-for="route in routes", :to="{name: route}", v-if="$route.name !== route") {{route | capitalize}}

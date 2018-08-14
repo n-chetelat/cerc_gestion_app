@@ -5,7 +5,6 @@
     "@rails/webpacker": "^3.3.1",
     "actioncable": "^5.2.0",
     "axios": "^0.18.0",
-    "fuse.js": "^3.2.1",
     "lodash-es": "^4.17.7",
     "moment": "^2.22.0",
     "normalize.css": "^8.0.0",

@@ -76,6 +76,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       ...mapActions("profiles", ["fetchProfiles", "fetchProfileFields"]),
       ...mapActions("positions", ["getAllPositions"]),
       ...mapActions("dates", ["fetchSemesters", "fetchMonths"]),
+      ...mapActions("csv", ["storeFilteredFieldsForCSV"]),
       getProfileStaticField(profile, attr) {
         return {value: profile[attr], form: 'text'}
       },
@@ -96,6 +97,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       },
       filterFields(filteredFieldIds) {
         this.selectedFields = [...filteredFieldIds]
+        this.storeFilteredFieldsForCSV(this.selectedFields)
       },
     },
     components: {

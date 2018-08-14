@@ -5,7 +5,7 @@ import { filter } from "lodash-es"
 const BASE_URL = `api/profiles/filters`
 
 const state = {
-  filtered: []
+  filtered: [],
 }
 
 // getters
@@ -13,7 +13,6 @@ const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   filteredProfiles: state => state.filtered,
   filteredProfileIds: state => state.filtered.map((f) => f.id),
-
 }
 
 // actions

@@ -4,8 +4,6 @@ import { mapGetters, mapActions } from "vuex"
 
 import _ from "lodash-es"
 
-import * as Fuse from "fuse.js"
-
 export default {
   name: "FilterComponent",
   props: {
@@ -68,6 +66,10 @@ export default {
   & .filter-btn {
     padding: 10px;
     margin-left: 5px;
+    border: 1px solid transparent;
+    &:hover {
+      border: 1px solid;
+    }
   }
 }
 

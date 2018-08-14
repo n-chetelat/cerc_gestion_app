@@ -1,0 +1,8 @@
+<%- headers =  @static_fields[:person] + @static_fields[:application] + @fields.pluck(:label)-%>
+<%= CSV.generate_line(headers) %>
+<%- @resources.each do |person| -%>
+<%- person_fields = @static_fields[:person].map {|f| person.send(f) } -%>
+<%- application_fields = @static_fields[:application].map {|f| person.application.send(f) } -%>
+<%- fields = @fields.map {|f| person.persons_profile_fields.find_by(profile_field_id: f.id).try(:data) } -%>
+<%= CSV.generate_line(person_fields + application_fields + fields) -%>
+<%- end -%>

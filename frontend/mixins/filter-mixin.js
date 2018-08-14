@@ -1,5 +1,7 @@
 import { intersection } from "lodash-es"
 
+import { mapActions } from "vuex"
+
 export default {
   data() {
     return {
@@ -22,8 +24,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions("csv", ["storeFilteredProfilesForCSV"]),
     filterProfiles(profileIds) {
       this.filteredProfileIds = profileIds
+      this.storeFilteredProfilesForCSV(profileIds)
     },
     selectProfiles(profileIds) {
       this.selectedProfileIds = profileIds
