@@ -16,9 +16,10 @@ module Api
           @resources = Person.active + Person.incoming + Person.finished + Person.rejected
         }
         format.csv {
-          @resources = filter_profiles_for_csv
-          @static_fields = filter_static_fields_for_csv
-          @fields = filter_fields_for_csv
+          service = ::ProfileCsvService.new(params[:profile_ids], params[:field_ids])
+          data = service.generate_csv_file_structure
+          @headers = data[:headers]
+          @lines = data[:lines]
           headers['Content-Disposition'] = "attachment; filename=\"cerc_profiles_#{DateTime.now.to_s}\""
           headers['Content-Type'] ||= 'text/csv'
         }
@@ -101,37 +102,6 @@ module Api
 
       def permitted_params
         params.permit(:name, :lastname, :email)
-      end
-
-      def filter_profiles_for_csv
-        profile_ids = params[:profile_ids]
-        unless profile_ids.try(:any?)
-          profile_ids = Person.post_recruitment.pluck(:id)
-        end
-        Person.where(id: profile_ids)
-      end
-
-      def filter_static_fields_for_csv
-        person_fields = ["name", "lastname", "email"]
-        application_fields = ["position_id", "starting_date", "ending_date", "created_at", "closed_at"]
-        static_field_ids = params[:field_ids]
-        unless static_field_ids.try(:any?)
-          static_field_ids = person_fields + application_fields
-        end
-        static_field_ids = static_field_ids.select {|field| !(/^\d+$/.match(field)) }
-        {
-          person: (static_field_ids & person_fields),
-          application: (static_field_ids & application_fields)
-        }
-      end
-
-      def filter_fields_for_csv
-        field_ids = params[:field_ids]
-        unless field_ids.try(:any?)
-          field_ids = ProfileField.all.pluck(:id)
-        end
-        field_ids = field_ids.select {|field| /^\d+$/.match(field.to_s) }.map(&:to_i)
-        ProfileField.where(id: field_ids)
       end
 
   end
