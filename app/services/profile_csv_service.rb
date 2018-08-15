@@ -2,7 +2,7 @@ class ProfileCsvService
 
   MANDATORY_FIELDS = ["name", "lastname", "status"]
   PERSON_FIELDS = ["email"]
-  APPLICATION_FIELDS = ["starting_date", "ending_date", "created_at", "closed_at"]
+  APPLICATION_FIELDS = ["starting_date", "ending_date", "applied_at", "closed_at"]
 
   def initialize(profile_ids, field_ids)
     @profile_ids = profile_ids || []

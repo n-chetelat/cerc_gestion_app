@@ -69,6 +69,10 @@ class Application < ApplicationRecord
     end
   end
 
+  def applied_at
+    self.created_at
+  end
+
   protected
 
     def date_to_s(date)
