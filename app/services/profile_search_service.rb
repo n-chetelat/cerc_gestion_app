@@ -6,7 +6,7 @@ class ProfileSearchService
     Person.post_recruitment.where(id: person_ids)
   end
 
-  # private
+  private
 
     def self.get_person_ids_from_query(query_str)
       query_components = query_str.split(";")
@@ -85,9 +85,9 @@ class ProfileSearchService
 
       persons = case column_title
       when "position"
-        position_id = Position.translation_class.where(locale: :en)
-          .find_by("lower(title) = ?", value).try(:position_id)
-         Person.post_recruitment.where("applications.position_id = ?", position_id)
+        position_ids = Position.translation_class.where(locale: :en)
+          .where("lower(title)IN (?)", value.split(",").map(&:strip)).pluck(:position_id)
+         Person.post_recruitment.where("applications.position_id IN (?)", position_ids)
 
       when "starting date", "ending date"
         date = Date.parse(value) rescue nil
@@ -134,7 +134,8 @@ class ProfileSearchService
         Person.post_recruitment.where(sql, date)
 
       when "name", "lastname", "email"
-        Person.post_recruitment.where("#{column_title} ILIKE ?", value)
+        values = value.split(",").map(&:strip).map {|val| "%#{val}%" }
+        Person.post_recruitment.where("#{column_title} ILIKE any (array[?])", values)
       else
         []
       end
@@ -175,23 +176,25 @@ class ProfileSearchService
 
       when :radio, :select
         choices = column.choices_with_locale(:en)
-        choice_options = choices.find do |ch|
-          ch[:label].downcase == value.downcase
+        values = value.downcase.split(",").map(&:strip)
+        choice_options = choices.select do |ch|
+          values.include?(ch[:label].downcase)
         end
-        return [] unless choice_options
-        choice_id = choice_options[:id]
+        return [] unless choice_options.any?
+        choice_ids = choice_options.map {|ch| ch[:id] }
 
         field_ids = column.persons_profile_fields
-          .where("persons_profile_fields.data ?| array[:keys]", keys: [choice_id])
+          .where("persons_profile_fields.data ?| array[:keys]", keys: choice_ids)
           .select("persons_profile_fields.id")
 
       when :checkbox
         choices = column.choices_with_locale(:en)
-        choice_options = choices.find do |ch|
-          ch[:label].downcase == value.downcase
+        values = value.downcase.split(",").map(&:strip)
+        choice_options = choices.select do |ch|
+          values.include?(ch[:label].downcase)
         end
-        return [] unless choice_options
-        choice_ids = choice_options[:id]
+        return [] unless choice_options.any?
+        choice_ids = choice_options.map {|ch| ch[:id] }.flatten
 
         field_ids = ProfileField.where(form_cd: [6]).joins(:persons_profile_fields)
           .where("persons_profile_fields.data ?| array[:keys]", keys: choice_ids)
