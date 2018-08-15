@@ -20,8 +20,8 @@ module Api
           data = service.generate_csv_file_structure
           @headers = data[:headers]
           @lines = data[:lines]
-          headers['Content-Disposition'] = "attachment; filename=\"cerc_profiles_#{DateTime.now.to_s}\""
-          headers['Content-Type'] ||= 'text/csv'
+          headers["Content-Disposition"] = "attachment; filename=\"cerc_profiles_#{DateTime.now.to_s}\""
+          headers["Content-Type"] ||= "text/csv"
         }
       end
 

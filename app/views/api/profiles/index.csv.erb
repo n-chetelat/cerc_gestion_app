@@ -1,4 +1,4 @@
-<%= CSV.generate_line(@headers, col_sep: ";") %>
+<%= CSV.generate_line(@headers, col_sep: ",") %>
 <%- @lines.each do |line| -%>
-  <%= CSV.generate_line(line, col_sep: ";") -%>
+  <%= CSV.generate_line(line, col_sep: ",") -%>
 <%- end -%>

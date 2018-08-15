@@ -16,14 +16,6 @@ const getters = {
 
 // actions
 const actions = {
-  createCSVFile({ commit, getters }) {
-    if (!getters.profilesForCSV.length && !getters.fieldsForCSV.length) return
-    const params = {
-      profile_ids: getters.profilesForCSV,
-      field_ids: getters.fieldsForCSV
-    }
-    return axios.get(`${getters.endpoint}.csv`, { params })
-  },
   storeFilteredProfilesForCSV({ commit }, profileIds) {
     commit("storeProfilesForCSV", profileIds)
   },
