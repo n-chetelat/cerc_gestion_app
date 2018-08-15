@@ -1,6 +1,7 @@
 class ProfileCsvService
 
-  PERSON_FIELDS = ["name", "lastname", "email"]
+  MANDATORY_FIELDS = ["name", "lastname", "status"]
+  PERSON_FIELDS = ["email"]
   APPLICATION_FIELDS = ["starting_date", "ending_date", "created_at", "closed_at"]
 
   def initialize(profile_ids, field_ids)
@@ -50,9 +51,8 @@ class ProfileCsvService
         static_field_ids = PERSON_FIELDS + APPLICATION_FIELDS
       end
       static_field_ids = static_field_ids.select {|field| !(/^\d+$/.match(field)) }
-
       {
-        person: (static_field_ids & PERSON_FIELDS),
+        person: MANDATORY_FIELDS + (static_field_ids & PERSON_FIELDS),
         application: (static_field_ids & APPLICATION_FIELDS)
       }
     end
@@ -70,19 +70,19 @@ class ProfileCsvService
       person_field = person.persons_profile_fields.find_by(profile_field_id: profile_field.id)
       return unless person_field
       value = person_field.data
-      value.blank? ? nil : case person_field.form
+      case person_field.form
       when :textarea
         value.dump
       when :text, :date
-        value
+        value.blank? ? nil : value
       when :month
         DatesService.month_to_s(value)
       when :semester
         DatesService.semester_to_s(value)
       when :radio, :select
-        profile_field.choices[value]
+        profile_field.locale_choices[value]["en"]
       when :checkbox
-        value.map {|val| profile_field[val] }.join(" / ")
+        value.map {|val| profile_field.locale_choices[val]["en"] }.join(" / ")
       else
         nil
       end
