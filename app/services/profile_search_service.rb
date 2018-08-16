@@ -12,36 +12,36 @@ class ProfileSearchService
       query_components = query_str.split(";")
 
       column_result_person_ids = []
+      milestone_result_person_ids = []
+      milestone_strs = []
       search_str_result_person_ids = []
       search_strs = []
 
       query_components.each do |component|
-        if component.scan(/:{2}/).any? # column name is specified
-          if column_result_person_ids.empty?
-            column_result_person_ids = self.get_column_results_person_ids(component)
-          else
-            column_result_person_ids &= self.get_column_results_person_ids(component)
-          end
+        if component.scan(/milestone/).any?
+          milestone_strs << component
+        elsif component.scan(/:{2}/).any? # column name is specified
+          column_result_person_ids << self.get_column_results_person_ids(component)
         else # no column name is specified - looks only in name, lastname, position
           search_strs << component
         end
       end
 
-     if search_strs.any?
+      if milestone_strs.any?
+        milestone_result_person_ids = self.get_milestone_results_person_ids(milestone_strs)
+      end
+      column_result_person_ids = column_result_person_ids.inject(&:&) || []
+      if search_strs.any?
        search_str_result_person_ids =
         self.get_search_str_results_person_ids(search_strs.compact.join(" "))
-     end
+      end
 
-     if search_str_result_person_ids.any? && column_result_person_ids.any?
-       # Take intersection of person id arrays
-       person_ids = (column_result_person_ids & search_str_result_person_ids)
-     elsif search_str_result_person_ids.empty? && column_result_person_ids.empty?
-       person_ids = []
-     else
-       person_ids = (search_str_result_person_ids.any?) ? search_str_result_person_ids
-        : column_result_person_ids
-     end
-      person_ids
+     arrays_with_results = [
+       search_str_result_person_ids, milestone_result_person_ids, column_result_person_ids
+     ].select {|result_arr| result_arr.any? }
+
+     person_ids = arrays_with_results.any? ? arrays_with_results.inject(&:&) : []
+     person_ids
     end
 
 
@@ -77,6 +77,35 @@ class ProfileSearchService
       end
 
       person_ids
+    end
+
+    def self.get_milestone_results_person_ids(query_strs)
+      components = query_strs.select {|query_str| /:{2}/.match(query_str) }
+      return [] unless components.any?
+
+      dates = []
+      milestone_ids = []
+
+      components.each do |component|
+        category, value = component.split("::").map(&:strip)
+        if /date/.match(category)
+          operator = (["<", ">"].include?(value[0]) ? value[0] : "=")
+          date = ::DatesService.semester_label_to_date(value)
+          next unless date
+          dates << [operator, date]
+        else
+          values = value.split(",").map(&:strip).map(&:downcase)
+          milestone_ids += Positions::Milestone.where("lower(title) IN (?)", values).pluck(:id)
+        end
+      end
+
+      persons_milestones = PersonPositionsMilestone.where(positions_milestone_id: milestone_ids)
+      if dates.any?
+        date_str = dates.map {|date| "date::date #{date[0]} ?" }.join(" AND ")
+        date_args = dates.map {|date| date[1] }
+        persons_milestones = persons_milestones.where(date_str, *date_args)
+      end
+      person_ids = persons_milestones.pluck(:person_id)
     end
 
 
