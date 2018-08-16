@@ -1,5 +1,7 @@
 class ProfileSearchService
 
+  PROFILE_SCOPES = ["active", "finished", "rejected", "incoming"]
+
   def self.filter_profiles_by_query_string(query_str)
     return Person.none if query_str.blank?
     person_ids = self.get_person_ids_from_query(query_str)
@@ -64,6 +66,12 @@ class ProfileSearchService
     def self.get_column_results_person_ids(query_str)
       column_title, value = query_str.split("::").map {|s| s.strip }
       column_title.downcase!
+
+      if column_title == "status"
+        values = value.split(",").map(&:strip)
+        return self.get_person_id_by_status(values)
+      end
+
       column = ProfileField.find_by("lower(label) = ?", column_title)
       return [] unless value.present?
 
@@ -236,5 +244,10 @@ class ProfileSearchService
       field_ids
     end
 
+    def self.get_person_id_by_status(values)
+      scopes = PROFILE_SCOPES & values
+      return [] if scopes.empty?
+      profile_ids = scopes.map {|scope| Person.send(scope).pluck(:id) }.flatten.uniq
+    end
 
 end

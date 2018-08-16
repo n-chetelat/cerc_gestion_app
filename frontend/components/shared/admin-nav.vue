@@ -52,7 +52,7 @@ export default {
 <template lang="pug">
     nav.admin-nav
       filter-component.filter(v-if="$route.name !== 'board'", :collection="profiles", @filter="emitFilteredProfiles")
-      csv-component(v-if="$route.name !== 'board'", )
+      csv-component(v-if="$route.name === 'profiles'")
       div.nav-links
         a.admin-link(href="/admin", target="_blank") Dashboard
         router-link.admin-link(v-for="route in routes", :to="{name: route}", v-if="$route.name !== route") {{route | capitalize}}

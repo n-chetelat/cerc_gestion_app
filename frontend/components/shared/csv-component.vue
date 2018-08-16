@@ -18,8 +18,7 @@ export default {
     profileCSVEndpoint() {
       const profiles = this.profilesForCSV.map((p) => `profile_ids[]=${p}`).join("&")
       const fields = this.fieldsForCSV.map((f) => `field_ids[]=${f}`).join("&")
-      const scope = (this.$route.name === "timeline") ? "&scope=timeline" : ""
-      const query = `${this.endpoint}.csv?${profiles}&${fields}${scope}`
+      const query = `${this.endpoint}.csv?${profiles}&${fields}`
       return query
     }
   },
