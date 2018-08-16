@@ -4,9 +4,10 @@ class ProfileCsvService
   PERSON_FIELDS = ["email"]
   APPLICATION_FIELDS = ["starting_date", "ending_date", "applied_at", "closed_at"]
 
-  def initialize(profile_ids, field_ids)
+  def initialize(profile_ids, field_ids, options={})
     @profile_ids = profile_ids || []
     @field_ids = field_ids || []
+    @scope = (options[:scope] == "timeline") ? -> { Person.active } : -> { Person.post_recruitment }
 
     @filtered_profiles = get_filtered_profiles
 
@@ -40,9 +41,9 @@ class ProfileCsvService
 
     def get_filtered_profiles
       unless @profile_ids.try(:any?)
-        @profile_ids = Person.post_recruitment.pluck(:id)
+        @profile_ids = @scope.call.pluck(:id)
       end
-      Person.where(id: @profile_ids)
+      @scope.call.where(id: @profile_ids)
     end
 
     def get_filtered_static_fields

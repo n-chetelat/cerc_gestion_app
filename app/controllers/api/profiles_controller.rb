@@ -16,7 +16,8 @@ module Api
           @resources = Person.active + Person.incoming + Person.finished + Person.rejected
         }
         format.csv {
-          service = ::ProfileCsvService.new(params[:profile_ids], params[:field_ids])
+          options = { scope: params[:scope] }
+          service = ::ProfileCsvService.new(params[:profile_ids], params[:field_ids], options)
           data = service.generate_csv_file_structure
           @headers = data[:headers]
           @lines = data[:lines]
