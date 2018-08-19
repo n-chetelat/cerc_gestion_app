@@ -19,17 +19,13 @@
         filterActions: [
           {id: "show_all", label: "Show all"},
           {id: "show_selected", label: "Show selected"},
-          {id: "active_only", label: "Show active"},
-          {id: "incoming_only", label: "Show incoming"},
-          {id: "rejected_only", label: "Show rejected"},
-          {id: "finished_only", label: "Show finished"},
           {id: "deselect_all", label: "Deselect all"},
         ],
         nonFilterActions: ["deselect_all", "show_all"]
       }
     },
     computed: {
-      ...mapGetters("profiles", [, "profiles", "profilesByStatus"]),
+      ...mapGetters("profiles", [, "profiles"]),
       nameFields() {
         return {
           name: "Name",
@@ -67,14 +63,6 @@
         } else if (this.filterAction === "deselect_all") {
           this.selectProfiles([])
           this.emitSelectedProfiles()
-        } else if (this.filterAction === "active_only") {
-          this.filterProfiles(this.profilesByStatus.active.map((p) => p.id))
-        } else if (this.filterAction === "incoming_only") {
-          this.filterProfiles(this.profilesByStatus.incoming.map((p) => p.id))
-        } else if (this.filterAction === "rejected_only") {
-          this.filterProfiles(this.profilesByStatus.rejected.map((p) => p.id))
-        } else if (this.filterAction === "finished_only") {
-          this.filterProfiles(this.profilesByStatus.finished.map((p) => p.id))
         }
         this.filterAction = null
       },
