@@ -19,13 +19,16 @@ export default {
     ...mapGetters("filters", ["filteredProfileIds"]),
     filterInstructions() {
       const instructions = [
-        "To filter by status:<br>Status::'status name' (active, incoming, rejected, or finished)",
-        "To filter by column, separate column name and value with two colons (::):<br>Column Name 1::Value1",
-        "To add multiple search terms by column (multi-choice fields only):<br>Column Name::Value1, Value2",
-        "To filter by exact date:<br>Date Column Name::date name (ex. june 2019, winter 2030, july 5 2019)",
-        "To filter by before a date:<br>Date Column Name::&lt;date name",
-        "To filter by after a date:<br>Date Column Name::&gt;date name",
-        "To use many filters, separate by semicolon (;):<br>Term1; Term2; Column1::value1; Column2::value2"
+        "To filter by:",
+        "- Status:<br>Status::&lt;status name&gt; (active, incoming, rejected, or finished)",
+        "- Milestone name:<br>Milestone::&lt;milestone name&gt;",
+        "- Column - separate column name and value with two colons (::):<br>&lt;column name 1&gt;::&lt;value 1&gt;",
+        "- Exact date:<br>&lt;date column name&gt;::&lt;date value&gt; (ex: winter 2019, july 4 2070)",
+        "- Before a date - add 'less than' sign (&lt;):<br>&lt;date column name&gt;::&lt;&lt;date name&gt;",
+        "- After a date - add 'greater than' sign (&gt;):<br>&lt;date column name&gt;::&gt;&lt;date name&gt;",
+        "- Milestone date:<br>As for any other dates, but with column name 'Milestone date' (ex: milestone date::winter 2017)",
+        "To add multiple search terms by column (multi-choice fields only):<br>&lt;column name&gt;::&lt;value 1&gt;, &lt;value 2&gt;",
+        "To use many filters, separate by semicolon (;):<br>&lt;term 1&gt;; &lt;term 2&gt;; &lt;column name 1&gt::&lt;value 1&gt;",
       ]
       return instructions.join("<br><br>")
     },
