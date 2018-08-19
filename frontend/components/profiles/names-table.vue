@@ -69,7 +69,7 @@
       profileStatusLabel(profile) {
         if (profile.status === "rejected") return "Rejected"
         else if (profile.status === "finished") return "Finished"
-        else if (profile.status === "incoming") return "Accepted"
+        else if (profile.status === "incoming") return "Incoming"
         else return "Currently active"
       }
     },
