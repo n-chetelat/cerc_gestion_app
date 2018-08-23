@@ -55,6 +55,8 @@
     }
     &.name-cell {
       border: 1px solid white;
+    }
+    &.name-cell, &.status-cell {
       background-color: var(--nameCellColor);
       &.--invalid {
         background-color: var(--errorColor);
@@ -68,6 +70,10 @@
       &.--incoming {
         background-color: var(--incomingColor);
       }
+    }
+
+    &.status-cell .cell-display {
+      color: var(--textColor);
     }
   }
 

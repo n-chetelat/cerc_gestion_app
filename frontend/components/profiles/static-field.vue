@@ -35,7 +35,9 @@ export default {
         applied_at: {form: "text", optional: false, fieldName: "applied_at",
           value: (createdByHand) ? "--" : this.profile.applied_at, editable: false},
         closed_at: {form: "text", optional: false, fieldName: "closed_at",
-          value: (createdByHand) ? "--" : this.profile.closed_at, editable: false}
+          value: (createdByHand) ? "--" : this.profile.closed_at, editable: false},
+        status: {form: "text", optional: false, fieldName: "status",
+          value: this.profile.status, editable: false}
       }
     },
   },

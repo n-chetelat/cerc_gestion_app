@@ -58,8 +58,9 @@
         div.row.placeholder-row
           div.cell(v-for="n in numSelectedFields")
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
-          div.cell(v-for="(label, key) in staticFields")
-            static-field(:profile="profile", :field-name="key", @error="$emit('error')", @valid="emitValid")
+          div.cell(v-for="(label, key) in staticFields", :class="{'status-cell': (key === 'status'), '--rejected': profile.status === 'rejected', '--finished': profile.status === 'finished', '--incoming': profile.status === 'incoming'}")
+            static-field(v-if="key === 'status'", :profile="profile", :field-name="'status'")
+            static-field(v-else, :profile="profile", :field-name="key", @error="$emit('error')", @valid="emitValid")
           div.cell(v-for="field in fields")
             field(:profile="profile", :field="field", @error="$emit('error')", @valid="emitValid")
 

@@ -48,6 +48,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       ...mapGetters("profiles", [, "profiles", "fields", "profilesByStatus"]),
       staticFields() {
         return {
+          status: "Status",
           applied_at: "Application sent on",
           closed_at: "Application closed on",
           position_id: "Position",
@@ -62,6 +63,11 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         return filter(this.profiles, (p) => this.filteredProfileIds.includes(p.id))
       },
       filteredStaticFields() {
+        // make sure status always comes first
+        if (this.selectedFields.includes("status") && this.selectedFields[0] !== "status") {
+          this.selectedFields.splice(this.selectedFields.indexOf("status"), 1)
+          this.selectedFields = ["status", ...this.selectedFields]
+        }
         return pick(this.staticFields, this.selectedFields)
       },
       filteredFields() {
