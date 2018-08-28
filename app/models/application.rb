@@ -15,7 +15,7 @@ class Application < ApplicationRecord
 
   validates :starting_date, presence: true
   validate :only_accepted_when_closed
-  validate :starting_date_in_range, on: :create
+  # validate :starting_date_in_range, on: :create
   validate :match_dates_with_milestones
 
   def attachments

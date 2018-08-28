@@ -51,7 +51,7 @@ module Positions
     protected
 
       def get_minimum_ending_date_from(minimum_starting_date)
-        extra_time = (self.position.duration_units || ::Position::DEFAULT_MINIMUM_DURATION)
+        extra_time = (self.position.duration_units || self.position.default_minimum_duration)
         if self.position.time_interval == :semester
 
           # Add 3 semesters (a year) to semester away count to avoid going under required milestone dates.

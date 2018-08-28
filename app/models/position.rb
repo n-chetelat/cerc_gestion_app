@@ -1,6 +1,7 @@
 class Position < ApplicationRecord
 
-  DEFAULT_MINIMUM_DURATION = 2
+  DEFAULT_MINIMUM_SEMESTERS = 10
+  DEFAULT_MINIMUM_MONTHS = 24
 
   before_save :add_recruitment_form
 
@@ -8,8 +9,6 @@ class Position < ApplicationRecord
   active_admin_translates :title do
     validates_uniqueness_of :title, scope: :locale
   end
-
-  validates :duration_units, presence: true
 
   has_one :recruitment_form, class_name: "Positions::RecruitmentForm", dependent: :destroy
   has_many :applications, foreign_key: "position_id"
@@ -34,6 +33,17 @@ class Position < ApplicationRecord
 
   def to_s
     self.title
+  end
+
+  def default_minimum_duration
+    (self.time_interval == :month) ?
+       DEFAULT_MINIMUM_MONTHS : DEFAULT_MINIMUM_SEMESTERS
+  end
+
+  def duration_units=(units)
+    units = units.to_i
+    units = self.default_minimum_duration if units <= 0
+    super(units)
   end
 
   def duplicate!
