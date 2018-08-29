@@ -38,8 +38,8 @@ module Api
       def set_extended_dates_options_for(interval_type)
         options = {}
         today = Date.today
-        options[:min_date] = Date.parse("#{today.year}-#{today.month}-01") - 1.year
-        extra_years = 3
+        options[:min_date] = Date.parse("#{today.year}-01-01") - 3.year
+        extra_years = 5
 
         case interval_type
         when :semester
