@@ -47,13 +47,13 @@ class PersonPositionsMilestone < ApplicationRecord
     end
 
     def match_application_dates_with_milestones
-      unless self.date >= self.person.starting_date
+      unless self.date.to_date >= self.person.starting_date
         errors.add(:invalid_date, "Milestone dates cannot come before starting date")
         return
       end
 
       return if self.person.ending_date.nil?
-      unless self.date <= self.person.ending_date
+      unless self.date.to_date <= self.person.ending_date
         errors.add(:invalid_date, "Milestone dates cannot exceed ending date")
       end
     end
