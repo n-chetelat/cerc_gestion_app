@@ -91,7 +91,9 @@
         div.row(v-for="profile in displayedProfiles", :class="{'--selected': selectedProfileIdMap[profile.id]}")
           div.cell.name-cell.selection-box
             input(type="checkbox", :value="profile.id", v-model="selectedProfileIds", @change="emitSelectedProfiles")
-          div.cell.name-cell.full-name(@click="emitModalByName('profile-milestones', { profile })")
+          div.cell.name-cell.full-name(
+            @click="emitModalByName('profile-milestones', { profile })",
+            :class="{'--incoming': profile.status === 'incoming'}")
             div {{profile.full_name}}
             div.person-position-label {{allPositionsById[profile.position_id].title}}
 

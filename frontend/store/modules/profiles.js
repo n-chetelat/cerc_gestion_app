@@ -28,7 +28,8 @@ const getters = {
     return map
   },
   profilesByStatus: state => groupBy(state.all, "status"),
-  activeProfiles: state => filter(state.all, p => p.status === "active")
+  activeProfiles: state => filter(state.all, p => p.status === "active"),
+  timelineProfiles: state => filter(state.all, p => ["active", "incoming"].includes(p.status))
 }
 
 // actions

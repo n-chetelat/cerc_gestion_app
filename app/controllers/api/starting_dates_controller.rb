@@ -39,7 +39,7 @@ module Api
         options = {}
         today = Date.today
         options[:min_date] = Date.parse("#{today.year}-01-01") - 3.year
-        extra_years = 5
+        extra_years = 7
 
         case interval_type
         when :semester
