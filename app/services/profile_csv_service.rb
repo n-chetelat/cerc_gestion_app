@@ -72,7 +72,7 @@ class ProfileCsvService
       value = person_field.data
       case person_field.form
       when :textarea
-        value.dump
+        value.blank? ? nil : value.dump
       when :text, :date
         value.blank? ? nil : value
       when :month
