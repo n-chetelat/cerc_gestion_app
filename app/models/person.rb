@@ -25,6 +25,7 @@ class Person < ApplicationRecord
   scope :incoming, -> { accepted.where(finished_at: nil).where("applications.starting_date > ?", Date.today) }
   scope :started, -> { accepted.where("applications.starting_date <= ?", Date.today) }
   scope :active, -> { started.where(finished_at: nil) }
+  scope :not_finished, -> { accepted.where(finished_at: nil) }
   scope :finished, -> { accepted.where.not(finished_at: nil) }
 
   delegate :starting_date, :ending_date, to: :application

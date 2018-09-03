@@ -11,7 +11,7 @@ module Api
     end
 
     def index
-      active_milestone_ids = Person.active.joins(:persons_positions_milestones)
+      active_milestone_ids = Person.not_finished.joins(:persons_positions_milestones)
         .select("persons_positions_milestones.id")
       @resources = PersonPositionsMilestone.where(id: active_milestone_ids)
     end
@@ -29,7 +29,7 @@ module Api
         @resource.errors.include?(:invalid_date)
         render json: {error: "Invalid date for milestone", status: 422}, status: 422
       else
-        raise "Person milestone could not be created: #{@resource.errors}"
+        raise "Person milestone could not be created: #{@resource.errors.messages}"
       end
     end
 
@@ -47,7 +47,7 @@ module Api
         @resource.errors.include?(:invalid_date)
         render json: {error: "Invalid date for milestone", status: 422}, status: 422
       else
-        raise "Person milestone could not be updated: #{@resource.errors}"
+        raise "Person milestone could not be updated: #{@resource.errors.messages}"
       end
     end
 
