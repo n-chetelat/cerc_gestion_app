@@ -2,8 +2,6 @@
 
 import { mapGetters, mapActions } from "vuex"
 
-import _ from "lodash-es"
-
 export default {
   name: "CsvComponent",
   created() {
@@ -29,10 +27,9 @@ export default {
 </script>
 
 <template lang="pug">
-  div.csv
-    button.csv-btn(type="button",
-      v-tooltip="'CSV will contain selected columns and filtered profiles only.'")
-      a(:href="profileCSVEndpoint") Export to CSV
+  span.csv
+    a.csv-link(:href="profileCSVEndpoint",
+      v-tooltip="'CSV will contain selected columns and filtered profiles only.'") Export to CSV
 
 
 </template>
@@ -42,21 +39,12 @@ export default {
 @import "../../init/variables.css";
 
 .csv {
-  & .csv-btn {
-    padding: 10px;
-    text-transform: none;
+  padding-top: .7em;
+  & .csv-link {
     margin-left: 5px;
-    border: 1px solid transparent;
     color: var(--navColor);
     &:hover {
       color: var(--navColor);
-      border: 1px solid;
-    }
-    & a {
-      color: white;
-      &:hover {
-        color: var(--navColor);
-      }
     }
   }
 }
