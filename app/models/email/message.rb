@@ -28,8 +28,10 @@ module Email
       Time.at(self.google_timestamp.to_i / 1000).to_datetime
     end
 
-    def snippet
-      if text = self.text_content
+    def snippet(html=false)
+      text = self.html_content if html
+      text = self.text_content if text.nil?
+      if text
         text.lines.first.try(:truncate, 30)
       end
     end
