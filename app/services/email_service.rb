@@ -198,15 +198,11 @@ class EmailService
       end
 
       parts = gmail_message_object.payload.try(&:parts)
-
-
-      multipart_part = gmail_message_object.payload.parts.find {|part| part.mime_type == "multipart/alternative" }
+      multipart_part = parts.find {|part| part.mime_type == "multipart/alternative" } if parts
       if multipart_part
         parts = multipart_part.parts
-      elsif gmail_message_object.payload.parts.nil?
+      elsif parts.nil?
         parts = [gmail_message_object.payload] # Has only one part
-      else
-        parts = gmail_message_object.payload.parts
       end
 
       if text_part = parts.find {|part| part.mime_type == "text/plain" }
