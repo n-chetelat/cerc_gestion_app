@@ -16,7 +16,7 @@ module Email
       parsed.html_part.try(:body).try(:raw_source)
       if html = parsed.html_part.try(:body).try(:raw_source)
         Nokogiri::XML.fragment(html).to_html
-      else
+      end
     end
 
     def text_content
