@@ -21,7 +21,11 @@ module Email
 
     def text_content
       parsed = Mail.new(self.content)
-      parsed.text_part.try(:body).try(:raw_source)
+      text = parsed.text_part.try(:body).try(:raw_source)
+      if text.encoding != "UTF-8"
+        text = text.force_encoding("utf-8")
+      end
+      text
     end
 
     def timestamp
