@@ -44,7 +44,7 @@ export default {
       li.message-line(v-for="message in thread.messages")
         div.heading(@click="toggleSelectMessage(message)")
           h3 {{message.from_address | truncate(25)}}
-          div.snippet {{message.snippet | truncate(25)}}
+          div.snippet(v-html="message.snippet")
           span.timestamp {{formattedDate(message.timestamp)}}
         collapse-transition
           div.content(v-if="openMessages[message.id]")
