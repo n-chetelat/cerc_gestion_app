@@ -16,6 +16,7 @@ config/database.yml
 
 # dotenv
 .env
+.env-prod
 
 ## Environment normalization:
 /.bundle

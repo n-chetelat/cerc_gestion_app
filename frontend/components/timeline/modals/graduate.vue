@@ -26,7 +26,10 @@ export default {
 <template lang="pug">
   div.graduate
     button.caution.graduate-flex-item(@click="markAsFinished", :disabled="isGraduated", :class="{'--disabled': isGraduated}") Mark as finished
-    p.graduate-text.graduate-flex-item(v-if="!isGraduated") Please be sure you wish to mark this individual as finished. This action cannot be undone.
+    div.graduate-text.graduate-flex-item(v-if="!isGraduated")
+      h1.attention Attention:
+      p Please be sure you wish to mark this individual as finished. This action cannot be undone.
+      p Make sure this person has no pending milestones.
     p.graduate-text.graduate-flex-item(v-else) This individual has been marked as graduated.
 
 </template>
@@ -48,10 +51,14 @@ export default {
     }
 
     & .graduate-text {
-      margin-top: 2em;
+      margin-top: 1.5em;
       text-align: center;
-
+      font-size: .9em;
+      & h1 {
+        font-size: 1.7em;
+      }
     }
+
   }
 
 
