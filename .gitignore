@@ -5,6 +5,9 @@
 /credentials/*
 /public/system
 /public/images
+/public/packs
+/public/assets
+
 
 # Only include if you have production secrets in this file, which is no longer a Rails default
 config/secrets.yml
