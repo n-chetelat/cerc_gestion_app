@@ -1,7 +1,7 @@
 class CorrespondenceController < ApplicationController
   before_action :authorize_gmail
+  before_action :set_resource, only: [:fetch]
 
-  # Fetch new correspondence not yet saved to DB
   def new
     token = Email::Token.find_by(name: "email-threads")
     if params[:token].present? && params[:token] == token.token
@@ -16,5 +16,10 @@ class CorrespondenceController < ApplicationController
     end
   end
 
+  private
+
+    def set_resource
+      @person ||= Person.find_by(uuid: params[:person_id])
+    end
 
 end
