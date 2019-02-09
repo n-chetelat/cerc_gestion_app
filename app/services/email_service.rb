@@ -122,10 +122,13 @@ class EmailService
         if association.save
           # change thread labels
           overwrite_thread_labels(thread, thread.email_labels)
-          # preload correspondence with person
-          token = SecureRandom.base58(24)
-          Email::Token.create!(name: "email-fetch-#{person.uuid}", token: token)
-          Email::PersonCorrespondenceWorker.perform_async(person.uuid)
+
+          # Fetch correspondence with person
+          person.threads.each do |thread|
+            next unless self.thread_exists_in_inbox?(thread.google_thread_id)
+            self.fetch_thread_message_details(thread)
+          end
+          Rails.logger.info("Fetching of thread content successful.")
         end
       end
     end

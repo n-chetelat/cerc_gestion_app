@@ -1,16 +1,13 @@
 require 'googleauth'
-require 'sidekiq/web'
 Rails.application.routes.draw do
 
   root to: "pages#home"
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  mount Sidekiq::Web => '/admin/sidekiq'
 
   get "/admin/google/authorize", to: "google#authorize"
   get "/correspondence/new", to: "correspondence#new"
-  get "/correspondence/:person_id/fetch", to: "correspondence#fetch"
 
   scope "(:locale)", locale: /en|fr/ do
 
