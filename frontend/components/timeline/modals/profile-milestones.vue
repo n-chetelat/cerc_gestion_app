@@ -6,7 +6,7 @@ import Modal from "components/shared/modal.vue"
 import Field from "components/profiles/field.vue"
 import StaticField from "components/profiles/static-field.vue"
 import MilestonesForm from "./milestones-form.vue"
-import Graduate from "./graduate.vue"
+import Advanced from "./advanced.vue"
 
 export default {
   name: "ProfileMilestones",
@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       currentTab: null,
-      tabs: ["information", "milestones", "graduate"],
+      tabs: ["information", "milestones", "advanced"],
     }
   },
   created() {
@@ -52,7 +52,7 @@ export default {
     Field,
     StaticField,
     MilestonesForm,
-    Graduate
+    Advanced
   }
 }
 </script>
@@ -83,8 +83,8 @@ export default {
         :position-milestones="milestonesByPosition[profile.position_id]",
         :position-dates="positionDates")
 
-      div.tab-section(v-if="currentTab === 'graduate'")
-        graduate(:profile="profile")
+      div.tab-section(v-if="currentTab === 'advanced'")
+        advanced(:profile="profile")
 
 </template>
 
