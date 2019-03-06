@@ -14,14 +14,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions("profiles", ["markProfileAsFinished"]),
+    ...mapActions("profiles", ["markProfileAsFinished", "markProfileAsCanceled"]),
     async markAsFinished() {
       await this.markProfileAsFinished(this.profile.uuid).then(() => {
         this.isGraduated = true
       })
     },
     async markAsCanceled() {
-      await this.markProfileAsFinished(this.profile.uuid).then(() => {
+      await this.markProfileAsCanceled(this.profile.uuid).then(() => {
         this.isCanceled = true
       })
     }
@@ -44,6 +44,7 @@ export default {
         p Please be sure you wish to mark this individual's program as canceled.
         p This action cannot be undone.
         p This person will have to re-apply in order to enter the program again.
+      p.graduate-text(v-else) This individual's program has been marked as canceled.
       button.danger(@click="markAsCanceled", :disabled="isCanceled", :class="{'--disabled': isCanceled}") Cancel program
 
 </template>

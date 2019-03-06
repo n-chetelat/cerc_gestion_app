@@ -1,7 +1,7 @@
 module Api
   class ProfilesController < ApiController
     before_action :authenticate_admin_user!
-    before_action :set_resource, only: [:show, :update, :destroy, :finished]
+    before_action :set_resource, only: [:show, :update, :destroy, :finished, :canceled]
 
     attr_reader :partial_path, :resource_name
 
@@ -13,7 +13,7 @@ module Api
     def index
       respond_to do |format|
         format.json {
-          @resources = Person.active + Person.incoming + Person.finished + Person.rejected
+          @resources = Person.active + Person.incoming + Person.finished + Person.rejected + Person.canceled
         }
         format.csv {
           service = ::ProfileCsvService.new(params[:profile_ids], params[:field_ids])
@@ -90,6 +90,20 @@ module Api
       application.save!
       unless @resource.save
         raise "Could not mark profile as finished"
+      end
+      render :show
+    end
+
+    def canceled
+        @resource.transaction do
+          @resource.canceled_at = DateTime.now
+          @resource.persons_positions_milestones.destroy_all
+          application = @resource.application
+          application.ending_date = DatesService.send("current_#{application.time_interval}", DateTime.now)
+          application.save!
+        end
+      unless @resource.save
+        raise "Could not mark profile as canceled"
       end
       render :show
     end

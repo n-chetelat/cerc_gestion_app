@@ -8,6 +8,7 @@
   --rejectedColor: #f39d9d;
   --finishedColor: #c3c7c6;
   --incomingColor: #e2e264;
+  --canceledColor: #f1b370;
 }
 
 .tables {
@@ -69,6 +70,9 @@
       }
       &.--incoming {
         background-color: var(--incomingColor);
+      }
+      &.--canceled {
+        background-color: var(--canceledColor);
       }
     }
 

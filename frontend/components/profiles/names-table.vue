@@ -97,7 +97,7 @@
           div.cell.name-cell.selection-box
             input(type="checkbox", :value="profile.id", v-model="selectedProfileIds", @change="emitSelectedProfiles")
           div.cell.name-cell(v-for="(label, key) in nameFields",
-            :class="{'--rejected': profile.status === 'rejected', '--finished': profile.status === 'finished', '--incoming': profile.status === 'incoming'}",
+            :class="{'--rejected': profile.status === 'rejected', '--finished': profile.status === 'finished', '--incoming': profile.status === 'incoming', '--canceled': profile.status === 'canceled'}",
             v-tooltip="{content: profileStatusLabel(profile), delay: {show: 900}}")
             static-field(:profile="profile", :field-name="key", @error="emit('error')", @valid="emitValid")
 

@@ -22,11 +22,13 @@ class Person < ApplicationRecord
   scope :not_in_phase, -> { in_recruitment.where.not(id: joins(:persons_phase).select(:person_id)) }
   scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
   scope :rejected, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = FALSE") }
-  scope :incoming, -> { accepted.where(finished_at: nil).where("applications.starting_date > ?", Date.today) }
-  scope :started, -> { accepted.where("applications.starting_date <= ?", Date.today) }
+  scope :canceled, -> { accepted.where.not(canceled_at: nil) }
+  scope :not_canceled, -> { accepted.where(canceled_at: nil) }
+  scope :incoming, -> { not_canceled.where(finished_at: nil).where("applications.starting_date > ?", Date.today) }
+  scope :started, -> { not_canceled.where("applications.starting_date <= ?", Date.today) }
   scope :active, -> { started.where(finished_at: nil) }
-  scope :not_finished, -> { accepted.where(finished_at: nil) }
-  scope :finished, -> { accepted.where.not(finished_at: nil) }
+  scope :not_finished, -> { not_canceled.where(finished_at: nil) }
+  scope :finished, -> { not_canceled.where.not(finished_at: nil) }
 
   delegate :starting_date, :ending_date, to: :application
 
@@ -83,6 +85,10 @@ class Person < ApplicationRecord
     self.class.incoming.exists?(id: self.id)
   end
 
+  def canceled?
+    self.class.canceled.exists?(id: self.id)
+  end
+
   def status
     return if self.class.in_recruitment.exists?(id: self.id)
     if self.rejected?
@@ -91,6 +97,8 @@ class Person < ApplicationRecord
       :incoming
     elsif self.finished?
       :finished
+    elsif self.canceled?
+      :canceled
     else
       :active
     end

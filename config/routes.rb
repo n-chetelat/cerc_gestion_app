@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       end
       resources :profiles, only: [:index, :show, :create, :update] do
         put :finished, on: :member
+        put :canceled, on: :member
       end
 
       resources :profile_fields, only: [:index]

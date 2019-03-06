@@ -61,6 +61,11 @@ const actions = {
       commit("setPersonProfile", data)
     })
   },
+  markProfileAsCanceled({ commit, getters }, personId) {
+    return axios.put(`${getters.endpoint}/${personId}/canceled`).then(({ data }) => {
+      commit("setPersonProfile", data)
+    })
+  },
   createProfileData({ commit, getters }, { personId, profileFieldId, newValue }) {
     return axios.post(`${getters.personsEndpoint}/${personId}/profile_fields`, {profile_field_id: profileFieldId, data: newValue}).then(({ data }) => {
       commit("setPersonProfile", data)
