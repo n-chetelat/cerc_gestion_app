@@ -37,21 +37,42 @@ export default {
         p Please be sure you wish to mark this individual's program as finished. This action cannot be undone.
         p Make sure this person's pending milestones are completed or deleted.
       p.graduate-text(v-else) This individual has been marked as graduated.
-      button.caution.graduate-btn(@click="markAsFinished", :disabled="isGraduated", :class="{'--disabled': isGraduated}") Finish / Graduate
+      button.graduate-btn(@click="markAsFinished", :disabled="isGraduated", :class="{'--disabled': isGraduated}") Finish / Graduate
     div.graduate-flex-item
-      h2.attention Mark program as canceled
+      h2.attention Mark registration as canceled
       div.graduate-text(v-if="!isCanceled")
-        p Please be sure you wish to mark this individual's program as canceled.
+        p Please be sure you wish to mark this individual's registration as canceled.
         p This action cannot be undone.
-        p This person will have to re-apply in order to enter the program again.
-      p.graduate-text(v-else) This individual's program has been marked as canceled.
-      button.danger(@click="markAsCanceled", :disabled="isCanceled", :class="{'--disabled': isCanceled}") Cancel program
+        p This person will have to re-apply in order to register again.
+      p.graduate-text(v-else) This individual's registration has been marked as canceled.
+      button.canceled-btn(@click="markAsCanceled", :disabled="isCanceled", :class="{'--disabled': isCanceled}") Cancel registration
 
 </template>
 
 <style>
 
   @import "../../../init/variables.css";
+
+  @import "../../../init/tables.css";
+
+  @define-mixin btn $color {
+      background-color: $color;
+      border: 1px solid $color;
+      &:hover {
+        color: $color;
+        background-color: white;
+      }
+      &.--disabled {
+        cursor: default;
+        border: 1px solid transparent;
+        background-color: #ff000099;
+        color: white;
+      }
+      &.--disabled:hover {
+        background-color: #ff000099;
+        color: white;
+      }
+  }
 
   .graduate {
     display: flex;
@@ -74,6 +95,14 @@ export default {
         height: 6em;
         display: block;
         margin: auto;
+
+        &.graduate-btn {
+          @mixin btn #c3c7c6;
+        }
+
+        &.canceled-btn {
+          @mixin btn #f1b370;
+        }
       }
     }
 
@@ -86,9 +115,8 @@ export default {
       }
     }
 
-    & .graduate-btn {
-      background-color: gold;
-    }
+
+
 
     & .attention {
       text-align: center;

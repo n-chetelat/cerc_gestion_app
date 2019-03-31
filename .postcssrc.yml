@@ -1,4 +1,6 @@
 plugins:
   postcss-import: {}
   postcss-cssnext: {}
+  postcss-mixins: {}
   postcss-nested: {}
+  postcss-simple-vars: {}

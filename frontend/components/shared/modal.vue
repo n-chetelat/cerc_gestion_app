@@ -63,9 +63,9 @@ export default {
       z-index: 201;
       background: white;
       min-width: 200px;
-      min-height: 400px;
+      min-height: 600px;
       width: 80%;
-      max-width: 900px;
+      max-width: 1000px;
       box-shadow: 2px 2px 20px 1px;
       border-radius: 2px;
       overflow-x: auto;

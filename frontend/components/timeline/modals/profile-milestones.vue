@@ -102,7 +102,6 @@ export default {
       padding: 1em;
       height: 90%;
       max-height: var(--windowHeight)px;
-      overflow-y: auto;
     }
 
     & .field-row {
