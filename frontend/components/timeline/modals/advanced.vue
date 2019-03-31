@@ -65,12 +65,8 @@ export default {
       &.--disabled {
         cursor: default;
         border: 1px solid transparent;
-        background-color: #ff000099;
-        color: white;
-      }
-      &.--disabled:hover {
-        background-color: #ff000099;
-        color: white;
+        background-color: rgba(0, 0, 0, .2);
+        color: rgba(0, 0, 0, .4);
       }
   }
 
