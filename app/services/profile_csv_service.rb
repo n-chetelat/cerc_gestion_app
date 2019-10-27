@@ -70,19 +70,20 @@ class ProfileCsvService
       person_field = person.persons_profile_fields.find_by(profile_field_id: profile_field.id)
       return unless person_field
       value = person_field.data
+      return unless value.present?
       case person_field.form
       when :textarea
-        value.blank? ? nil : value.dump
+        value.dump
       when :text, :date
-        value.blank? ? nil : value
+        value
       when :month
-        value.blank? ? nil : DatesService.month_to_s(value)
+        DatesService.month_to_s(value)
       when :semester
-        value.blank? ? nil : DatesService.semester_to_s(value)
+        DatesService.semester_to_s(value)
       when :radio, :select
-        value.blank? ? nil : profile_field.locale_choices[value].try(:[], "en")
+        profile_field.locale_choices[value].try(:[], "en")
       when :checkbox
-        value.map {|val| val.blank? ? nil : profile_field.locale_choices[value].try(:[], "en") }.compact.join(" / ")
+        value.map {|val| profile_field.locale_choices[value].try(:[], "en") }.compact.join(" / ")
       else
         nil
       end
