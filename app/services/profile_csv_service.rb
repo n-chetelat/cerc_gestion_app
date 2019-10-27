@@ -82,7 +82,7 @@ class ProfileCsvService
       when :radio, :select
         value.blank? ? nil : profile_field.locale_choices[value].try(:[], "en")
       when :checkbox
-        value.map {|val| val.blank? ? nil :profile_field.locale_choices[value].try(:[], "en") }.compact.join(" / ")
+        value.map {|val| val.blank? ? nil : profile_field.locale_choices[value].try(:[], "en") }.compact.join(" / ")
       else
         nil
       end
