@@ -13,7 +13,7 @@ module Api
     def index
       respond_to do |format|
         format.json {
-          @resources = Person.active + Person.incoming + Person.finished + Person.rejected + Person.canceled
+          @resources = Person.active + Person.incoming #+ Person.finished + Person.rejected + Person.canceled
         }
         format.csv {
           service = ::ProfileCsvService.new(params[:profile_ids], params[:field_ids])
