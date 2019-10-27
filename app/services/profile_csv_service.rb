@@ -76,13 +76,13 @@ class ProfileCsvService
       when :text, :date
         value.blank? ? nil : value
       when :month
-        DatesService.month_to_s(value)
+        value.blank? ? nil : DatesService.month_to_s(value)
       when :semester
-        DatesService.semester_to_s(value)
+        value.blank? ? nil : DatesService.semester_to_s(value)
       when :radio, :select
-        profile_field.locale_choices[value]["en"]
+        value.blank?  nil : profile_field.locale_choices[value]["en"]
       when :checkbox
-        value.map {|val| profile_field.locale_choices[val]["en"] }.join(" / ")
+        value.map {|val| val.blank? ? nil : profile_field.locale_choices[val]["en"] }.compact.join(" / ")
       else
         nil
       end
