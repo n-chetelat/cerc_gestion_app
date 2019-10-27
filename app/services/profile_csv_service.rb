@@ -80,9 +80,9 @@ class ProfileCsvService
       when :semester
         value.blank? ? nil : DatesService.semester_to_s(value)
       when :radio, :select
-        value.blank? ? nil : profile_field.locale_choices[value]["en"]
+        value.blank? ? nil : profile_field.locale_choices[value].try(:[], "en")
       when :checkbox
-        value.map {|val| val.blank? ? nil : profile_field.locale_choices[val]["en"] }.compact.join(" / ")
+        value.map {|val| val.blank? ? nil :profile_field.locale_choices[value].try(:[], "en") }.compact.join(" / ")
       else
         nil
       end
