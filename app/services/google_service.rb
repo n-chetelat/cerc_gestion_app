@@ -45,7 +45,7 @@ class GoogleService
     begin
       @gmail_service.get_user_profile(USER_ID)
       @token_store.load(USER_ID).nil?
-    rescue Google::Apis::AuthorizationError
+    rescue Google::Apis::AuthorizationError, Signet::AuthorizationError
       @token_store.delete(USER_ID)
       true
     end
