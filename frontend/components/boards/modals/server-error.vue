@@ -41,7 +41,7 @@ export default {
   @import "../../../init/index.css";
 
   .error-message {
-    min-height: 300px;
+    min-height: 100%;
     max-height: 500px;
     overflow: auto;
     text-align: center;

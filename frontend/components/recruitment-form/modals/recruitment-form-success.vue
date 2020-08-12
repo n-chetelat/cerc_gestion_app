@@ -47,7 +47,7 @@ export default {
   @import "../../../init/variables.css";
 
   .success-message {
-    min-height: 300px;
+    min-height: 100%;
     max-height: 500px;
     overflow: auto;
     text-align: center;
