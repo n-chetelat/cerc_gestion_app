@@ -20,7 +20,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
       try {
         await this.fetchActiveProfileTimelineDates()
         await Promise.all([
-          this.fetchMilestones(), this.fetchProfiles(),
+          this.fetchMilestones(), this.fetchProfiles({ profilesLoaded: this.profilesLoaded }),
           this.getAllPositions(), this.fetchProfileFields(),
           this.fetchMonths({extended: true}),
           this.fetchSemesters({extended: true})
@@ -44,6 +44,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         currentTabInModal: null,
         errorType: null,
         selectedFields: [],
+        profilesLoaded: 0,
       }
     },
     computed: {
@@ -80,6 +81,16 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
         this.modalName = null
         if (this.currentProfileInModal) this.currentProfileInModal = null
       },
+      async onScroll() {
+        const tablesElem = this.$refs.elem
+        let bottomOfWindow = tablesElem.scrollTop +  tablesElem.offsetHeight === tablesElem.scrollHeight
+        if (bottomOfWindow) {
+          if (this.profilesLoaded < this.profiles.length) {
+            this.profilesLoaded = this.profiles.length
+            await this.fetchProfiles({ profilesLoaded: this.profilesLoaded })
+          }
+        }
+      },
     },
     components: {
       ServerErrorModal,
@@ -98,7 +109,7 @@ import ProfileMilestonesModal from "./timeline/modals/profile-milestones.vue"
 
       admin-nav(@filter="onFilterBySearch")
 
-      div.tables
+      div.tables(@scroll="onScroll", ref="elem")
         names-table(:displayed-profiles="filteredProfiles",
           @filter="onFilterByMenu",
           @selection="selectProfiles",

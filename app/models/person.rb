@@ -18,6 +18,7 @@ class Person < ApplicationRecord
 
   scope :in_recruitment, -> { joins(:application).where("applications.closed_at IS NULL") }
   scope :post_recruitment, -> { joins(:application).where("applications.closed_at IS NOT NULL") }
+  scope :post_recruitment_ordered, -> { order('canceled_at desc', 'accepted desc', 'finished_at desc', 'starting_date asc') }
 
   scope :not_in_phase, -> { in_recruitment.where.not(id: joins(:persons_phase).select(:person_id)) }
   scope :accepted, -> { joins(:application).where("applications.closed_at IS NOT NULL AND applications.accepted = TRUE") }
@@ -29,6 +30,7 @@ class Person < ApplicationRecord
   scope :active, -> { started.where(finished_at: nil) }
   scope :not_finished, -> { not_canceled.where(finished_at: nil) }
   scope :finished, -> { not_canceled.where.not(finished_at: nil) }
+
 
   delegate :starting_date, :ending_date, to: :application
 
