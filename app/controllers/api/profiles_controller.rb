@@ -14,7 +14,7 @@ module Api
       respond_to do |format|
         format.json {
           offset = params[:offset].to_i || 0
-          resources_to_load = 30
+          resources_to_load = 50
           # order should be active + incoming + finished + rejected + canceled
           @resources = Person.post_recruitment
             .post_recruitment_ordered.offset(offset).limit(resources_to_load)
