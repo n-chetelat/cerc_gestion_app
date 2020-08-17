@@ -1,6 +1,6 @@
 import axios from "axios"
 
-import { keyBy, groupBy, filter, differenceBy } from "lodash-es"
+import { keyBy, groupBy, filter } from "lodash-es"
 
 const PROFILE_URL = `api/profiles`
 const PROFILE_FIELDS_URL = `api/profile_fields`
@@ -34,9 +34,8 @@ const getters = {
 
 // actions
 const actions = {
-  fetchProfiles({ commit, getters }, { profilesLoaded }) {
-    const offset = profilesLoaded
-    return axios.get(getters.endpoint, { params: { offset } }).then(({ data }) => {
+  fetchProfiles({ commit, getters }) {
+    return axios.get(getters.endpoint).then(({ data }) => {
       commit("setProfiles", data)
     })
   },
@@ -82,12 +81,7 @@ const actions = {
 // mutations
 const mutations = {
   setProfiles(state, profiles) {
-    if (!state.all.length) {
-      state.all = profiles
-    } else {
-      const newProfiles = differenceBy(profiles, state.all, "id")
-      state.all = [...state.all, ...newProfiles]
-    }
+    state.all = profiles
   },
   setProfileFields(state, fields) {
     state.fields = fields

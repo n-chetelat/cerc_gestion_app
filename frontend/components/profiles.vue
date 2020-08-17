@@ -21,7 +21,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
     async created() {
       try {
         await this.fetchProfileFields()
-        await this.fetchProfiles({ profilesLoaded: this.profilesLoaded })
+        await this.fetchProfiles()
         await Promise.all([
           this.getAllPositions(),
           this.fetchSemesters({extended: true}),
@@ -42,7 +42,6 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
       return {
         sidebarOpen: false,
         selectedFields: [],
-        profilesLoaded: 0,
       }
     },
     computed: {
@@ -106,16 +105,6 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
         this.selectedFields = [...filteredFieldIds]
         this.storeFilteredFieldsForCSV(this.selectedFields)
       },
-      async onScroll() {
-        const tablesElem = this.$refs.elem
-        let bottomOfWindow = tablesElem.scrollTop +  tablesElem.offsetHeight === tablesElem.scrollHeight
-        if (bottomOfWindow) {
-          if (this.profilesLoaded < this.profiles.length) {
-            this.profilesLoaded = this.profiles.length
-            await this.fetchProfiles({ profilesLoaded: this.profilesLoaded })
-          }
-        }
-      },
     },
     components: {
       AdminNav,
@@ -141,7 +130,7 @@ import ServerErrorModal from "./boards/modals/server-error.vue"
 
       admin-nav.admin-nav(@filter="onFilterBySearch")
 
-      div.tables(@scroll="onScroll", ref="elem")
+      div.tables
         names-table(:displayed-profiles="filteredProfiles",
           @filter="onFilterByMenu",
           @selection="selectProfiles",
