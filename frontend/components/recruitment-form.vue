@@ -44,10 +44,10 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
     },
     computed: {
       ...mapGetters("locales", ["currentLocale"]),
-      ...mapGetters("positions", ["allPositions", "positionFormsById"]),
+      ...mapGetters("positions", ["visiblePositions", "positionFormsById"]),
       ...mapGetters("recruitmentInfo", ["recruitmentInfo", "pageCopyright", "positionLabel"]),
       dataIsLoaded() {
-        return (this.recruitmentInfo && this.positionLabel && this.allPositions.length)
+        return (this.recruitmentInfo && this.positionLabel && this.visiblePositions.length)
       },
       recruitmentFormFields() {
         // excludes positions to avoid repetition
@@ -88,7 +88,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
       },
       showConfirmationModal() {
         if (!this.formIsValid || this.loading) return
-        const positions = map(this.allPositions, (p) => ({id: p.id, label: p.title }))
+        const positions = map(this.visiblePositions, (p) => ({id: p.id, label: p.title }))
         this.recruitmentFormInput = [
             {
               value: this.positionId, inputName: "input_select_position_id",
@@ -162,7 +162,7 @@ import ConfirmSubmissionModal from './recruitment-form/modals/confirm-submission
                   label.label {{positionLabel}}
                   select(v-model="positionId", @change="generatePositionForm")
                     option(:value="null") --
-                    option(v-for="position in allPositions", :value="position.id") {{position.title}}
+                    option(v-for="position in visiblePositions", :value="position.id") {{position.title}}
 
               transition(name="ease")
                 div.position-fields(v-if="applicationForm && !loadingApplication")

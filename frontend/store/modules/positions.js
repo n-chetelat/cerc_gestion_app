@@ -1,5 +1,5 @@
 import axios from "axios"
-import { keyBy } from "lodash-es"
+import { keyBy, filter } from "lodash-es"
 
 const BASE_URL = `api/positions`
 
@@ -12,6 +12,7 @@ const state = {
 const getters = {
   endpoint: (state, getters, root, rootGetters) => `${rootGetters.currentHost}/${BASE_URL}`,
   allPositions: state => state.all,
+  visiblePositions: state => filter(state.all, (p) => !p.hidden),
   allPositionsById: state => keyBy(state.all, 'id'),
   positionForms: state => state.forms,
   positionFormsById: (state, getters) => keyBy(getters.positionForms, 'position_id')
