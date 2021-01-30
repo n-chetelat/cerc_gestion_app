@@ -85,7 +85,7 @@ GEM
     arbre (1.1.1)
       activesupport (>= 3.0.0)
     arel (8.0.0)
-    bcrypt (3.1.11)
+    bcrypt (3.1.16)
     better_errors (2.4.0)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -372,6 +372,7 @@ DEPENDENCIES
   acts-as-taggable-on (~> 4.0)
   acts_as_list
   acts_as_paranoid!
+  bcrypt (~> 3.1.16)
   better_errors
   binding_of_caller
   byebug
